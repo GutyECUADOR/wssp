@@ -9,7 +9,23 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
         
         //$consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, B.NOMBRE, A.FECHA, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid' AND A.TIPO IN ('SPA','SPB','SPC') ORDER BY A.TIPO, A.ID";
         
-        $consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid' AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "SELECT 
+                                A.ID, 
+                                A.TIPO, 
+                                C.empresa, 
+                                Bodegas.NOMBRE as BodegaName, 
+                                B.NOMBRE, 
+                                A.FECHA, 
+                                C.total 
+                            FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO 
+                                INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS 
+                                INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+                            WHERE 
+                                c.estado = 0 
+                                AND c.empresa ='$cod_empresagrid' 
+                                AND A.ID NOT IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE  (Aprobado='1' OR Negado='1'))
+                                AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') 
+                            ORDER BY A.TIPO, A.ID";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -25,15 +41,14 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
         
             echo " <table class='tablaedocs'>";    
             echo " <tr class='trcabecera'>
-                    <td tdcabecera title='Código'>Código</td>
-                    <td tdcabecera title='Tipo Documento'>Tipo Documento</td>
-                    <td tdcabecera title='Empresa'>Empresa</td>
-                    <td tdcabecera title='Local'>Local</td>
-                    <td tdcabecera title='Solicitante'>Solicitante</td>
-                    <td tdcabecera title='Fecha'>Fecha Solicitada</td>
-                    <td tdcabecera title='Estado' colspan='2'>Estado</td>
-                    <td tdcabecera title='Total'>Total</td>
-                    <td tdcabecera title='Reporte'>#</td>
+                <td tdcabecera title='Código'>Código</td>
+                <td tdcabecera title='Tipo Documento'>Tipo Documento</td>
+                <td tdcabecera title='Empresa'>Empresa</td>
+                <td tdcabecera title='Local'>Local</td>
+                <td tdcabecera title='Solicitante'>Solicitante</td>
+                <td tdcabecera title='Fecha'>Fecha Solicitada</td>
+                <td tdcabecera title='Estado'>Estado</td>
+                <td tdcabecera title='Total'>Total</td>
                   </tr>
                 ";  
             //Construcción Filas
@@ -59,7 +74,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                 $ind_color++;
                 $ind_color %= 2;
                 
-                 switch ($estadoVALE) 
+                switch ($estadoVALE) 
                     {
                     case 1:
                         $estado_txt = 'Aprobado';
@@ -69,34 +84,34 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                         $estado_txt = 'Anulado';
                             break;    
 
-                    case 0:
-                        $consulta_isInORG_DOCS = "SELECT * FROM dbo.ORG_DOCUMENTOS WHERE IDDoc='$cod_reporte' AND (Aprobado='1' OR Negado='1')";
-                        $result_isInORG_DOCS = odbc_exec($db_empresa, $consulta_isInORG_DOCS);
-                        $count_isInORG_DOCS = odbc_num_rows($result_isInORG_DOCS);
-                        $notaNegado = "";
-                        
-                        if($count_isInORG_DOCS ==1){
-                            if (odbc_result($result_isInORG_DOCS,"Aprobado")=='1') {
-                                $estado_txt = 'Pendiente aprob. administracion';
-                            }elseif (odbc_result($result_isInORG_DOCS,"Negado")=='1'){
-                                $estado_txt = 'Vale negado por supervisor';
-                                $notaNegado = odbc_result($result_isInORG_DOCS,"NegadoNota");
-                            }else{
-                                $estado_txt = 'Estado no definido';
-                            }
-                        }else {
-                            $estado_txt = 'No revisado por supervisor';
-                        }
-
+                            case 0:
+                            $consulta_isInORG_DOCS = "SELECT * FROM dbo.ORG_DOCUMENTOS WHERE IDDoc='$cod_reporte' AND (Aprobado='1' OR Negado='1')";
+                            $result_isInORG_DOCS = odbc_exec($db_empresa, $consulta_isInORG_DOCS);
+                            $count_isInORG_DOCS = odbc_num_rows($result_isInORG_DOCS);
+                            $notaNegado = "";
                             
-
-                            break;
-                    default:
-                         $estado_txt = 'Estado no definido';
-                   
-                        break;
-                    }
+                            if($count_isInORG_DOCS ==1){
+                                if (odbc_result($result_isInORG_DOCS,"Aprobado")=='1') {
+                                    $estado_txt = 'Pendiente aprob. administracion';
+                                }elseif (odbc_result($result_isInORG_DOCS,"Negado")=='1'){
+                                    $estado_txt = 'Vale negado por supervisor';
+                                    $notaNegado = odbc_result($result_isInORG_DOCS,"NegadoNota");
+                                }else{
+                                    $estado_txt = 'Estado no definido';
+                                }
+                            }else {
+                                $estado_txt = 'No revisado por supervisor';
+                            }
     
+                                
+    
+                                break;
+                        default:
+                             $estado_txt = 'Estado no definido';
+                       
+                            break;
+                }
+
                 switch ($cod_empresaValep) 
                     {
                     case '001':
@@ -147,12 +162,11 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
                     echo"<td>".$fechaPDF."</td>";
-                    echo"<td class='textorojo' data-toggle='tooltip' title='$notaNegado'>".$estado_txt."</td>";
+                    echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
-                    echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
                     echo"</td>";
-                echo "</tr>";
-                }
+                    echo "</tr>";
+            }
        
         echo "</table>";
         }
