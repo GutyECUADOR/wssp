@@ -1,0 +1,662 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+    }
+  
+ 
+
+body {
+  background: #f2f2f2;
+  font-family: "Roboto";
+   }
+
+.centertext{
+       text-align:center;
+   }   
+   
+.rowspace{
+       margin-top: 5px;
+       margin-bottom: 5px
+   }
+header {
+	width:100%; /* Establecemos que el header abarque el 100% del documento */
+	overflow:hidden; /* Eliminamos errores de float */
+	background:#FFFFFF;
+	margin-bottom:20px;
+        position: fixed;
+	height:45px;
+        border-bottom: 1px solid #E8E8E8;
+        z-index: 100001;
+}
+ 
+.wrapper {
+	max-width:90%; 
+	margin:auto; 
+	overflow:hidden; /* Eliminamos errores de float */
+}  
+
+ 
+header .logocontainer .logo {
+        margin-top: 3px;
+	max-width: 85px; 
+        max-height: 40px;
+	font-size:20px;
+	line-height:25px;
+	float:left;
+}
+
+header nav {
+	float:right;
+	line-height:47px;
+}
+
+.navizq {
+	float:left;
+	margin-right: 10px;
+        display:none;
+       
+}
+
+
+.navizq a:hover {
+	border-bottom: 0px solid #303766;
+}
+
+
+header nav a {
+	display:inline-block;
+	text-decoration:none;	
+        padding: 12px 10px;
+        font-family: "Roboto";
+	line-height:22px;
+	font-size:14px;
+	
+}
+
+header nav a:hover {
+	border-bottom: 5px solid #303766;
+}
+
+.sidebar-left {
+    background-color: #FFFFFF;
+    border-right: 1px solid #E8E8E8;
+    /* border-radius: 8px 8px 8px 8px;*/
+    float: left;
+    position: fixed;
+    height: 100%;
+    min-height: 225px;
+    margin-top: 45px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    overflow: auto;
+    text-align: center;
+    width: 18%;
+    z-index: 100000;
+} 
+
+
+.sidebar-left.container-menu{
+    background: transparent;
+    width: 100%;
+}
+#sidebar-central {
+    background: #FFFFFF;
+    min-height: 200px;
+    margin-top: 50px;
+    margin-right: 1%;
+    margin-left: 1%;
+    border: 1px solid #D2D2D2;
+    float: right;
+    margin-bottom: 10px;
+    width: 80%;
+}
+
+.cajacod {
+        font-family: "Roboto";
+        font-size: 12px;
+        text-align: center;
+        color: #303766;
+        width: 100%;
+        outline: none;
+        padding: 5px;
+        background: #DDDDDD;
+        border: none;
+        height: 28px;
+        }
+
+.frame-container{
+    width: 100%;
+    height: 100%;
+    border:none;
+}
+
+.celdagrid{
+    text-align: center;
+    font-size: 12px; 
+}
+
+.textoverdeclaro{
+    color: #3c763d;
+}
+
+.textoverde{
+    color: #008000;
+}
+
+.textoamarillo{
+    color: #d58512;
+}
+
+.textorojo{
+    color: #D32F2F;
+}
+
+.celdagridtitulos{
+    text-align: center;
+    font-size: 12px;
+    color: #FFFFFF;
+    background: #5F637A;
+    font-weight: bold;
+}
+
+/* Manu lateral por listas */
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 0 8px 30px;
+    text-decoration: none;
+    text-align: left;
+    font-family: "Roboto";
+    font-size:14px;
+
+}
+li a:hover {
+    background-color: #555555;
+    color: white;
+}
+/*Cambios de menu activo*/
+
+nav#evaluaciones ul.menu li:nth-child(1) a,
+nav#valesperdida ul.menu li:nth-child(2) a,
+nav#chlocales ul.menu li:nth-child(3) a,
+nav#info ul.menu li:nth-child(4) a,
+nav#contacto ul.menu li:nth-child(5) a {
+  background-color: #303766;
+  color: #ffffff;
+}
+
+li a.active{
+    background-color: #303766;
+    color: white;
+}
+li a:active{
+    background-color: #303766;
+    color: white;
+}
+
+.tituloh5 {
+    font-size: 11px;
+    color: #303766; 
+    padding: 5px;
+    font-family: Arial, sans-serif;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.wrap {
+  width: 100%;
+  /*max-width: 600px;*/
+  min-width: 200px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0px 0px 10px grey; 
+  position: relative;
+  text-align:center;
+  margin: 0 auto;
+
+}
+
+.links1{
+  color: #3b5998;    
+  cursor: pointer;
+  font-family: Roboto, arial, sans-serif;
+  font-size: 10px;
+  }
+
+.linksnav{
+  color: #66757f;    
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  }  
+  
+.contenedor-formulario {
+  width: 100%;
+  padding: 10px; 
+}
+
+.icon-large{
+  font-size: 16px;
+  line-height: 1px;
+}
+
+.text-iconlarge{
+  font-family: Roboto, arial, sans-serif;
+  font-size: 14px;
+  padding-left: 5px;
+}
+
+.textperfilusuario{
+    font-size: 12px;
+}
+
+.imagenusuario{
+    border-radius: 50%;
+}
+
+#responsibetable{
+    height: 300px;
+     overflow:scroll;
+     width:100%;
+     
+}
+
+.tablaedocs {
+    margin-top: 5px;
+    width: 100%;
+    min-width: 800px; 
+}
+
+.tablaedocs_modal{
+    margin-top: 5px;
+    width: 100%;
+}
+
+
+.textheadertable{
+    font-family: Roboto, arial, sans-serif;
+    font-size: 12px;
+}
+
+.trcabecera{
+    font-size: 12px;
+    text-align: center;
+    color: #FFFFFF;
+    background: #5F637A;
+}
+
+.tdcabecera{
+    height: 25px;  
+    border: 1px solid #b2b2b2;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.tdcontenido{
+    text-align: center;
+    font-size: 12px;
+    border-bottom: 1px solid #b2b2b2;
+    height: 20px;
+}
+
+.tdcontenido:hover{
+background-color:#b2b2b2;
+}
+
+  .contenedor-formulario .formulario {
+    width: 100%;
+    margin: auto; }
+	
+	.contenedor-formulario .formulario .logo{
+          position:relative;
+	  margin: auto;
+          text-align: center;
+          padding-bottom: 15px;
+	 }
+         
+        
+    
+       .contenedor-formulario .formulario .txtcentro{
+          position:relative;
+          padding-top: 5px;
+          padding-bottom: 20px;
+	  margin: auto;
+          text-align: center;
+          color: #D32F2F;
+          font-size: 12px;
+   
+	 }
+         
+         .contenedor-formulario .formulario .txtseccion{
+          position:relative;
+          padding: 5px;
+	  margin: auto;
+          text-align: center;
+          font-weight: bold;
+          background: #303766;
+          color: #fff;
+          box-shadow: 0px 0px 1px grey;
+          margin-bottom:  18px;
+	 }
+         
+         .txtseccion{
+          position:relative;
+          padding: 5px;
+	  margin: auto;
+          text-align: center;
+          font-weight: bold;
+          background: #303766;
+          color: #fff;
+          box-shadow: 0px 0px 1px grey;
+          margin-bottom:  18px;
+	 }
+         
+         .contenedor-formulario .formulario .txtseccion .etique{
+          position:relative;
+          margin: auto;
+          font-size:12px;
+         }
+         
+         .etique{
+          position:relative;
+          margin: auto;
+          font-size:12px;
+          
+         }
+       
+         
+ #inputuser{
+           background: url('../img/PNG/user.png') no-repeat right 8px center; 
+         }
+
+ #inputpass{
+           background: url('../img/PNG/key.png') no-repeat right 8px center; 
+         }
+
+#iconemail{
+           background: url('../img/PNG/mail4.png') no-repeat left 8px center; 
+         }
+
+         
+ #titulosoptionb{
+            left: 10px;
+            width: 100%;
+            color: #303766;
+          
+         }
+
+ .em{
+            left: 10px;
+            width: 100%;
+            color: #D32F2F;
+          
+         }
+         
+         #puestotrab {
+             width: 100%; 
+             margin-left: 25px;
+             margin-bottom: 17px;
+         }
+         
+         
+#bloque{  /*padre*/
+	width: 100%;
+        text-align:center;
+}
+#bloque .input-group{  /*hijos*/
+	display: inline-block;
+       
+}        
+        
+#bloquede2-1{  
+	width: 30%;
+        
+        
+}
+ 
+#nombresyapellidos{
+    width: 35%;
+}
+
+#cidentidad{
+    width: 17%;
+}
+
+#fechanacimiento{
+    width: 15%;
+}
+
+#lugarnacimiento{
+    width: 31%;
+}
+
+#estadocivil{
+    width: 15%;
+}
+
+#direcciondomicilio{
+    width: 84%;
+}
+
+
+#telefonoconv{
+    width: 20%;
+}
+
+#celular{
+    width: 20%;
+}
+
+#correoelectronico{
+    width: 29%;
+}
+
+#correoelectronicoalt{
+    width: 29%;
+}
+
+#bloquede2-2{  
+	width: 50%;
+        
+}
+
+#bloquede3-1{  
+	width: 30%;   
+}
+
+#bloquede3-2{  
+	width: 20%;   
+}
+
+#bloquede3-2{  
+	width: 34%;   
+}
+
+    .contenedor-formulario .formulario .input-group {
+      position: relative;
+      margin-bottom: 10px; 
+      width: 300px;
+     
+    }
+    
+    .contenedor-formulario .formulario .label{
+       font-size:12px;
+       font-family: "Roboto";
+       color: #4A4A4A;
+    }
+    
+      .contenedor-formulario .formulario .input-group input[type="text"],
+      .contenedor-formulario .formulario .input-group input[type="email"],
+      .contenedor-formulario .formulario .input-group input[type="password"] {
+        font-family: "Roboto";
+        font-size: 14px;
+        color: #303766;
+        width: 100%;
+        border:1px solid #DDDDDD;
+        padding: 5px;
+        margin-bottom: 10px;
+        }
+      
+       .input[type="text"],
+       .input[type="email"],
+       .input[type="password"] {
+        font-family: "Roboto";
+        font-size: 14px;
+        color: #303766;
+        width: 100%;
+        border:1px solid #DDDDDD;
+        padding: 5px;
+        margin-bottom: 10px;
+        } 
+        
+        
+        
+        .contenedor-formulario .formulario select{
+        margin-bottom:  10px;    
+        font-family: "Roboto";
+        font-size: 12px;
+        color: #303766;
+        width: 100%;
+        outline: none;
+        padding: 4px;
+        background: #DDDDDD;
+        border: none;
+        }
+        
+        
+
+       
+    .contenedor-formulario .formulario input[type="submit"] {
+      background: #303766;
+      border-radius: 1px;
+      border: 2px solid #f2f2f2;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Roboto";
+      font-size: 14px;
+      padding: 5px;
+      width: 100%;
+      margin-bottom: 10px;
+      margin-top: 7px;
+      border-radius: 1px 1px 1px 1px;
+      -moz-border-radius: 1px 1px 1px 1px;
+      -webkit-border-radius: 1px 1px 1px 1px;
+       border: 0px solid #000000;
+      
+      -webkit-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease; }
+    
+      .contenedor-formulario .formulario input[type="submit"]:hover {
+        background: #1976D2; }
+
+      
+      .box1 {
+        font-family: "Roboto";
+        font-size: 14px;
+        text-align: center;
+        color: #303766;
+        width: 100%;
+        border:1px solid #DDDDDD;
+        padding: 5px;
+        margin-bottom: 5px;
+        } 
+      
+      .botonazul {
+      background: #303766;
+      border-radius: 1px;
+      border: 2px solid #f2f2f2;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Roboto";
+      font-size: 14px;
+      padding: 5px;
+      width: 100%;
+      margin-bottom:  5px;
+      margin-top: 7px;
+      border-radius: 1px 1px 1px 1px;
+      -moz-border-radius: 1px 1px 1px 1px;
+      -webkit-border-radius: 1px 1px 1px 1px;
+       border: 0px solid #000000;
+      
+      -webkit-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease; }
+    
+      .botonazul:hover {
+        background: #1976D2; 
+        color: #fff;}
+      
+
+      
+      
+
+    .footer {
+    border-top: solid 1px #A8A8A8;
+    margin-top: 10px;
+    text-align: center;
+    padding-top: 5px;
+    color: #616161;
+    font-size: 9px;
+}
+
+ /* INICIO RESPONSIVE DESING*/
+ 
+ 
+@media screen and (max-width:800px){
+    
+    .contenedor-formulario{
+        padding: 5px;
+        width: 100%;
+    }
+    
+    #sidebar-central {
+        width: 98%;
+        min-height: 200px;
+       
+    }
+    
+    .wrap{
+        width: 100%;
+        max-width: 100%;
+        padding: 0px;
+        padding-top: 10px;
+        background: #fff;
+        box-shadow: 0px 0px 0px; 
+        position: relative;
+        text-align:center;
+        top:0px;
+        margin: 0 auto;
+    }
+    
+   /* MENU */
+   
+   .sidebar-left{   /* ancho de menu*/
+       width: 80%; 
+   }
+  
+   .sidebar-left {
+       left:-100%;  /* ocultar sidebarleft*/
+   }
+   
+   .navizq {        /* boton de accion de menu*/
+	float:left;
+	margin-right: 10px;
+        display:inline-block;
+}
+   
+}

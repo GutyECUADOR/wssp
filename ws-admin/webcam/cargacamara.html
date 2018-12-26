@@ -1,0 +1,87 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    
+    
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>WebcamJS - Carga de Imagen</title>
+	<style type="text/css">
+		
+		h2, h3 { margin-top:0; }
+		form { margin-top: 15px; }
+		form > input { margin-right: 15px; }
+		
+	</style>
+</head>
+<body>
+
+    <div class="contenedor-formulario">
+        
+    <div class="wrap">    
+        
+        <table class="tablaoculta" style=width:100%;>
+        <tr>
+          <th > <!-- Lado izquierdo -->
+              <img src="monitorBLANCO.png" alt="Dysplay" width="320" height="240">
+              <h3>Display a 320x240</h3>
+          
+              <div id="my_camera"></div>
+          
+          </th>  
+          <th > <!-- Lado derecho -->
+               <img src="monitorBLANCO.png" alt="Dysplay" width="320" height="240">
+              <div id="results"></div>
+          
+          </th>    
+       
+        </tr>
+        </table>
+        
+        
+	<!-- First, include the Webcam.js JavaScript Library -->
+	<script type="text/javascript" src="webcam.js"></script>
+	
+	<!-- Configure a few settings and attach camera -->
+	<script language="JavaScript">
+		Webcam.set({
+			width: 320,
+			height: 240,
+			image_format: 'jpeg',
+			jpeg_quality: 90
+		});
+		Webcam.attach( '#my_camera' );
+	</script>
+	
+	<!-- A button for taking snaps -->
+	<form>
+             <div  id="bloque">
+                <div class="input-group" id="bloquede2-1">
+		<input type=button value="Capturar Imagen" onClick="take_snapshot()" style=width:100%;>
+                </div>
+                <div class="input-group" id="bloquede2-2">
+                <input type=button value="Establecer" onClick="" style=width:100%;>
+                </div>
+            </div>
+	</form>
+	
+	<!-- Code to handle taking the snapshot and displaying it locally -->
+	<script language="JavaScript">
+		function take_snapshot() {
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				// display results in page
+				document.getElementById('results').innerHTML = 
+					'<h2>Previsualizacion:</h2>' + 
+					'<img src="'+data_uri+'"/ width="85" height="113">';
+			} );
+		}
+	</script>
+	<div class="footer">Asegúrese de que la WebCam no está siendo usada en otra aplicación y se encuentra correctamente instalada.</div>
+    </div>
+    </div>    
+</body>
+</html>

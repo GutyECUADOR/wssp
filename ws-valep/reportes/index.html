@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Reporte</title>
+    <link rel="stylesheet" href="style.css" media="all" />
+  </head>
+  <body>
+    <header class="clearfix">
+      <div id="logo">
+        <img src="logo.png">
+      </div>
+      <h1>SOLICITUD DE PÉRDIDA</h1>
+      <div id="contenedor_info">
+            <div id="company" class="clearfix">
+              <div>KAO Sport Center</div>
+              <div>Av. de los Shyris y Naciones Unidas Edificio Nuñez Vela<br /> Quito, Ecuador</div>
+              <div>(593-2)-2550005</div>
+              <div><a href="mailto:info@kaosport.com">info@kaosport.com</a></div>
+            </div>
+            <div id="datos1">
+              <div><span>CÓDIGO </span> $cod_ev </div>
+              <div><span>LOCAL: </span> $local </div>
+              <div><span>SUPERVISOR: </span> $solicitante </div>
+               <div><span>SOLICITANTE: </span> $supervisor </div>
+              <div><span>FECHA:</span> date()</div>
+            </div>
+      </div>    
+    </header>
+    <main>
+        
+        <!-- SECCION ITEMS REPORTADOS-->
+        
+        <div class="grupo-2">
+        <table>
+            <thead>
+              <tr>
+                  <th class="title-row" colspan="4">ITEMS REPORTADOS</th>
+              </tr>
+              <tr>
+                <th class="service">Cod</th>
+                <th class="desc">DESCRIPCIÓN</th>
+                <th>CANTIDAD</th>
+                <th>VALOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="service">$VAL</td>
+                <td class="desc">$VAL</td>
+                <td class="ptn">$VAL</td>
+                <td class="ptn">$VAL</td>
+              </tr>
+             
+               
+            </tbody>
+        </table>
+        </div>
+        
+        <!-- SECCION PERSONAL RECARGO-->
+      
+        <div class="grupo-2">
+        <table>
+            <thead>
+              <tr>
+                  <th class="title-row" colspan="4">PERSONAL REPORTADO</th>
+              </tr>
+              <tr>
+                <th class="service">CI</th>
+                <th class="desc">EMPLEADO</th>
+                <th>PORCENTAJE</th>
+                <th>VALOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="service">$VAL</td>
+                <td class="desc">$VAL</td>
+                <td class="ptn">$VAL</td>
+                <td class="ptn">$VAL</td>
+              </tr>
+             
+               
+            </tbody>
+        </table>
+        </div>
+        
+         <!-- SECCION RESUMEN-->
+        
+        <div class="grupo-2">
+        <table>
+            <thead>
+              <tr>
+                  <th class="title-row" colspan="3">MONTO REPORTADO</th>
+              </tr>
+              <tr>
+                <th class="espacio"></th>
+                <th class="service andho1">DESCRIPCIÓN</th>
+                <th class="desc andho1">VALOR</th>
+              
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                 <th class="espacio"></th>  
+                <td class="service">SUBTOTAL</td>
+                <td class="desc">$VAL</td>
+              </tr>
+              <tr>
+                <th class="espacio"></th>
+                <td class="service">IVA</td>
+                <td class="desc">$VAL</td>
+              </tr>
+              <tr>
+                 <th class="espacio"></th>  
+                <td class="service">TOTAL</td>
+                <td class="desc">$VAL</td>
+              </tr>
+              
+               
+            </tbody>
+        </table>
+        </div>
+        
+         <div id="cont_firmas">
+            <div id="firma1">Firma Autorizada</div>
+        </div>
+
+        
+        
+    </main>
+    <div class="grupo-2">
+    <footer>
+      La información contenida en el presente documento es de uso exclusivo del empleado y/o empresa.
+    </footer>
+    </div>
+  </body>
+</html>
