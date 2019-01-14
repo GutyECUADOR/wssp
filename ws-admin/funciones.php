@@ -18,10 +18,11 @@ function check_in_range($start_date, $end_date, $evaluame) {
     return (($user_ts >= $start_ts) && ($user_ts <= $end_ts));
     }
     
-function ultimo_dia_vales(){
+
+function ultimo_dia_vales($ultimoDiaValep=30){
     $year = date('Y');
     $month = date('m');
-    $day = 12;
+    $day = $ultimoDiaValep;
     return date('Y-m-d', mktime(0,0,0, $month, $day, $year));
 }  
   
@@ -50,10 +51,10 @@ function first_month_day() {
 
 /* Funcion determina el dia maximo que esta disponible el modulo de wssp-evaluaeg*/ 
 
-function ultimo_dia_EJI(){
+function ultimo_dia_EJI($ultimoDiaEJI=30){
     $year = date('Y');
     $month = date('m');
-    $day =9;
+    $day = $ultimoDiaEJI;
     return date('Y-m-d', mktime(0,0,0, $month, $day, $year));
 }  
 

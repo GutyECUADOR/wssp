@@ -5,9 +5,19 @@ include('../ws-admin/acceso_multi_db.php');
 include('../ws-admin/funciones.php');
 $conexionEmpresa = getDataBase(008); // Empresa modelo es 008
 
+if(file_exists('../ws-admin/configuraciones.xml') && $configXML = simplexml_load_file('../ws-admin/configuraciones.xml')){
+    $ultimoDiaValep = (string) $configXML->ultimoDiaActivoVales;
+
+}else{
+    die ('Error no se pudo cargar el archivo de configuraciones XML, informe a sistemas.');
+} 
+
+
+
+
 $fechaActual = getDateNow();
 $fechainicio = first_month_day();
-$fechafinal = ultimo_dia_vales();
+$fechafinal = ultimo_dia_vales($ultimoDiaValep);
     
     $nombreDia = getDiaText($fechaActual);
     $diasHabiles = array('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');

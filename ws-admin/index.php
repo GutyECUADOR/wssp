@@ -45,7 +45,6 @@ include_once ('./acceso_db_sbio.php');
                                                     echo "<option value='$cod_emp'>$detalle_emp</option>";
                                                     }
                                                     ?>
-                                                    <option value='008'> EMPRESA MODELO </option>
                                              </select>
                                             
                                             <input type="text" name="usuario" id="inputuser" maxlength="30" placeholder="Usuario del Sistema o RUC" required >

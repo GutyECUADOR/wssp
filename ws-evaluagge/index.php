@@ -4,9 +4,19 @@ include('../ws-admin/funciones.php'); // Acceso a funciones utiles
 include('../config/global.php');
 include('funcions.php');
 
+
+if(file_exists('../ws-admin/configuraciones.xml') && $configXML = simplexml_load_file('../ws-admin/configuraciones.xml')){
+    $ultimoDiaEJI = (string) $configXML->ultimoDiaEvaluaEGG;
+
+}else{
+    die ('Error no se pudo cargar el archivo de configuraciones XML, informe a sistemas.');
+} 
+
+
+
 $fechaActual = getDateNow();
 $fechainicio = first_month_day();
-$fechafinal = ultimo_dia_EJI();
+$fechafinal = ultimo_dia_EJI($ultimoDiaEJI);
 
 
 insertRegistro();
