@@ -801,8 +801,84 @@ $(function ajaxbusqueda_valepANT(){
                
                 else if (valida_porcentaje_manual()===true) {
                       return true;
-                }else
+                }else{
                        return false;
                 }            
                     
+        }
+
+
+        function validar_formulario_valesArobados() {
+
+            let isRevisado = confirm("Se ha revisado los descuentos indicados por el solicitante ?");
+            console.log(isRevisado);
+            if (!isRevisado) {
+                return false;
+            }
+
+            if(document.formulario_registro.txt_solicitante_name.value==="- Sin Identificar -")
+            {
+                 swal({  title: 'Solicitante inválido',
+                        text: 'La CI del solicitante no es correcta o no esta registrada en el sistema',  
+                        type: 'warning',    
+                        showCancelButton: false,   
+                        closeOnConfirm: false,   
+                        confirmButtonText: 'Aceptar', 
+                        showLoaderOnConfirm: true } 
+                        ); 
+                 
+                  return false;                               
+            }
+        
+            else if (document.formulario_registro.txt_total.value==="" || document.formulario_registro.txt_total.value==="NaN" || document.formulario_registro.txt_total.value<=0)
+            {
+                swal({  title: 'Solicitud Vacia',
+                        text: 'Debe existir un monto que reportar, revise el calculo del Total',  
+                        type: 'warning',    
+                        showCancelButton: false,   
+                        closeOnConfirm: false,   
+                        confirmButtonText: 'Aceptar', 
+                        showLoaderOnConfirm: true } 
+                        ); 
+                 return false;                               
+            }
+            
+            else if(valida_productos_ok()>=1)
+            {
+                 swal({  title: 'Producto no registrado',
+                        text: 'Se ha detectado productos inválidos o no registrados en el sistema',  
+                        type: 'warning',    
+                        showCancelButton: false,   
+                        closeOnConfirm: false,   
+                        confirmButtonText: 'Aceptar', 
+                        showLoaderOnConfirm: true } 
+                        ); 
+                 
+                  return false;                               
+            }
+            
+            else if(valida_empleados_ok()>=1)
+            {
+                 swal({  title: 'Empleado no registrado',
+                        text: 'Se ha detectado empleados inválidos o no registrados en el sistema',  
+                        type: 'warning',    
+                        showCancelButton: false,   
+                        closeOnConfirm: false,   
+                        confirmButtonText: 'Aceptar', 
+                        showLoaderOnConfirm: true } 
+                        ); 
+                 
+                  return false;                               
+            }
+           
+            else if (valida_porcentaje_manual()===true) {
+                  return true;
+            }else{
+                   return false;
+            }            
+                
+        }
+
+
+        
             

@@ -652,7 +652,18 @@ background-color:#b2b2b2;
     padding-top: 5px;
     color: #616161;
     font-size: 10px;
-}
+    }
+
+    .blink_me {
+        animation: blinker 1s linear infinite;
+        color: red;
+      }
+      
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
 
 
 /* INICIO RESPONSIVE DESING*/
@@ -707,10 +718,7 @@ background-color:#b2b2b2;
         width: 100%;
     }
     
-    .icon_remove {
-        
-    }
-    
+   
     .derechasub {
         padding-left: 0;
     }

@@ -88,14 +88,15 @@ require_once '../ws-admin/acceso_multi_db.php';
                                     <h6>COD. <?php echo $cod_reporte ?></h6>
                             </div>
                     
-                    <form action="actualiza_valep.php" class="formulario" name="formulario_registro" method="POST" onsubmit= "return validar_formulario()">
+                    <form action="actualiza_valep.php" class="formulario" name="formulario_registro" method="POST" onsubmit= "return validar_formulario_valesArobados()">
                         <input type="hidden"  id="cod_valep_edit" name="cod_valep_edit" value="<?php echo $cod_reporte ?>">
                                 <div class="centrado">
 	           		   	<img class="logo" src="../ws-admin/img/logo.png" alt="Logo">
                     		</div>
                     
                                 <div class="txtcentro">
-                                    <label> Unicamente los campos de porcentaje son editables.</label>
+                                    <label> Unicamente los campos de porcentaje son editables, tenga en cuenta la siguiente nota del solicitante:</label><br>
+                                    <label class="blink_me"> <?php echo $comentario_editavalep?>.</label>
                                 </div>
                             
                                 
@@ -266,7 +267,7 @@ require_once '../ws-admin/acceso_multi_db.php';
                                 </div>
                                  
                                  <div id="bloque" class="input-group">
-                                     <textarea class="cajaarea" name="txt_comentario" rows="3" cols="100%" maxlength="180" readonly><?php echo $comentario_editavalep?></textarea>
+                                     <textarea class="cajaarea blink_me" name="txt_comentario" rows="3" cols="100%" maxlength="180" readonly><?php echo $comentario_editavalep?></textarea>
                                      
                                  </div>         
 
