@@ -10,7 +10,28 @@ $fecha_finCHK = $_POST['post_datefin'];
 
 if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqueda para Gustavo Imbaquingo
      $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB
-        $consulta_chlocales = "select A.id, A.empresa, E.Nombre as NombreEmpresaN, A.local, D.NOMBRE as bodegaN, B.Apellido+ B.Nombre as supervisorN, A.fecha, A.estado, (C.Nombre + C.Apellido) as revisadopor from dbo.chlist_locales as A INNER JOIN SBIOKAO.dbo.Empleados as B ON A.supervisor = B.Cedula INNER JOIN SBIOKAO.dbo.Empleados as C ON C.Cedula=revisadopor INNER JOIN dbo.INV_BODEGAS as D ON A.local COLLATE Modern_Spanish_CI_AS = D.CODIGO COLLATE Modern_Spanish_CI_AS INNER JOIN SBIOKAO.dbo.Empresas_WF as E ON E.Codigo = A.empresa WHERE revisadopor='$empresa_search'  AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' ORDER BY id DESC";
+        $consulta_chlocales = "
+            SELECT TOP 100
+                checklist.id,
+                checklist.empresa as codEmpresa,
+                empresa.Nombre as nombreEmpresa,
+                checklist.local as codLocal,
+                bodega.NOMBRE as nombreLocal,
+                checklist.supervisor as cedulaSupervisor,
+                (SBIO.Nombre + SBIO.Apellido) as supervisorName,
+                checklist.fecha,
+                checklist.revisadopor as cedulaRevisado,
+                (SBIO2.Nombre + SBIO2.Apellido) as revisadorName,
+                checklist.estado
+            FROM 
+                dbo.chlist_locales as checklist
+                INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON SBIO.Cedula = checklist.supervisor
+                LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
+                INNER JOIN dbo.INV_BODEGAS as bodega ON bodega.CODIGO = checklist.local
+                INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa 
+            WHERE revisadopor='$empresa_search' AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' 
+            ORDER BY id desc
+        ";
         $result_consulta_chlocales = odbc_exec($db_empresa, $consulta_chlocales);
         $count_result = odbc_num_rows($result_consulta_chlocales);
             if ($count_result>=1){
@@ -43,13 +64,13 @@ if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqu
             {
                 //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_consulta_chlocales,"id");
-                $empresa = odbc_result($result_consulta_chlocales,"NombreEmpresaN");
-                $empresacodDB = odbc_result($result_consulta_chlocales,"empresa");
+                $empresa = odbc_result($result_consulta_chlocales,"nombreEmpresa");
+                $empresacodDB = odbc_result($result_consulta_chlocales,"codEmpresa");
                 //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorN"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorName"));
                 $fechaPDF = odbc_result($result_consulta_chlocales,"fecha");
-                $local = odbc_result($result_consulta_chlocales,"bodegaN");
-                $revisadopor = odbc_result($result_consulta_chlocales,"revisadopor");
+                $local = odbc_result($result_consulta_chlocales,"nombreLocal");
+                $revisadopor = odbc_result($result_consulta_chlocales,"cedulaRevisado") . '-' . odbc_result($result_consulta_chlocales,"revisadorName");
                 $cod_estado = odbc_result($result_consulta_chlocales,"estado");
               
                 switch ($cod_estado) 
@@ -98,7 +119,30 @@ if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqu
         }
 }  else {
         $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB
-        $consulta_chlocales = "select A.id, A.empresa, A.local, B.Apellido+ B.Nombre as supervisorN, A.fecha, A.estado, A.revisadopor from dbo.chlist_locales as A INNER JOIN SBIOKAO.dbo.Empleados as B ON A.supervisor = B.Cedula WHERE empresa='$empresa_search' and local='$local_search'  AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' ORDER BY id DESC";
+        $consulta_chlocales = "
+       
+            SELECT TOP 100
+                    checklist.id,
+                    checklist.empresa as codEmpresa,
+                    empresa.Nombre as nombreEmpresa,
+                    checklist.local as codLocal,
+                    bodega.NOMBRE as nombreLocal,
+                    checklist.supervisor as cedulaSupervisor,
+                    (SBIO.Nombre + SBIO.Apellido) as supervisorName,
+                    checklist.fecha,
+                    checklist.revisadopor as cedulaRevisado,
+                    (SBIO2.Nombre + SBIO2.Apellido) as revisadorName,
+                    checklist.estado
+                FROM 
+                    dbo.chlist_locales as checklist
+                    INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON SBIO.Cedula = checklist.supervisor
+                    LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
+                    INNER JOIN dbo.INV_BODEGAS as bodega ON bodega.CODIGO = checklist.local
+                    INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa 
+                WHERE empresa='$empresa_search' and checklist.local='$local_search' AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' 
+                ORDER BY id desc
+        
+        ";
         $result_consulta_chlocales = odbc_exec($db_empresa, $consulta_chlocales);
         $count_result = odbc_num_rows($result_consulta_chlocales);
             if ($count_result>=1){
@@ -131,14 +175,16 @@ if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqu
             {
                 //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_consulta_chlocales,"id");
-                $empresa = odbc_result($result_consulta_chlocales,"empresa");
-                $empresacodDB = odbc_result($result_consulta_chlocales,"empresa");
+                $empresa = odbc_result($result_consulta_chlocales,"nombreEmpresa");
+                $empresacodDB = odbc_result($result_consulta_chlocales,"codEmpresa");
                 //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorN"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorName"));
                 $fechaPDF = odbc_result($result_consulta_chlocales,"fecha");
-                $local = odbc_result($result_consulta_chlocales,"local");
-                $revisadopor = odbc_result($result_consulta_chlocales,"revisadopor");
+                $local = odbc_result($result_consulta_chlocales,"nombreLocal");
+                $revisadopor = odbc_result($result_consulta_chlocales,"cedulaRevisado") . '-' . odbc_result($result_consulta_chlocales,"revisadorName");
                 $cod_estado = odbc_result($result_consulta_chlocales,"estado");
+
+                
               
                 switch ($cod_estado) 
                     {

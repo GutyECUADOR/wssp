@@ -2,7 +2,28 @@
 require_once '../ws-admin/acceso_multi_db.php';
    
         $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB
-        $consulta_chlocales = "select TOP 100 A.id, A.empresa, E.Nombre as NombreEmpresaN, A.local, D.NOMBRE as bodegaN, B.Apellido+ B.Nombre as supervisorN, A.fecha, A.estado, (C.Nombre + C.Apellido) as revisadopor from dbo.chlist_locales as A LEFT JOIN SBIOKAO.dbo.Empleados as B ON A.supervisor = B.Cedula LEFT JOIN SBIOKAO.dbo.Empleados as C ON C.Cedula=revisadopor LEFT JOIN dbo.INV_BODEGAS as D ON A.local COLLATE Modern_Spanish_CI_AS = D.CODIGO COLLATE Modern_Spanish_CI_AS INNER JOIN SBIOKAO.dbo.Empresas_WF as E ON E.Codigo = A.empresa ORDER BY id desc";
+        $consulta_chlocales = "
+            SELECT TOP 100
+                checklist.id,
+                checklist.empresa as codEmpresa,
+                empresa.Nombre as nombreEmpresa,
+                checklist.local as codLocal,
+                bodega.NOMBRE as nombreLocal,
+                checklist.supervisor as cedulaSupervisor,
+                (SBIO.Nombre + SBIO.Apellido) as supervisorName,
+                checklist.fecha,
+                checklist.revisadopor as cedulaRevisado,
+                (SBIO2.Nombre + SBIO2.Apellido) as revisadorName,
+                checklist.estado
+            FROM 
+                dbo.chlist_locales as checklist
+                INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON SBIO.Cedula = checklist.supervisor
+                LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
+                INNER JOIN dbo.INV_BODEGAS as bodega ON bodega.CODIGO = checklist.local
+                INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa 
+            ORDER BY id desc
+       
+        ";
         if (!$result_consulta_chlocales = odbc_exec($db_empresa, $consulta_chlocales)){
             echo "ODBC error: ", odbc_errormsg();
         }
@@ -34,13 +55,13 @@ require_once '../ws-admin/acceso_multi_db.php';
             {
                 //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_consulta_chlocales,"id");
-                $empresa = odbc_result($result_consulta_chlocales,"NombreEmpresaN");
-                $empresacodDB = odbc_result($result_consulta_chlocales,"empresa");
+                $empresa = odbc_result($result_consulta_chlocales,"nombreEmpresa");
+                $empresacodDB = odbc_result($result_consulta_chlocales,"codEmpresa");
                 //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorN"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorName"));
                 $fechaPDF = odbc_result($result_consulta_chlocales,"fecha");
-                $local = odbc_result($result_consulta_chlocales,"bodegaN");
-                $revisadopor = odbc_result($result_consulta_chlocales,"revisadopor");
+                $local = odbc_result($result_consulta_chlocales,"nombreLocal");
+                $revisadopor = odbc_result($result_consulta_chlocales,"revisadorName");
                 $cod_estado = odbc_result($result_consulta_chlocales,"estado");
               
                 switch ($cod_estado) 

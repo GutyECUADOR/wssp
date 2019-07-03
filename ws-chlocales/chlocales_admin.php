@@ -29,85 +29,85 @@ include_once('funcions.php');
         
         <script type="text/javascript">
             
-        $(function search_chlocales(){
-            $('#btn_busqueda_chlocales').click(function(){
-              var empresa_search = document.getElementById("seleccion_empresa_chlocales").value;
-              var local_search = document.getElementById("seleccion_local_chlocales").value;
-             
-              var post_dateini = document.getElementById("dateini_modal").value;
-              var post_datefin = document.getElementById("datefin_modal").value;
-               $.ajax({
-                  url : 'search_chlocales.php', 
-                  method : 'POST',
-                  data: {empresa_search: empresa_search, local_search:local_search, post_dateini: post_dateini , post_datefin: post_datefin}, 
+            $(function search_chlocales(){
+                $('#btn_busqueda_chlocales').click(function(){
+                var empresa_search = document.getElementById("seleccion_empresa_chlocales").value;
+                var local_search = document.getElementById("seleccion_local_chlocales").value;
+                
+                var post_dateini = document.getElementById("dateini_modal").value;
+                var post_datefin = document.getElementById("datefin_modal").value;
+                $.ajax({
+                    url : 'search_chlocales.php', 
+                    method : 'POST',
+                    data: {empresa_search: empresa_search, local_search:local_search, post_dateini: post_dateini , post_datefin: post_datefin}, 
+                                
+                success: function (result) {
+                    $('.result_search_chlocales').show().html(result);
+                    }
+                });
+            });
+            });
+                
+            function showselectLocales(str){
+                            var val_evalua = str.value;
                             
-               success: function (result) {
-                   $('.result_search_chlocales').show().html(result);
-                   }
-               });
-           });
-        });
-            
-        function showselectLocales(str){
-                         var val_evalua = str.value;
-                         
-                        $.ajax({
-                           type : 'get',
-                            url : 'ajax_select_locales.php', 
+                            $.ajax({
+                            type : 'get',
+                                url : 'ajax_select_locales.php', 
 
-                           data: {cod_WF: str, cod_db:val_evalua},
-                          
-                        success : function(r)
-                            {
-                              document.getElementById("seleccion_local").innerHTML=r;
-                            }
-                            });
-        }    
-        
-        function showselectLocalesNoModal(){
-                         var val_evalua = document.getElementById("seleccion_empresa_chlocales").value; //Obtenemos el value del select
-                         
-                        $.ajax({
-                           type : 'get',
-                            url : 'ajax_locales_search.php', 
+                            data: {cod_WF: str, cod_db:val_evalua},
+                            
+                            success : function(r)
+                                {
+                                document.getElementById("seleccion_local").innerHTML=r;
+                                }
+                                });
+            }    
+            
+            function showselectLocalesNoModal(){
+                            var val_evalua = document.getElementById("seleccion_empresa_chlocales").value; //Obtenemos el value del select
+                            
+                            $.ajax({
+                            type : 'get',
+                                url : 'ajax_locales_search.php', 
 
-                           data: {cod_WF:val_evalua},
-                          
-                        success : function(r)
-                            {
-                              document.getElementById("seleccion_local_chlocales").innerHTML=r;
-                            }
-                            });
-        }    
+                            data: {cod_WF:val_evalua},
+                            
+                            success : function(r)
+                                {
+                                document.getElementById("seleccion_local_chlocales").innerHTML=r;
+                                }
+                                });
+            }    
+                
+                
+            // Funcion de Menùs
+            $('.nav-list').on('click', 'li', function() {
+            $('.nav-list li.active').removeClass('active');
+            $(this).addClass('active');
+            });
             
             
-        // Funcion de Menùs
-        $('.nav-list').on('click', 'li', function() {
-        $('.nav-list li.active').removeClass('active');
-        $(this).addClass('active');
-        });
-        
-        
-        //Generacion de reportes segun row clickeado
-       function fn_genreport_chlocal(this_elemento){
-            var data_id = this_elemento.id;
-            alert("Generando reporte con ID: CHLOCAL-" + data_id);
-            window.open('reportes/reporte_diario_byid.php?id_chlocal='+data_id);
+            //Generacion de reportes segun row clickeado
+            function fn_genreport_chlocal(this_elemento){
+                    var data_id = this_elemento.id;
+                    alert("Generando reporte con ID: CHLOCAL-" + data_id);
+                    window.open('reportes/reporte_diario_byid.php?id_chlocal='+data_id);
+                    
+                };
+                
+            //Edicion de check list
+            function fn_edit_chlocal(this_elemento){
+                    var data_id = this_elemento.id;
+                    var dataDB_id = document.getElementById("db"+data_id).value;
+                    alert("Editando check list con ID: CHLOCAL-" + data_id);
+                    window.open('edita_chlocales.php?id_chlocal='+data_id+'&id_db='+dataDB_id);
+                    
+                };
             
-        };
         
-      //Edicion de check list
-       function fn_edit_chlocal(this_elemento){
-            var data_id = this_elemento.id;
-            var dataDB_id = document.getElementById("db"+data_id).value;
-            alert("Editando check list con ID: CHLOCAL-" + data_id);
-            window.open('edita_chlocales.php?id_chlocal='+data_id+'&id_db='+dataDB_id);
-            
-        };
         
-      
-      
-        </script>
+            </script>
         
         <title>Registro de vales por pérdida</title>
 </head>
