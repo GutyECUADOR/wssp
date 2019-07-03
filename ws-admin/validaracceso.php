@@ -50,6 +50,10 @@
                                         $_SESSION['user_lv'] = 7;  
                                         break;
                                     
+                                    case 'TEC':
+                                        $_SESSION['user_lv'] = 2;  
+                                        break;
+                                    
                                     default:
                                         $_SESSION['user_lv'] = 0;  
                                         break;
