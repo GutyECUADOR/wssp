@@ -32,7 +32,7 @@ body {
   padding: 10px;
   background-image: url("../files/logokao.png");
   background-repeat: no-repeat;
-  background-size: 80% 40%;
+  background-size: 80% 20%;
   background-position: center; 
   border-radius: 50%;
   border: 0;
@@ -99,31 +99,31 @@ body {
 }
 
 #menu1{
- background-image: url("../files/menu1.png");
+ background-image: url("../files/evaluacionempleados.png");
 }
 
 #menu2{
- background-image: url("../files/menu2.png");
+ background-image: url("../files/valesperdida.png");
 }
 
 #menu3{
- background-image: url("../files/menu3.png");
+ background-image: url("../files/checklistlocales.png");
 }
 
 #menu4{
- background-image: url("../files/menu4.png");
+ background-image: url("../files/config.png");
 }
 
 #menu5{
- background-image: url("../files/menu5.png");
+ background-image: url("../files/registroanfitriones.png");
 }
 
 #menu6{
- background-image: url("../files/menu6.png");
+ background-image: url("../files/evaluacionjefes.png");
 }
 
 #menu7{
- background-image: url("../files/menu7.png");
+ background-image: url("../files/mantenimientos.png");
 }
 
 #menu8{

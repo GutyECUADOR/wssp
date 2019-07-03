@@ -14,7 +14,6 @@ require_once '../ws-admin/acceso_multi_db.php';
 
         echo "<option value='$cod_emp'>$detalle_emp</option>";
         }
-        echo "<option value='008'> EMPRESA MODELO </option>";
     }
 
     function getChlocalesBySupervisor($CI_sueprvisor){
