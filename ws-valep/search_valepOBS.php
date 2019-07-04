@@ -26,13 +26,28 @@ switch ($tipo_document) {
     //Case vales pendientes
     case 'PND':
         //$consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, B.NOMBRE, A.FECHA, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid'  AND A.TIPO IN ('SPA','SPB','SPC') ORDER BY A.TIPO, A.ID";
-        $consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
-                            WHERE 
-                                c.estado = 0 
-                                AND c.empresa ='$cod_empresagrid' 
-                                AND A.ID NOT IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE  (Aprobado='1' OR Negado='1'))
-                                AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') 
-                            ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+        
+            SELECT TOP 100
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO, 
+                vales.empresa, 
+                Bodegas.NOMBRE as BodegaName, 
+                cliente.NOMBRE, VEN_CAB.FECHA, 
+                vales.fechaPagos, 
+                vales.total,
+                vales.estado
+            FROM dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as cliente on VEN_CAB.CLIENTE = cliente.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as vales on vales.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as bodegas on vales.BODEGA COLLATE Modern_Spanish_CI_AS = bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            WHERE 
+                vales.empresa ='$cod_empresagrid' 
+                AND VEN_CAB.ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)
+                AND vales.estado = 0
+            ORDER BY vales.fecha DESC
+        
+        ";
        
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
@@ -77,7 +92,7 @@ switch ($tipo_document) {
                 $cod_empresaValep = odbc_result($result_consulta_valep,"empresa");
                 $localTxT = iconv("iso-8859-1", "UTF-8",odbc_result($result_consulta_valep,"BodegaName"));
                 
-                $estadoVALE = "";
+                $estadoVALE = odbc_result($result_consulta_valep,"estado");
                 $total = odbc_result($result_consulta_valep,"total");
                 
                 $cont++;
@@ -169,7 +184,7 @@ switch ($tipo_document) {
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
@@ -184,23 +199,29 @@ switch ($tipo_document) {
     
     case 'ANUL':
         $consulta_valep = "
-                SELECT 
-                A.ID, 
-                A.TIPO, 
-                C.empresa, 
+            SELECT 
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO,
+                VEN_CAB.FECHA as fechaVENCAB, 
+                vales.fecha,
+                vales.empresa,
+                vales.BODEGA,
                 Bodegas.NOMBRE as BodegaName, 
-                B.NOMBRE, 
-                A.FECHA, 
-                C.total 
-            FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO 
-                INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS 
-                INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+                cliente.RUC as cedulaCliente,
+                cliente.NOMBRE, 
+                VEN_CAB.TOTAL as totalVENCAB,
+                vales.estado, 
+                vales.total 
+            FROM dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as cliente on VEN_CAB.CLIENTE = cliente.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as vales on vales.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as bodegas on vales.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
             WHERE 
-                c.estado = 0 
-                AND c.empresa ='$cod_empresagrid' 
-                AND A.ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE  (Aprobado='1' OR Negado='1'))
-                AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') 
-            ORDER BY A.TIPO, A.ID   
+                vales.estado = 2
+                AND vales.empresa ='002' 
+            ORDER BY
+                VEN_CAB.ID DESC 
+     
         ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
@@ -298,7 +319,7 @@ switch ($tipo_document) {
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
@@ -313,7 +334,32 @@ switch ($tipo_document) {
         break;
     
     case 'SPA':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.empresa as empresaVALE , C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+            SELECT 
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO, 
+                Bodegas.NOMBRE as BodegaName, 
+                B.NOMBRE, 
+                VEN_CAB.FECHA, 
+                VEN_CAB.total,
+                C.empresa as empresaVALE, 
+                C.estado 
+            FROM 
+                dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+                
+            WHERE 
+                VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+                AND c.estado = 1 
+                AND c.empresa='$cod_empresagrid' 
+                AND VEN_CAB.TIPO = '$tipo_document' 
+                AND VEN_CAB.ANULADO='0' 
+            ORDER BY 
+                VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -383,7 +429,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    
@@ -407,7 +453,32 @@ switch ($tipo_document) {
         break;
     
     case 'SPB':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = " 
+            SELECT 
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO, 
+                Bodegas.NOMBRE as BodegaName, 
+                B.NOMBRE, 
+                VEN_CAB.FECHA, 
+                VEN_CAB.total,
+                C.empresa as empresaVALE, 
+                C.estado 
+            FROM 
+                dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+                
+            WHERE 
+                VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+                AND c.estado = 1 
+                AND c.empresa='$cod_empresagrid' 
+                AND VEN_CAB.TIPO = '$tipo_document' 
+                AND VEN_CAB.ANULADO='0' 
+            ORDER BY 
+                VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -478,7 +549,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    
@@ -503,7 +574,32 @@ switch ($tipo_document) {
         
     
     case 'SPC':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+        SELECT 
+            VEN_CAB.ID, 
+            VEN_CAB.TIPO, 
+            Bodegas.NOMBRE as BodegaName, 
+            B.NOMBRE, 
+            VEN_CAB.FECHA, 
+            VEN_CAB.total,
+            C.empresa as empresaVALE, 
+            C.estado 
+        FROM 
+            dbo.VEN_CAB
+            INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+            INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+            INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            
+        WHERE 
+            VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+            AND c.estado = 1 
+            AND c.empresa='$cod_empresagrid' 
+            AND VEN_CAB.TIPO = '$tipo_document' 
+            AND VEN_CAB.ANULADO='0' 
+        ORDER BY 
+            VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -573,7 +669,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    
@@ -596,7 +692,32 @@ switch ($tipo_document) {
         break;    
     
     case 'SPD':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+        SELECT 
+            VEN_CAB.ID, 
+            VEN_CAB.TIPO, 
+            Bodegas.NOMBRE as BodegaName, 
+            B.NOMBRE, 
+            VEN_CAB.FECHA, 
+            VEN_CAB.total,
+            C.empresa as empresaVALE, 
+            C.estado 
+        FROM 
+            dbo.VEN_CAB
+            INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+            INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+            INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            
+        WHERE 
+            VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+            AND c.estado = 1 
+            AND c.empresa='$cod_empresagrid' 
+            AND VEN_CAB.TIPO = '$tipo_document' 
+            AND VEN_CAB.ANULADO='0' 
+        ORDER BY 
+            VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -666,7 +787,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    
@@ -691,7 +812,32 @@ switch ($tipo_document) {
     
 
     case 'SPE':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+        SELECT 
+            VEN_CAB.ID, 
+            VEN_CAB.TIPO, 
+            Bodegas.NOMBRE as BodegaName, 
+            B.NOMBRE, 
+            VEN_CAB.FECHA, 
+            VEN_CAB.total,
+            C.empresa as empresaVALE, 
+            C.estado 
+        FROM 
+            dbo.VEN_CAB
+            INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+            INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+            INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            
+        WHERE 
+            VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+            AND c.estado = 1 
+            AND c.empresa='$cod_empresagrid' 
+            AND VEN_CAB.TIPO = '$tipo_document' 
+            AND VEN_CAB.ANULADO='0' 
+        ORDER BY 
+            VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -761,7 +907,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    
@@ -786,7 +932,32 @@ switch ($tipo_document) {
 
 
     case 'SPF':
-        $consulta_valep = "SELECT A.ID, A.TIPO, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE A.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' AND c.estado = 1 AND c.empresa='$cod_empresagrid' AND A.TIPO = '$tipo_document' and a.ANULADO='0' ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+        SELECT 
+            VEN_CAB.ID, 
+            VEN_CAB.TIPO, 
+            Bodegas.NOMBRE as BodegaName, 
+            B.NOMBRE, 
+            VEN_CAB.FECHA, 
+            VEN_CAB.total,
+            C.empresa as empresaVALE, 
+            C.estado 
+        FROM 
+            dbo.VEN_CAB
+            INNER JOIN dbo.COB_CLIENTES as B on VEN_CAB.CLIENTE = B.CODIGO 
+            INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+            INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            
+        WHERE 
+            VEN_CAB.FECHA BETWEEN '$trimDATE1' AND '$trimDATE2' 
+            AND c.estado = 1 
+            AND c.empresa='$cod_empresagrid' 
+            AND VEN_CAB.TIPO = '$tipo_document' 
+            AND VEN_CAB.ANULADO='0' 
+        ORDER BY 
+            VEN_CAB.ID DESC
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -856,7 +1027,7 @@ switch ($tipo_document) {
                     echo"<td>".$tipo_doc."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
                     echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td>";    

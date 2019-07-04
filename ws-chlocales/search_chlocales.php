@@ -13,24 +13,24 @@ $dbcode = $_SESSION['empresa_autentificada'];
 if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqueda para Gustavo Imbaquingo
      $db_empresa = getDataBase($dbcode); //Obtenemos conexion con base de datos segun codigo de la DB
         $consulta_chlocales = "
-            SELECT TOP 100
-                checklist.id,
-                checklist.empresa as codEmpresa,
-                empresa.Nombre as nombreEmpresa,
-                checklist.local as codLocal,
-                bodega.NOMBRE as nombreLocal,
-                checklist.supervisor as cedulaSupervisor,
-                (SBIO.Nombre + SBIO.Apellido) as supervisorName,
-                checklist.fecha,
-                checklist.revisadopor as cedulaRevisado,
-                (SBIO2.Nombre + SBIO2.Apellido) as revisadorName,
-                checklist.estado
-            FROM 
-                dbo.chlist_locales as checklist
-                INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON SBIO.Cedula = checklist.supervisor
-                LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
-                INNER JOIN dbo.INV_BODEGAS as bodega ON bodega.CODIGO = checklist.local
-                INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa 
+        SELECT TOP 100
+            checklist.id,
+            checklist.empresa as codEmpresa,
+            empresa.Nombre as nombreEmpresa,
+            checklist.local as codLocal,
+            bodega.NOMBRE as nombreLocal,
+            checklist.supervisor as cedulaSupervisor,
+            (SBIO.Nombre + SBIO.Apellido) as supervisorName,
+            checklist.fecha,
+            checklist.revisadopor as cedulaRevisado,
+            (SBIO2.Nombre + SBIO2.Apellido) as revisadorName,
+            checklist.estado
+        FROM 
+            INV_BODEGAS as bodega
+            INNER JOIN KAO_wssp.dbo.chlist_locales as checklist ON checklist.local collate Modern_Spanish_CI_AS = bodega.CODIGO
+            INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON SBIO.Cedula = checklist.supervisor
+            LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
+            INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa
             WHERE revisadopor='$empresa_search' AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' 
             ORDER BY id desc
         ";

@@ -4,11 +4,23 @@ require_once '../ws-admin/acceso_multi_db.php';
 $db_empresa = getDataBase($_SESSION['empresa_autentificada']); //Obtenemos conexion con base de datos segun codigo de la DB
 $cod_empresagrid = $_SESSION['empresa_autentificada'];
 
-
-       //$consulta_valep = "SELECT A.ID, A.TIPO, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND A.TIPO = 'SPB' or c.estado = 0 AND A.TIPO ='SPA' or c.estado = 0 AND A.TIPO ='SPC' AND ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)ORDER BY A.TIPO, A.ID";
-        
-       //$consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, B.NOMBRE, A.FECHA, C.fechaPagos, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid'  AND A.TIPO IN ('SPA','SPB','SPC') AND ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)ORDER BY A.TIPO, A.ID";
-        $consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, Bodegas.NOMBRE as BodegaName, B.NOMBRE, A.FECHA, C.fechaPagos, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid'  AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') AND ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)ORDER BY A.TIPO, A.ID";
+      $consulta_valep = "
+        SELECT TOP 100
+            VEN_CAB.ID, 
+            VEN_CAB.TIPO, 
+            vales.empresa, 
+            Bodegas.NOMBRE as BodegaName, 
+            cliente.NOMBRE, VEN_CAB.FECHA, 
+            vales.fechaPagos, 
+            vales.total,
+            vales.estado
+        FROM dbo.VEN_CAB
+            INNER JOIN dbo.COB_CLIENTES as cliente on VEN_CAB.CLIENTE = cliente.CODIGO 
+            INNER JOIN KAO_wssp.dbo.vales_perdida as vales on vales.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+            INNER JOIN dbo.INV_BODEGAS as bodegas on vales.BODEGA COLLATE Modern_Spanish_CI_AS = bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+        WHERE vales.estado = 0 AND vales.empresa ='002'  AND VEN_CAB.ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)
+        ORDER BY vales.fecha DESC
+      ";
 
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
