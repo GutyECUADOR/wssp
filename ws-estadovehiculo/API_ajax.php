@@ -15,6 +15,10 @@ class ajax{
       return $this->ajax->getEmpleadoByID($cedula);
     }
 
+    public function  getVehiculoByPlaca($placa, $empresa){
+      return $this->ajax->getVehiculoByPlaca($placa, $empresa);
+    }
+
 }
 
   try{
@@ -27,8 +31,23 @@ class ajax{
         $respuesta = $ajax->getEmpleadoByID($cedula);
         $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
         echo json_encode($rawdata);
-
         break;
+
+        case 'getVehiculoByPlaca':
+        $placa = $_GET["placa"];
+        $empresa = $_GET["empresa"];
+        $respuesta = $ajax->getVehiculoByPlaca($placa, $empresa);
+        $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
+        echo json_encode($rawdata);
+        break;
+
+        case 'saveSolicitud':
+        $solicitud = $_POST["solicitud"];
+        $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $solicitud);
+        echo json_encode($rawdata);
+        break;
+
+        
 
         default:
             $rawdata = array('error' => TRUE, 'message' =>'el API no ha podido responder la solicitud, revise el tipo de action');

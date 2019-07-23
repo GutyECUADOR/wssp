@@ -1,6 +1,10 @@
 // Evitar enter en formularios
 
 $(document).ready(function() {
+    // Creacion de objeto a enviar a API
+
+    var solicitud = new Solicitud();
+
     // Inicio de funciones
     app = {
         searchEmpleado: function (cedula) { 
@@ -15,8 +19,10 @@ $(document).ready(function() {
                     
                     if (JSONresponse.error == false && JSONresponse.data != false) {
                         $('#txt_empleadoIdentificado').val(`${JSONresponse.data.Apellido.trim()} ${JSONresponse.data.Nombre.trim()}`);
+                        solicitud.empleado = cedula.trim();
                     }else{
                         $('#txt_empleadoIdentificado').val(`Sin identificar`);
+                        solicitud.empleado = null;
                     }
                    
                 }, error: function (error) {
@@ -26,28 +32,46 @@ $(document).ready(function() {
         
             });
         },
-        searchVehiculo: function (empresa, placa) { 
-            $.ajax({
-                url: 'API_ajax.php?action=searchVehiculo',
-                method: 'GET',
-                data: { empresa: empresa, placa: placa },
-        
-                success: function (response) {
-                    console.log(response);
-                    let JSONresponse = JSON.parse(response);
-                    
-                    if (JSONresponse.error == false && JSONresponse.data != false) {
-                        $('#txt_empleadoIdentificado').val(`${JSONresponse.data.Apellido.trim()} ${JSONresponse.data.Nombre.trim()}`);
-                    }else{
-                        $('#txt_empleadoIdentificado').val(`Sin identificar`);
+        searchVehiculo: function (placa, empresa) {
+            if (empresa) {
+                $.ajax({
+                    url: 'API_ajax.php?action=getVehiculoByPlaca',
+                    method: 'GET',
+                    data: { placa: placa, empresa: empresa },
+            
+                    success: function (response) {
+                        console.log(response);
+                        let JSONresponse = JSON.parse(response);
+                        
+                        if (JSONresponse.error == false && JSONresponse.data != false) {
+                            $('#txt_vehiculoIdentificado').val(`${JSONresponse.data.Nombre.trim()}`);
+                            solicitud.vehiculo = placa.trim();
+                            solicitud.empresa = empresa.trim();
+                        }else{
+                            $('#txt_vehiculoIdentificado').val(`Sin identificar`);
+                            solicitud.vehiculo = null;
+                        }
+                       
+                    }, error: function (error) {
+                        alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                    },complete: function() {
                     }
-                   
-                }, error: function (error) {
-                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
-                },complete: function() {
+            
+                });
+            }else{
+                alert('No se han ingresado todos los parametros, seleccione empresa');
+            }
+            
+            
+        },
+        addItems: function (){
+            let list = document.getElementsByClassName("itemVehiculo");
+            for (let item of list) {
+                if (item.value) {
+                    let ItemVehiculo = new Item(item.id,item.value);
+                    solicitud.items.push(ItemVehiculo);
                 }
-        
-            });
+            }
         }
         
     
@@ -60,74 +84,73 @@ $(document).ready(function() {
         }
     });
 
-    
-
-    $("#txt_CIRUC").on( "keyup", function() {
+    $("#txt_CIRUC").on("keyup", function() {
         let cedula = $(this).val();
         console.log(cedula);
         app.searchEmpleado(cedula);
     });
 
-    $("#btn_registrar").on( "click", function() {
-        console.log('Funciona');
+    $("#txt_placas").on("keyup", function() {
+        let cedula = $(this).val();
+        let empresa = $('#select_empresa').val();
+        console.log(cedula, empresa);
+        app.searchVehiculo(cedula, empresa);
+    });
+
+    $("#txt_kilometraje").on("keyup", function() {
+        let kilometraje = $(this).val();
+        solicitud.kilometraje = kilometraje;
+    });
+
+    $("#txt_observacion").on("keyup", function() {
+        let observacion = $(this).val();
+        solicitud.observacion = observacion;
+    });
+
+
+    let registerForm = $('#registerForm');
+    registerForm.on("submit", function(event) {
+        event.preventDefault();
+        app.addItems();
+
+        console.log(solicitud);
+       
+        let solicitudJSON = JSON.stringify(solicitud);
+
+        $.ajax({
+            url: 'API_ajax.php?action=saveSolicitud',
+            method: 'POST',
+            data: { solicitud: solicitudJSON },
+
+            success: function(response) {
+                console.log(JSON.parse(solicitudJSON));
+
+                registerForm.trigger("reset");
+            },
+            error: function(error) {
+                alert('No se pudo completar la operación. #' + error.status + ' ' + error.statusText, '. Intentelo mas tarde.');
+            }
+
+        });
     });
 });
 
 
-                    
-    function ajaxvalidacod_seguridad(){
-    
-        var cod_usu_ing =document.getElementById("cajacod").value;
-        var ci_usu =document.getElementById("txt_CIRUC").value;
-        
-        $.ajax({
-            type : 'post',
-            url : 'valida_cod_seguridad.php', 
+class Solicitud {
+    constructor() {
+        this.fecha = new Date(),
+        this.empleado = null,
+        this.vehiculo = null,
+        this.empresa = null,
+        this.kilometraje = null,
+        this.items = []
+        this.observacion = null;
+    }
+}
 
-            data: {post_cod_usr: cod_usu_ing, ci_usu: ci_usu},
-
-        success : function(r)
-            {
-                $('#mymodal').show();  // put your modal id 
-                $('.resultmodal').show().html(r);
-            
-                        var verificacion_cod = document.getElementById("cod_veri").value;
-                        if(verificacion_cod !== "")
-                        {
-                        document.getElementById("aceptar_modal1").removeAttribute('disabled');
-                        $("#txt_CIRUC").attr("readonly","readonly");
-                        //showselectChkListRealizados(); Funcion carga ultimo check del usuario ci ingresado
-                        } 
-            }
-            });
-    
-    };   
-     
-        function ajaxvalidacod_json(){
-                       var cod_usu_ing =document.getElementById("txt_CIRUC").value;
-                       
-                        $.ajax({
-                           type : 'get',
-                            url : 'valida_cod_json.php', 
-                            dataType: "json",
-
-                           data: {dato_ci: cod_usu_ing},
-
-                        success : function(response)
-                            {
-                                
-                                     if(response.length!==0){
-                                        
-                                        document.getElementById("txt_empleadoIdentificado").value = response[0]['Nombre'].trim() +" "+response[0]['Apellido'].trim();
-                                       
-                                    }else{
-                                        document.getElementById("txt_empleadoIdentificado").value = "-- Sin Identificar -- ";
-                                    
-                                    }
-                            }
-                        });
-        }
-            
-          
-
-    
+class Item {
+    constructor(codigo, valor) {
+        this.codigo = codigo,
+        this.valor = valor
+    }
+}
