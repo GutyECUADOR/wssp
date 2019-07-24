@@ -45,4 +45,43 @@ class EstadoVehiculo {
         $result = odbc_exec($this->empresa_db, $query); 
         return odbc_fetch_array($result);
     }
+
+    public function saveSolicitud($solicitud){
+        $newCod = $this->getNewCodigo()["codigo"];
+        $query = "
+            INSERT INTO 
+                dbo.CAB_estado_vehiculo 
+            VALUES ('$newCod','$solicitud->vehiculo','$solicitud->kilometraje','$solicitud->empleado','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
+        ";
+        $result = odbc_exec($this->wssp_db, $query); 
+
+        if ($result){
+            return $this->saveSolicitudMOV($solicitud->items, $newCod);
+
+        }  else {
+            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
+           
+        }
+    }
+
+    public function saveSolicitudMOV($arrayItems, $codigoCAB){
+        $cont = 0;
+        foreach ($arrayItems as $item) {
+            $query = "
+            INSERT INTO 
+                dbo.MOV_estado_vehiculo 
+            VALUES ('$codigoCAB','$item->codigo','$item->valor')
+            ";
+            $result = odbc_exec($this->wssp_db, $query); 
+            $cont++;
+        }
+
+        if ($result){
+
+            return $rawdata = array('error' => FALSE, 'message' => 'Registro correcto', 'nuevoregistro' => $codigoCAB, 'itemsregistrados' => $cont );
+        }  else {
+            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
+           
+        }
+    }
 } 

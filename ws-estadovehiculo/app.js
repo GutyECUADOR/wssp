@@ -123,9 +123,10 @@ $(document).ready(function() {
             data: { solicitud: solicitudJSON },
 
             success: function(response) {
-                console.log(JSON.parse(solicitudJSON));
-
+                console.log(response);
+                toastr.success('Registro exitoso', 'Realizado', {timeOut: 5000, progressBar: true, positionClass: "toast-top-right"});
                 registerForm.trigger("reset");
+                $('html, body').animate({ scrollTop: 0 }, 'fast');
             },
             error: function(error) {
                 alert('No se pudo completar la operación. #' + error.status + ' ' + error.statusText, '. Intentelo mas tarde.');

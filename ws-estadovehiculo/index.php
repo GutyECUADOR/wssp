@@ -19,7 +19,8 @@ $arrayItems = $estadoVehiculo->getItems();
         <!--Import materialize.css-->
 
         <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css"  media="screen,projection"/>
-        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
         <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
         <link rel="stylesheet" href="mystyles.css">
 	
@@ -172,6 +173,8 @@ $arrayItems = $estadoVehiculo->getItems();
 	<!-- USO JQUERY, animacion de menu para responsive-->
     <script src="../ws-admin/js/jquery-latest.js"></script>
     <script src="../ws-admin/js/bootstrap.js"></script>
+     <!-- Toastr script -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
         
 </body>
