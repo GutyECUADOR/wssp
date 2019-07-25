@@ -14,7 +14,28 @@ if ($cod_ingresado==''){
      
 }else{
     
-        $consulta_eva = "SELECT cod_evaluacion, Empleados.Cedula as CI, fecha, semana, (Empleados.Apellido+Empleados.Nombre)as Usuario,(formacion_1+formacion_2+formacion_3+formacion_4)as total_formacion, (organizacion_1+organizacion_2+organizacion_3+organizacion_4) as total_organizacion, (relainter_1+relainter_2+relainter_3+relainter_4) as total_relainter, (compempresa1_1+compempresa1_2+compempresa1_3+compempresa1_4) as total_comempresa1, (compempresa2_1+compempresa2_2+compempresa2_3+compempresa2_4) as total_comempresa2, (compempresa3_1+compempresa3_2+compempresa3_3+compempresa3_4) as total_comempresa3, (compempresa4_1+compempresa4_2+compempresa4_3+compempresa4_4) as total_comempresa4, (autoevalua_1+autoevalua_2+autoevalua_3+autoevalua_4+autoevalua_5) as total_autoevalua, (formacion_1+formacion_2+formacion_3+formacion_4+organizacion_1+organizacion_2+organizacion_3+organizacion_4+relainter_1+relainter_2+relainter_3+relainter_4+compempresa1_1+compempresa1_2+compempresa1_3+compempresa1_4+compempresa2_1+compempresa2_2+compempresa2_3+compempresa2_4+compempresa3_1+compempresa3_2+compempresa3_3+compempresa3_4+compempresa4_1+compempresa4_2+compempresa4_3+compempresa4_4+autoevalua_1+autoevalua_2+autoevalua_3+autoevalua_4+autoevalua_5) as total_general FROM KAO_wssp.dbo.Evaluaciones with (nolock) INNER JOIN SBIOKAO.dbo.Empleados on KAO_wssp.dbo.Evaluaciones.empleado = SBIOKAO.dbo.Empleados.Codigo INNER JOIN Empresas_WF on Empresas_WF.Codigo = Evaluaciones.local WHERE KAO_wssp.dbo.Evaluaciones.cod_evaluacion LIKE '$cod_ingresado' or Empleados.Apellido LIKE '$cod_ingresado%' or Empleados.Cedula = '$cod_ingresado' ORDER BY cod_evaluacion";
+        $consulta_eva = "
+            SELECT TOP 100
+                cod_evaluacion, 
+                Empleados.Cedula as CI, 
+                fecha, 
+                semana, 
+                (Empleados.Apellido+Empleados.Nombre)as Usuario,
+                (formacion_1+formacion_2+formacion_3+formacion_4)as total_formacion, 
+                (organizacion_1+organizacion_2+organizacion_3+organizacion_4) as total_organizacion,
+                (relainter_1+relainter_2+relainter_3+relainter_4) as total_relainter, 
+                (compempresa1_1+compempresa1_2+compempresa1_3+compempresa1_4) as total_comempresa1, 
+                (compempresa2_1+compempresa2_2+compempresa2_3+compempresa2_4) as total_comempresa2, 
+                (compempresa3_1+compempresa3_2+compempresa3_3+compempresa3_4) as total_comempresa3, 
+                (compempresa4_1+compempresa4_2+compempresa4_3+compempresa4_4) as total_comempresa4, 
+                (autoevalua_1+autoevalua_2+autoevalua_3+autoevalua_4+autoevalua_5) as total_autoevalua, 
+                (formacion_1+formacion_2+formacion_3+formacion_4+organizacion_1+organizacion_2+organizacion_3+organizacion_4+relainter_1+relainter_2+relainter_3+relainter_4+compempresa1_1+compempresa1_2+compempresa1_3+compempresa1_4+compempresa2_1+compempresa2_2+compempresa2_3+compempresa2_4+compempresa3_1+compempresa3_2+compempresa3_3+compempresa3_4+compempresa4_1+compempresa4_2+compempresa4_3+compempresa4_4+autoevalua_1+autoevalua_2+autoevalua_3+autoevalua_4+autoevalua_5) as total_general 
+            FROM KAO_wssp.dbo.Evaluaciones with (nolock) 
+                INNER JOIN SBIOKAO.dbo.Empleados on KAO_wssp.dbo.Evaluaciones.empleado = SBIOKAO.dbo.Empleados.Codigo 
+                INNER JOIN Empresas_WF on Empresas_WF.Codigo = Evaluaciones.local 
+            WHERE KAO_wssp.dbo.Evaluaciones.cod_evaluacion LIKE '$cod_ingresado' OR Empleados.Apellido LIKE '$cod_ingresado%' OR Empleados.Cedula = '$cod_ingresado' 
+            ORDER BY cod_evaluacion
+        ";
         $result_consulta_eva = odbc_exec($conexion_sbio, $consulta_eva);
         $count_result = odbc_num_rows($result_consulta_eva);
         
@@ -74,7 +95,7 @@ if ($cod_ingresado==''){
                 $ind_color++;
                 $ind_color %= 2;
                 
-                if ($db_total_general <= 165 && $db_total_general >=140)
+                if ($db_total_general <= 165 && $db_total_general >=140 || $db_total_general > 165)
                 {   $valoracion_txt = "Felicitaciones";    
                     $color = "textoverdeclaro";
                 }else if ($db_total_general <= 139 && $db_total_general >=120){

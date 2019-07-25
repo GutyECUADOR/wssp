@@ -5,35 +5,26 @@ $db_empresa = getDataBase($_SESSION['empresa_autentificada']); //Obtenemos conex
 
 $cod_empresagrid = $_SESSION['empresa_autentificada'];
 
-        //$consulta_valep = "SELECT A.ID, A.TIPO, B.NOMBRE, A.FECHA, A.total, C.estado FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND A.TIPO = 'SPB' or c.estado = 0 AND A.TIPO ='SPA' or c.estado = 0 AND A.TIPO ='SPC' AND ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)ORDER BY A.TIPO, A.ID";
-        
-        //$consulta_valep = "SELECT A.ID, A.TIPO, C.empresa, B.NOMBRE, A.FECHA, C.total FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS WHERE c.estado = 0 AND c.empresa ='$cod_empresagrid' AND A.TIPO IN ('SPA','SPB','SPC') ORDER BY A.TIPO, A.ID";
-        
-        $consulta_valep = "SELECT 
-                                A.ID, 
-                                A.TIPO, 
-                                C.empresa, 
-                                Bodegas.NOMBRE as BodegaName, 
-                                B.NOMBRE, 
-                                A.FECHA, 
-                                C.total 
-                            FROM dbo.VEN_CAB as A INNER JOIN dbo.COB_CLIENTES as B on A.CLIENTE = B.CODIGO 
-                                INNER JOIN KAO_wssp.dbo.vales_perdida as C on C.cod_valep COLLATE Modern_Spanish_CI_AS = A.ID COLLATE Modern_Spanish_CI_AS 
-                                INNER JOIN dbo.INV_BODEGAS as Bodegas on c.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
-                            WHERE 
-                                c.estado = 0 
-                                AND c.empresa ='$cod_empresagrid' 
-                                AND A.ID NOT IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE  (Aprobado='1' OR Negado='1'))
-                                AND A.TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF') 
-                            ORDER BY A.TIPO, A.ID";
+        $consulta_valep = "
+            SELECT TOP 100
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO, 
+                vales.empresa, 
+                Bodegas.NOMBRE as BodegaName, 
+                cliente.NOMBRE, VEN_CAB.FECHA, 
+                vales.fechaPagos, 
+                vales.total,
+                vales.estado
+            FROM dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as cliente on VEN_CAB.CLIENTE = cliente.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as vales on vales.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as bodegas on vales.BODEGA COLLATE Modern_Spanish_CI_AS = bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            WHERE vales.empresa ='$cod_empresagrid' AND VEN_CAB.ID IN (SELECT IDDoc FROM dbo.ORG_DOCUMENTOS WHERE Aprobado=1)
+            ORDER BY vales.fecha DESC
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
-            echo '
-            <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <p> '.$count_result.' vale(s) pendiente(s).</p>
-            </div> ';
             
             $color_row=array('#DDDDDD', '#CBCBCB');
             $ind_color=0;
@@ -49,6 +40,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                 <td tdcabecera title='Fecha'>Fecha Solicitada</td>
                 <td tdcabecera title='Estado'>Estado</td>
                 <td tdcabecera title='Total'>Total</td>
+                <td tdcabecera>Acciones</td>
                   </tr>
                 ";  
             //Construcción Filas
@@ -67,7 +59,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                 $localTxT = iconv("iso-8859-1", "UTF-8",odbc_result($result_consulta_valep,"BodegaName"));
                 
                 $fechaPDF = odbc_result($result_consulta_valep,"FECHA");
-                $estadoVALE = "";
+                $estadoVALE = odbc_result($result_consulta_valep,"estado");
                 $total = odbc_result($result_consulta_valep,"total");
                 
                 $cont++;
@@ -84,32 +76,31 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                         $estado_txt = 'Anulado';
                             break;    
 
-                            case 0:
-                            $consulta_isInORG_DOCS = "SELECT * FROM dbo.ORG_DOCUMENTOS WHERE IDDoc='$cod_reporte' AND (Aprobado='1' OR Negado='1')";
-                            $result_isInORG_DOCS = odbc_exec($db_empresa, $consulta_isInORG_DOCS);
-                            $count_isInORG_DOCS = odbc_num_rows($result_isInORG_DOCS);
-                            $notaNegado = "";
-                            
-                            if($count_isInORG_DOCS ==1){
-                                if (odbc_result($result_isInORG_DOCS,"Aprobado")=='1') {
-                                    $estado_txt = 'Pendiente aprob. administracion';
-                                }elseif (odbc_result($result_isInORG_DOCS,"Negado")=='1'){
-                                    $estado_txt = 'Vale negado por supervisor';
-                                    $notaNegado = odbc_result($result_isInORG_DOCS,"NegadoNota");
-                                }else{
-                                    $estado_txt = 'Estado no definido';
-                                }
-                            }else {
-                                $estado_txt = 'No revisado por supervisor';
-                            }
-    
-                                
-    
-                                break;
-                        default:
-                             $estado_txt = 'Estado no definido';
-                       
-                            break;
+                    case 0:
+                    $consulta_isInORG_DOCS = "SELECT * FROM dbo.ORG_DOCUMENTOS WHERE IDDoc='$cod_reporte' AND (Aprobado='1' OR Negado='1')";
+                    $result_isInORG_DOCS = odbc_exec($db_empresa, $consulta_isInORG_DOCS);
+                    $count_isInORG_DOCS = odbc_num_rows($result_isInORG_DOCS);
+                    $notaNegado = "";
+                    
+                    if($count_isInORG_DOCS ==1){
+                        if (odbc_result($result_isInORG_DOCS,"Aprobado")=='1') {
+                            $estado_txt = 'Pendiente aprob. administracion';
+                        }elseif (odbc_result($result_isInORG_DOCS,"Negado")=='1'){
+                            $estado_txt = 'Vale negado por supervisor';
+                            $notaNegado = odbc_result($result_isInORG_DOCS,"NegadoNota");
+                        }else{
+                            $estado_txt = 'Estado no definido';
+                        }
+                    }else {
+                        $estado_txt = 'No revisado por supervisor';
+                    }
+
+                    break;
+                    
+                    default:
+                            $estado_txt = 'Estado no definido';
+                    
+                        break;
                 }
 
                 switch ($cod_empresaValep) 
@@ -161,9 +152,10 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
-                    echo"<td class='textorojo'>".$estado_txt."</td>";
+                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
+                    echo"<td>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
+                    echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";
                     echo"</td>";
                     echo "</tr>";
             }

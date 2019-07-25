@@ -241,36 +241,36 @@ include_once ('./functions.php'); // Acceso a funciones utiles
                 <div class="wrap">
                 
                     <!-- Inicio panel de navegacion y busqueda -->
-                <div class="row">
-                  <div class="col-sm-12">
-                      <div class="col-sm-6">
-                          <div class="input-group">
-                               <input type="text" id="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                               <input type="text" id="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                          </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="input-group">
-                            <select class="form-control centertext" name="seleccion_tipodoc" id="seleccion_tipodoc" required>
-                                <option value="">--- TIPO DE DOCUMENTO ---</option>
-                                <?php getTiposDocByDB($_SESSION['empresa_autentificada'])?>
-                            </select> 
-                           
-                          <span class="input-group-btn">
-                              <button class="btn btn-default" type="button" id="btn_busqueda_valesp" onclick="search_valesp()"><span class="glyphicon glyphicon-search"></span> Buscar</button>
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones <span class="caret"></span></button>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="text" id="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input type="text" id="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <select class="form-control centertext" name="seleccion_tipodoc" id="seleccion_tipodoc" required>
+                                        <option value="">--- TIPO DE DOCUMENTO ---</option>
+                                        <?php getTiposDocByDB($_SESSION['empresa_autentificada'])?>
+                                    </select> 
                                 
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                  <li><a href="../ws-valep/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nueva Solicitud</a></li>
-                                </ul>
-                          </span>
-                        </div><!-- /input-group -->
-                      </div>
-                  </div><!-- /.col-lg-6 -->
-                </div><!-- /.row -->
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="btn_busqueda_valesp" onclick="search_valesp()"><span class="glyphicon glyphicon-search"></span> Buscar</button>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones <span class="caret"></span></button>
+                                        
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="../ws-valep/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nueva Solicitud</a></li>
+                                        </ul>
+                                </span>
+                                </div><!-- /input-group -->
+                            </div>
+                        </div><!-- /.col-lg-6 -->
+                    </div><!-- /.row -->
                 
                 </div>
-                </br>
+                <br>
                 
                 <div class="wrap">
                     <div class="txtseccion">
