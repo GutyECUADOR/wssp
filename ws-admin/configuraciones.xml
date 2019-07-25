@@ -12,7 +12,9 @@
                   <modulo4 isActivo="true" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
                   <modulo5 isActivo="true" idDB="5" name="modulo5">Revisar e Imprimir vales por perdida </modulo5>
                   <modulo6 isActivo="true" idDB="6" name="modulo6">Evaluacion Jefe Inmediato</modulo6>
+                  <modulo8 isActivo="true" idDB="7" name="modulo8">Estado Vehiculos</modulo8>
                   <modulo7 isActivo="true" idDB="9" name="modulo7">Configuraciones</modulo7>
+                  
             </ADM>
             <SSP>
                   <modulo1 isActivo="true" idDB="1" name="modulo1">Evaluaciones</modulo1>
@@ -31,6 +33,7 @@
                   <modulo4 isActivo="true" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
                   <modulo5 isActivo="true" idDB="5" name="modulo5">Revisar e Imprimir vales por perdida </modulo5>
                   <modulo6 isActivo="true" idDB="6" name="modulo6">Evaluacion Jefe Inmediato</modulo6>
+                  <modulo8 isActivo="true" idDB="7" name="modulo8">Estado Vehiculos</modulo8>
                   <modulo7 isActivo="" idDB="9" name="modulo7">Configuraciones</modulo7>
             </SUP>
 

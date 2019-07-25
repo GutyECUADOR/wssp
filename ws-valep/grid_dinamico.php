@@ -42,7 +42,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                     <td tdcabecera title='Empresa'>Empresa</td>
                     <td tdcabecera title='Local'>Local</td>
                     <td tdcabecera title='Solicitante'>Solicitante</td>
-                    <td tdcabecera title='Fecha'>Fecha Solicitada</td>
+                    <td tdcabecera title='Fecha'>Fecha Creacion (Local)</td>
                     <td tdcabecera title='Fecha'>Fecha Ini Pagos</td>
                     <td tdcabecera title='Estado'>Estado</td>
                     <td tdcabecera title='Total'>Total</td>
@@ -147,7 +147,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
+                    echo"<td>".substr($fechaPDF, 0, 10)."</td>";
                     echo"<td>".$fechaINIPAGOS."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";

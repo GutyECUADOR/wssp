@@ -84,4 +84,29 @@ class EstadoVehiculo {
            
         }
     }
+
+    public function getAllVehiculos ($busqueda='', $empresa='008'){
+        $this->empresa_db = getDataBase($empresa);
+        $query = "
+        SELECT TOP 100
+            vehiculo.Nombre as nombreVehiculo,
+            vehiculo.Marca as marcaVehiculo,
+            vehiculo.feccompra as fechaCompraVehiculo,
+            SBIO.Apellido + SBIO.Nombre as nombreAsignadoA,
+            wssp.*
+        FROM
+            ACT_ARTICULOS as vehiculo
+        INNER JOIN KAO_wssp.dbo.CAB_estado_vehiculo as wssp on vehiculo.Codigo = wssp.placa COLLATE Modern_Spanish_CI_AS
+        INNER JOIN SBIOKAO.dbo.Empleados as SBIO on SBIO.Cedula = wssp.asignadoA
+        WHERE wssp.placa LIKE '".$busqueda."%'
+        ORDER BY fecha DESC
+        
+        ";
+        $result = odbc_exec($this->empresa_db, $query); 
+        $resultArray= [];
+        while($row = odbc_fetch_array($result)) {
+            array_push($resultArray, $row);
+        }
+        return $resultArray;
+    }
 } 

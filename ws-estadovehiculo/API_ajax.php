@@ -23,6 +23,10 @@ class ajax{
       return $this->ajax->saveSolicitud($solicitud);
     }
 
+    public function getAllVehiculos($busqueda){
+      return $this->ajax->getAllVehiculos($busqueda);
+    }
+
 }
 
   try{
@@ -41,6 +45,13 @@ class ajax{
           $placa = $_GET["placa"];
           $empresa = $_GET["empresa"];
           $respuesta = $ajax->getVehiculoByPlaca($placa, $empresa);
+          $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
+          echo json_encode($rawdata);
+        break;
+
+        case 'getAllVehiculos':
+          $busqueda = $_GET["busqueda"];
+          $respuesta = $ajax->getAllVehiculos($busqueda);
           $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
           echo json_encode($rawdata);
         break;

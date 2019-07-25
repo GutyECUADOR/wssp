@@ -149,7 +149,7 @@
                                 </div> 
                                 </div>
                                 
-            <!--SECCION RECARGO-->                       
+                                <!--SECCION RECARGO-->                       
                                 <div class="txtseccion">
                                     <label class="etique">RECARGO</label>
                                 </div>
