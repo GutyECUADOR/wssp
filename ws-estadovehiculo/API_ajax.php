@@ -6,9 +6,15 @@ require('EstadoVehiculo.php');
 
 class ajax{
   private $ajax;
+  private $empresaActiva;
 
     public function __construct() {
       $this->ajax = new EstadoVehiculo();
+      if ($_SESSION) {
+        $this->empresaActiva = $_SESSION['empresa_autentificada'];
+      }else {
+        $this->empresaActiva = '008';
+      }
     }
 
     public function getEmpleadoByID($cedula){
@@ -23,8 +29,12 @@ class ajax{
       return $this->ajax->saveSolicitud($solicitud);
     }
 
+    public function saveOrdenPedido($solicitud){
+      return $this->ajax->saveOrdenPedido($solicitud);
+    }
+
     public function getAllVehiculos($busqueda){
-      return $this->ajax->getAllVehiculos($busqueda);
+      return $this->ajax->getAllVehiculos($busqueda, $this->empresaActiva);
     }
 
 }
@@ -60,6 +70,15 @@ class ajax{
           if (isset($_POST['solicitud'])) {
             $formDataObject = json_decode($_POST['solicitud']);
             $respuesta = $ajax->saveSolicitud($formDataObject);
+            $rawdata = $respuesta;
+            echo json_encode($rawdata);
+            }
+          break;
+
+        case 'saveOrdenPedido':
+          if (isset($_POST['solicitud'])) {
+            $formDataObject = json_decode($_POST['solicitud']);
+            $respuesta = $ajax->saveOrdenPedido($formDataObject);
             $rawdata = $respuesta;
             echo json_encode($rawdata);
             }

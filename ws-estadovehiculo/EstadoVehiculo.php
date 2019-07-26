@@ -15,8 +15,8 @@ class EstadoVehiculo {
         echo 'test';
     }
 
-    public function getNewCodigo(){
-        $query = "SELECT 'EST'+RIGHT('000000'+ISNULL(CONVERT (Varchar , (SELECT COUNT(*)+1 FROM dbo.CAB_estado_vehiculo)),''),6) as codigo";
+    public function getNewCodigo($tipo='EST'){
+        $query = "SELECT '$tipo'+RIGHT('000000'+ISNULL(CONVERT (Varchar , (SELECT COUNT(*)+1 FROM dbo.CAB_estado_vehiculo)),''),6) as codigo";
         $result = odbc_exec($this->wssp_db, $query); 
         return odbc_fetch_array($result);
     }
@@ -27,8 +27,8 @@ class EstadoVehiculo {
         return $result;
     }
 
-    public function getItems(){
-        $query = "SELECT * FROM dbo.ITEMS_estado_vehiculos WHERE activo='1'";
+    public function getItems($tipo){
+        $query = "SELECT * FROM dbo.ITEMS_estado_vehiculos WHERE activo='1' and tipo='$tipo'";
         $result = odbc_exec($this->wssp_db, $query); 
         return $result;
     }
@@ -47,11 +47,29 @@ class EstadoVehiculo {
     }
 
     public function saveSolicitud($solicitud){
-        $newCod = $this->getNewCodigo()["codigo"];
+        $newCod = $this->getNewCodigo('EST')["codigo"];
         $query = "
             INSERT INTO 
                 dbo.CAB_estado_vehiculo 
-            VALUES ('$newCod','$solicitud->vehiculo','$solicitud->kilometraje','$solicitud->empleado','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
+            VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
+        ";
+        $result = odbc_exec($this->wssp_db, $query); 
+
+        if ($result){
+            return $this->saveSolicitudMOV($solicitud->items, $newCod);
+
+        }  else {
+            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
+           
+        }
+    }
+
+    public function saveOrdenPedido($solicitud){
+        $newCod = $this->getNewCodigo('ODP')["codigo"];
+        $query = "
+            INSERT INTO 
+                dbo.CAB_estado_vehiculo 
+            VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
         ";
         $result = odbc_exec($this->wssp_db, $query); 
 
@@ -98,7 +116,7 @@ class EstadoVehiculo {
             ACT_ARTICULOS as vehiculo
         INNER JOIN KAO_wssp.dbo.CAB_estado_vehiculo as wssp on vehiculo.Codigo = wssp.placa COLLATE Modern_Spanish_CI_AS
         INNER JOIN SBIOKAO.dbo.Empleados as SBIO on SBIO.Cedula = wssp.asignadoA
-        WHERE wssp.placa LIKE '".$busqueda."%'
+        WHERE wssp.placa LIKE '".$busqueda."%' and wssp.empresa='$empresa'
         ORDER BY fecha DESC
         
         ";

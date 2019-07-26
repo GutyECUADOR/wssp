@@ -25,10 +25,22 @@
             <li><a href="../ws-chlocales/">CheckList (Locales)</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="../ws-valep/">Vales por pérdida</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="../ws-estadovehiculo/">Estado del Vehiculo</a></li>
+            <li><a href="../ws-estadovehiculo/ordenPedido.php">Orden de Pedido Vehiculo</a></li>
+           
           </ul>
         </li>
         
-        <li><a href="../ws-admin/">Iniciar Sesión <span class="sr-only"></span></a></li>
+        <?php
+          if ($_SESSION) {
+            echo '<li><a href="../ws-admin/">Administracion <span class="sr-only"></span></a></li>';
+          }else {
+            echo '<li><a href="../ws-admin/">Iniciar Sesión <span class="sr-only"></span></a></li>';
+          }
+        ?>
+        
+        
       </ul>
       
       

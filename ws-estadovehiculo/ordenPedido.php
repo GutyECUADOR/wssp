@@ -6,7 +6,7 @@ require('EstadoVehiculo.php');
 
 $estadoVehiculo = new EstadoVehiculo();
 $arrayEmpresas = $estadoVehiculo->getEmpresas();
-$arrayItems = $estadoVehiculo->getItems('EST');
+$arrayItems = $estadoVehiculo->getItems('ODP');
 
 ?>
 <html lang="es">
@@ -39,7 +39,7 @@ $arrayItems = $estadoVehiculo->getItems('EST');
             <div class="row">
                 <div class="col-sm-12">
                     <div class="txtcentro">
-                            <h5>FORMULARIO DE ESTADO DEL VEHICULO</h5>
+                            <h5>ORDEN PEDIDO ESTADO DEL VEHICULO</h5>
                             <h6>rev24.07.19</h6>
                     </div>
                 </div>
@@ -134,11 +134,9 @@ $arrayItems = $estadoVehiculo->getItems('EST');
                         <div class="form-group col-lg-4">
                             <label for="<?php echo $codigo?>"><?php echo $descripcion?></label>
                             <select class="form-control input-sm centertext itemVehiculo" id="<?php echo $codigo?>" name="<?php echo $codigo?>">
-                                    <option value=""> Seleccione por favor</option>
-                                    <option value="4">Muy Bueno</option>
-                                    <option value="3">Bueno</option>
-                                    <option value="2">Regular</option>
-                                    <option value="0">No dispone</option>
+                                    <option value=""> No necesita</option>
+                                    <option value="1">Realizar</option>
+                                   
                                 </select>
                  
                         </div> 
@@ -176,7 +174,7 @@ $arrayItems = $estadoVehiculo->getItems('EST');
     <script src="../ws-admin/js/bootstrap.js"></script>
      <!-- Toastr script -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="ordenPedido.js"></script>
         
 </body>
 </html>

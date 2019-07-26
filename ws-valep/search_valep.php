@@ -163,7 +163,32 @@ switch ($tipo_document) {
         break;
     
     case 'ANUL':
-        $consulta_valep = "SELECT ANULADO, * FROM dbo.VEN_CAB WHERE ANULADO='1' and TIPO IN ('SPA','SPB','SPC','SPD','SPE','SPF')";
+        $consulta_valep = "
+        SELECT 
+                VEN_CAB.ID, 
+                VEN_CAB.TIPO,
+                VEN_CAB.FECHA as fechaVENCAB, 
+                vales.fecha,
+                vales.empresa,
+                vales.BODEGA,
+                Bodegas.NOMBRE as BodegaName, 
+                cliente.RUC as cedulaCliente,
+                cliente.NOMBRE, 
+                VEN_CAB.TOTAL as totalVENCAB,
+                vales.comentario,
+                vales.estado, 
+                vales.total 
+            FROM dbo.VEN_CAB
+                INNER JOIN dbo.COB_CLIENTES as cliente on VEN_CAB.CLIENTE = cliente.CODIGO 
+                INNER JOIN KAO_wssp.dbo.vales_perdida as vales on vales.cod_valep COLLATE Modern_Spanish_CI_AS = VEN_CAB.ID COLLATE Modern_Spanish_CI_AS 
+                INNER JOIN dbo.INV_BODEGAS as bodegas on vales.BODEGA COLLATE Modern_Spanish_CI_AS = Bodegas.CODIGO COLLATE Modern_Spanish_CI_AS 
+            WHERE 
+                vales.estado = 2
+                AND vales.empresa ='002' 
+            ORDER BY
+                VEN_CAB.ID DESC 
+        
+        ";
         $result_consulta_valep = odbc_exec($db_empresa, $consulta_valep);
         $count_result = odbc_num_rows($result_consulta_valep);
             if ($count_result>=1){
@@ -180,15 +205,16 @@ switch ($tipo_document) {
             echo " <table class='tablaedocs'>";    
             echo " <tr class='trcabecera'>
                     <td tdcabecera title='Código'>ID</td>
-                    <td tdcabecera title='Tipo Documento'>Fecha</td>
-                    <td tdcabecera title='Solicitante'>Subtotal</td>
-                    <td tdcabecera title='Fecha'>Fecha Impuesto</td>
-                    <td tdcabecera title='Total'>Total</td>
-                    <td tdcabecera title='Estado'>Anulado por</td>
+                    <td tdcabecera title='Tipo Documento'>Tipo Documento</td>
+                    <td tdcabecera title='Empresa'>Empresa</td>
+                    <td tdcabecera title='Local'>Local</td>
+                    <td tdcabecera title='Solicitante'>Solicitante</td>
+                    <td tdcabecera title='Fecha'>Fecha Solicitada</td>
+                    <td tdcabecera title='Comentario'>Comentario</td>
                     <td tdcabecera title='Estado'>Estado</td>
-                    
-                  </tr>
-                ";  
+                    <td tdcabecera title='Total' colspan='2'>Total</td>
+                   
+                  </tr>";
             //Construcción Filas
           
             $cont=0;
@@ -197,20 +223,60 @@ switch ($tipo_document) {
                 
                 //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_consulta_valep,"ID");
-                $tipo_doc = odbc_result($result_consulta_valep,"FECHA");
+                $tipo_doc = odbc_result($result_consulta_valep,"TIPO");
                 
                 //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_valep,"SUBTOTAL"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_valep,"NOMBRE"));
+                $cod_empresaValep = odbc_result($result_consulta_valep,"empresa");
+                $localTxT = iconv("iso-8859-1", "UTF-8",odbc_result($result_consulta_valep,"BodegaName"));
                 
-                $fechaPDF = odbc_result($result_consulta_valep,"IMPUESTO");
-                $total = odbc_result($result_consulta_valep,"TOTAL");
-                $anuladopor = odbc_result($result_consulta_valep,"ANULADOPOR");
+                $fechaPDF = odbc_result($result_consulta_valep,"FECHA");
+                $comentario = odbc_result($result_consulta_valep,"comentario");
+                $estadoVALE = "";
+                $total = odbc_result($result_consulta_valep,"total");
                 
-                $cont++;
                 $ind_color++;
                 $ind_color %= 2;
-                
                
+                switch ($cod_empresaValep) 
+                    {
+                    case '001':
+                        $empresaTxT = 'Importaciones KAO';
+                            break;
+
+                    case '002':
+                        $empresaTxT = 'KINDRED';
+                            break;  
+                        
+                    case '003':
+                        $empresaTxT = 'KINDSMAN';
+                            break;  
+                    
+                    case '004':
+                        $empresaTxT = 'FRANKIN ALVAREZ';
+                            break;    
+                     
+                    case '005':
+                        $empresaTxT = 'LYNN LEE';
+                            break;    
+                        
+                    case '006':
+                    $empresaTxT = 'COMERCIALIZADORA K';
+                        break;    
+
+                    case '007':
+                    $empresaTxT = 'VERONICA CARRASCO';
+                        break;    
+                        
+                    case '008':
+                        $empresaTxT = 'MODELO';
+                            break;    
+                        
+                    default:
+                        $empresaTxT = 'No definida';
+                        break;
+                    }
+
                 $estado_txt = 'Anulado / Negado';
                           
                 // Despliege de resultados
@@ -218,11 +284,14 @@ switch ($tipo_document) {
                     echo"<tr class='celdagrid' bgcolor=${color_row[$ind_color]}>";
                     echo"<td>".$cod_reporte."</td>";
                     echo"<td>".$tipo_doc."</td>";
+                    echo"<td>".$empresaTxT."</td>";
+                    echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".$fechaPDF."</td>";
-                    echo"<td>".$total."</td>";
-                     echo"<td>".$anuladopor."</td>";
+                    echo"<td>".substr($fechaPDF, 0, 12)."</td>";
+                    echo"<td>".$comentario."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
+                    echo"<td>".$total."</td>";
+                    echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
                     echo"</td>";
                 echo "</tr>";
                 }

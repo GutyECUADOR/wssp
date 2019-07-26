@@ -1,6 +1,12 @@
 <?php
+session_start();
 include_once ('acceso_db.php');
 include_once ('./acceso_db_sbio.php');
+
+      if ($_SESSION) {
+       echo 'Session activa';
+       header('Location: frm_main.php');
+      }
 ?>
 
 <html lang="es">
@@ -55,20 +61,11 @@ include_once ('./acceso_db_sbio.php');
                                         
                                         </div>
                                 </div>
-	<!--SECCION reCAPTCHA-->     
-				<center>
-                                          
-        <!--FIN SECCION reCAPTCHA-->            
-				</center>
 		                
 		                <div>
 					<input name="guardar" type="submit" id="btn-submit" value="Ingresar">
 				</div>
 				
-                                <div  id="bloque">
-                                     
-                                </div>    
-        
 			</form>
 			<div class="footer">Todos los derechos reservados © 2017 - <?php echo date("Y")?>, Ver 2.0.0</div>
 		</div>

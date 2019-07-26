@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 date_default_timezone_set('America/Bogota');
 include('../ws-admin/acceso_db.php');
 include('../ws-admin/acceso_db_sbio.php');

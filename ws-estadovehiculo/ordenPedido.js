@@ -119,7 +119,7 @@ $(document).ready(function() {
         let solicitudJSON = JSON.stringify(solicitud);
 
         $.ajax({
-            url: 'API_ajax.php?action=saveSolicitud',
+            url: 'API_ajax.php?action=saveOrdenPedido',
             method: 'POST',
             data: { solicitud: solicitudJSON },
 

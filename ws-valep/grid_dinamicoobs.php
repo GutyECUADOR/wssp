@@ -89,7 +89,7 @@ $cod_empresagrid = $_SESSION['empresa_autentificada'];
                             $estado_txt = 'Vale negado por supervisor';
                             $notaNegado = odbc_result($result_isInORG_DOCS,"NegadoNota");
                         }else{
-                            $estado_txt = 'Estado no definido';
+                            $estado_txt = 'Pendiente aprob. supervisor';
                         }
                     }else {
                         $estado_txt = 'No revisado por supervisor';

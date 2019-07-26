@@ -1,4 +1,5 @@
 <?php
+session_start();
 date_default_timezone_set('America/Bogota');
 include('../ws-admin/funciones.php'); // Acceso a funciones utiles
 include('../config/global.php');

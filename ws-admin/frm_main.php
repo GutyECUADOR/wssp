@@ -84,7 +84,7 @@ include_once ('seguridad.php');
        
         <!-- USO JQUERY, animacion de menu para responsive-->
         <script src="http://code.jquery.com/jquery-latest.js"></script>
-        <script src="/js/bootstrap.js"></script>
+        <script src="js/bootstrap.js"></script>
         <script src="js/menuresponsive.js"></script>
         
         

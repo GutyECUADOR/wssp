@@ -83,13 +83,13 @@ include_once ('../ws-admin/seguridad.php');
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="txt_busqueda" placeholder="Placas del Vehiculo" required="">
+                        <input type="text" class="form-control" id="txt_busqueda" placeholder="Placas del Vehiculo" required>
                       <span class="input-group-btn">
                           <button class="btn btn-default" type="button" id="btn_busqueda"><span class="glyphicon glyphicon-search"></span> Buscar</button>
                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="../ws-evalua/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Est. Vehiculo</a></li>
-                                <li><a href="../ws-evalua/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Orden Pedido</a></li>
+                                <li><a href="../ws-estadovehiculo/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Est. Vehiculo</a></li>
+                                <li><a href="./ordenPedido.php" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Orden Pedido</a></li>
                             </ul>
                       </span>
                     </div><!-- /input-group -->
@@ -110,10 +110,12 @@ include_once ('../ws-admin/seguridad.php');
                             <table class="table table-condensed table-striped table-hover">
                                 <thead>
                                     <tr>
+                                    <th class="text-left">Codigo</th>
                                     <th class="text-left">Placas</th>
                                     <th class="text-left">Vehiculo</th>
                                     <th class="text-left">Asignado a</th>
-                                    <th class="text-left">Fecha Asignacion</th>
+                                    <th class="text-left">Tipo</th>
+                                    <th class="text-left">Fecha</th>
                                     <th class="text-left">Kilometraje</th>
                                     
                                     </tr>

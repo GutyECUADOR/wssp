@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../ws-admin/funciones.php'); // Acceso a funciones utiles
 include('../config/global.php');
 include('funcions.php');

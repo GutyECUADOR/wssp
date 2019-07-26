@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 
 include('../config/global.php');
 include('../ws-admin/acceso_multi_db.php');

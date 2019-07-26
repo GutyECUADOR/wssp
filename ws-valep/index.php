@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../ws-admin/acceso_db.php');
 include('../ws-admin/acceso_db_sbio.php');
 include('../ws-admin/acceso_multi_db.php');

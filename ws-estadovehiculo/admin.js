@@ -33,6 +33,9 @@ $(document).ready(function() {
                 let rowHTML = `
                     <tr>
                         <td>
+                            ${ row.codigo }
+                        </td>
+                        <td>
                             ${ row.placa }
                         </td>
                         <td>
@@ -40,6 +43,9 @@ $(document).ready(function() {
                         </td>
                         <td>
                             ${ row.nombreAsignadoA }
+                        </td>
+                        <td>
+                            ${ app.getTipoDocumentoIs(row.codigo.substr(0, 3)) }
                         </td>
                         <td>
                             ${ row.fecha }
@@ -70,6 +76,21 @@ $(document).ready(function() {
     
             });
     
+        },
+        getTipoDocumentoIs: function (codigo) {
+            switch (codigo) {
+                case 'EST':
+                    return 'Informe de Estado';
+                    break;
+                
+                case 'ODP':
+                    return 'Orden de Pedido';
+                break;
+            
+                default:
+                    return 'No definido';
+                    break;
+            }
         }
     } 
     // Inicio acciones

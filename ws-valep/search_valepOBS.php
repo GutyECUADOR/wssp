@@ -184,7 +184,7 @@ switch ($tipo_document) {
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
+                    echo"<td>".substr($fechaPDF, 0, 12)."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
@@ -210,6 +210,7 @@ switch ($tipo_document) {
                 cliente.RUC as cedulaCliente,
                 cliente.NOMBRE, 
                 VEN_CAB.TOTAL as totalVENCAB,
+                vales.comentario,
                 vales.estado, 
                 vales.total 
             FROM dbo.VEN_CAB
@@ -238,14 +239,15 @@ switch ($tipo_document) {
         
             echo " <table class='tablaedocs'>";    
             echo " <tr class='trcabecera'>
-                    <td tdcabecera title='Código'>Código</td>
+                    <td tdcabecera title='Código'>ID</td>
                     <td tdcabecera title='Tipo Documento'>Tipo Documento</td>
                     <td tdcabecera title='Empresa'>Empresa</td>
                     <td tdcabecera title='Local'>Local</td>
                     <td tdcabecera title='Solicitante'>Solicitante</td>
                     <td tdcabecera title='Fecha'>Fecha Solicitada</td>
-                    <td tdcabecera title='Estado' colspan='2'>Estado</td>
-                    <td tdcabecera title='Total'>Total</td>
+                    <td tdcabecera title='Comentario'>Comentario</td>
+                    <td tdcabecera title='Estado'>Estado</td>
+                    <td tdcabecera title='Total' colspan='2'>Total</td>
                    
                   </tr>";
             //Construcción Filas
@@ -263,6 +265,7 @@ switch ($tipo_document) {
                 $localTxT = iconv("iso-8859-1", "UTF-8",odbc_result($result_consulta_valep,"BodegaName"));
                 
                 $fechaPDF = odbc_result($result_consulta_valep,"FECHA");
+                $comentario = odbc_result($result_consulta_valep,"comentario");
                 $estadoVALE = "";
                 $total = odbc_result($result_consulta_valep,"total");
                 
@@ -319,7 +322,8 @@ switch ($tipo_document) {
                     echo"<td>".$empresaTxT."</td>";
                     echo"<td>".$localTxT."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
-                    echo"<td>".substr($fechaPDF, 0, -12)."</td>";
+                    echo"<td>".substr($fechaPDF, 0, 12)."</td>";
+                    echo"<td>".$comentario."</td>";
                     echo"<td class='textorojo'>".$estado_txt."</td>";
                     echo"<td>".$total."</td>";
                     echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codvalep valepGeneraAprobado' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
