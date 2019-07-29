@@ -1,0 +1,25 @@
+{
+    "name": "vidiasoft/wssp-vehiculos",
+    "description": "App de mantenimientos y estados del vehiculo",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "José Gutiérrez",
+            "email": "guti06@hotmail.es"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+          "./"
+        
+        ],
+        "files": [
+            
+        ]
+    },
+    "require": {
+        "mpdf/mpdf": "^8.0",
+        "phpmailer/phpmailer": "^6.0"
+    }
+}

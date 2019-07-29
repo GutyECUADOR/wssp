@@ -66,7 +66,7 @@ $arrayItems = $estadoVehiculo->getItems('ODP');
                         </div> 
                         
                         <div class="form-group col-lg-4">
-                          <label for="txt_empleadoIdentificado">Supervisor</label>
+                          <label for="txt_empleadoIdentificado">Solicitado por</label>
                           <input type="text" class="form-control" id="txt_empleadoIdentificado" placeholder="(Empleado)" readonly>
                           <small class="form-text text-muted">Empleado identificado con el CI /RUC Ingresado.</small>
                         </div>

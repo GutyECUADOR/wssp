@@ -5,6 +5,7 @@ class EstadoVehiculo {
     public $wssp_db;
     public $sbio_db;
     public $empresa_db;
+    public $defaulDataBase = "008";
 
     function __construct() {
         $this->wssp_db = getDataBase('009');
@@ -126,5 +127,114 @@ class EstadoVehiculo {
             array_push($resultArray, $row);
         }
         return $resultArray;
+    }
+
+
+    public function generaReporte($codigoPedido, $outputMode = 'S'){
+
+        $empresaData = $this->getInfoEmpresa('008');
+        
+         $html = '
+             
+             <div style="width: 100%;">
+         
+                 <div style="float: right; width: 75%;">
+                     <div id="informacion">
+                         <h4>'.$empresaData["NomCia"].'</h4>
+                         <h4>Direccion: '.$empresaData["DirCia"].'</h4>
+                         <h4>Telefono: '.$empresaData["TelCia"].'</h4>
+                         <h4>RUC: '.$empresaData["RucCia"].'</h4>
+                        
+                     </div>
+                 </div>
+         
+                 <div id="logo" style="float: left; width: 20%;">
+                     <img src="./assets/logo_dark.png" alt="Logo">
+                 </div>
+         
+             </div>
+         
+             <div id="infoCliente" class="rounded">
+                 <div class="cabecera"><b>Fecha:</b> '. date('Y-m-d').'</div>
+               
+             </div>
+         
+             <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+                 <thead>
+                     <tr>
+                         <td width="20%">Item</td>
+                         <td width="30%">Codigo</td>
+                         <td width="50%">Descripcion</td>
+                         
+                     </tr>
+                 </thead>
+             <tbody>
+         
+             <!-- ITEMS HERE -->
+             ';
+                 $cont = 1;
+                 $VEN_MOV = array();
+                 foreach($VEN_MOV as $row){
+                    
+                     $html .= '
+         
+                     <tr>
+                         <td align="center">'.$cont.'</td>
+                         <td align="center">'.$row["CODIGO"].'</td>
+                         <td align="center">'.$row["CANTIDAD"].'</td>
+                         <td>'.$row["Nombre"].'</td>
+                         <td>'.$row["tipoiva"].'</td>
+                         <td>'.$row["PRECIO"].'</td>
+                         <td>'.$row["DESCU"].'</td>
+                         <td class="cost"> '.$row["DESCU"].' </td>
+                         <td class="cost"> '.$row["PRECIOTOT"].'</td>
+                     </tr>';
+                     $cont++;
+                     }
+         
+             $html .= ' 
+             
+         
+             <!-- END ITEMS HERE -->
+                 
+             </tbody>
+             </table>
+ 
+             <div style="width: 100%;">
+                 <p id="observacion">Observacion: </p> 
+             </div>
+         
+             
+         ';
+ 
+         //==============================================================
+         //==============================================================
+         //==============================================================
+ 
+         /* require_once '../../../vendor/autoload.php'; */
+         $mpdf = new \Mpdf\Mpdf();
+ 
+         // LOAD a stylesheet
+         $stylesheet = file_get_contents('./assets/reportesStyles.css');
+         
+         $mpdf->WriteHTML($stylesheet,1);	// The parameter 1 tells that this is css/style only and no body/html/text
+ 
+         $mpdf->WriteHTML($html);
+         
+         return $mpdf->Output('doc.pdf', $outputMode);
+ 
+         //==============================================================
+         //==============================================================
+         //==============================================================
+ 
+    }
+
+    /* Retorna la respuesta del modelo ajax*/
+    public function getInfoEmpresa($empresa='008'){
+        $this->empresa_db = getDataBase($empresa);
+        $query = "SELECT NomCia, Oficina, Ejercicio, DirCia, TelCia, RucCia, Ciudad  FROM dbo.DatosEmpresa";
+        $result = odbc_exec($this->empresa_db, $query); 
+        return odbc_fetch_array($result);
+       
     }
 } 

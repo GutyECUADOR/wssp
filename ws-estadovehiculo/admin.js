@@ -55,16 +55,7 @@ $(document).ready(function() {
                         </td>
                        
                         <td class="text-right">
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog">
-                                </span></button>
-                                <ul class="dropdown-menu pull-right">
-                                <li><a class="btn-xs btn_edit_ticket" data-codigo="${ row.codigo }"><i class="fa fa-check"></i> Ver detalle</a></li>
-                                    <li><a class="btn-xs btn_finalizar_ticket" data-codigo="${ row.codigo }"><i class="fa fa-thumbs-up"></i> Finalizar</a></li>
-                                  
-                                </ul>
-                            </div>
+                            ${ app.showMenus(row.codigo.substr(0, 3), row.codigo) }
                         </td>
                     </tr>
 
@@ -84,7 +75,42 @@ $(document).ready(function() {
                     break;
                 
                 case 'ODP':
-                    return 'Orden de Pedido';
+                    return '<span class="text-danger">Orden de Pedido</span>';
+                break;
+            
+                default:
+                    return 'No definido';
+                    break;
+            }
+        },
+        showMenus: function (codigo, ID) {
+            switch (codigo) {
+                case 'EST':
+                    return `
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-cog">
+                            </span></button>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a class="btn-xs btn_showinforme" data-codigo="${ ID }"><i class="fa fa-check"></i> Ver detalle</a></li>
+                            </ul>
+                        </div>
+                        `;
+                    break;
+                
+                case 'ODP':
+                    return `
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-cog">
+                            </span></button>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a class="btn-xs btn_showinforme" data-codigo="${ ID }"><i class="fa fa-check"></i> Ver detalle</a></li>
+                                <li><a class="btn-xs btn_aprobarOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Aprobar Orden</a></li>
+                                <li><a class="btn-xs btn_aprobarOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Enviar Orden</a></li>
+                            </ul>
+                        </div>
+                        `;
                 break;
             
                 default:
@@ -107,6 +133,15 @@ $(document).ready(function() {
         console.log(busqueda);
         app.getAllVehiculos(busqueda);
     });
+
+    // Boton de creacion de PDF en busqueda de documentos
+    $("#tbodyresults").on("click", '.btn_showinforme', function(event) {
+        let IDDocument = $(this).data("codigo");
+
+        window.open('./API_documentos.php?action=generaReporte&IDDocument='+IDDocument);
+       
+    });
+
 
    
 });

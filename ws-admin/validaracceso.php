@@ -67,7 +67,8 @@
                             }
                             else
                             {
-                               $mensaje = "Error en acceso, usuario y/o contrasena erroneos o no registrados en sistema";
+                                session_destroy();
+                                $mensaje = "Error en acceso, usuario y/o contrasena erroneos o no registrados en sistema";
                                 echo "<script>";
                                 echo "alert('$mensaje');";  
                                 echo "window.location = '../ws-admin/';"; /*REDIRECCIONAMIENTO*/ 
