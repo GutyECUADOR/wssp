@@ -11,11 +11,11 @@
     ],
     "autoload": {
         "classmap": [
-          "./"
-        
+          "./",
+          "./models/"
         ],
         "files": [
-            
+            "../config/global.php"
         ]
     },
     "require": {

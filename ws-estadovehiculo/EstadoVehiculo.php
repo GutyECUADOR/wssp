@@ -1,15 +1,25 @@
 <?php
-require_once ('../ws-admin/acceso_multi_db.php');
+
+require_once  './vendor/autoload.php';
 
 class EstadoVehiculo { 
+    private $instanciaDB;
     public $wssp_db;
     public $sbio_db;
     public $empresa_db;
-    public $defaulDataBase = "008";
+    public $defaulDataBase = "MODELOKIND_V7";
 
     function __construct() {
-        $this->wssp_db = getDataBase('009');
-        $this->sbio_db = getDataBase('010');
+        
+        $this->instanciaDB = new \models\conexion('KAO_wssp');
+        $this->wssp_db = $this->instanciaDB->getInstanciaCNX();
+        
+        $this->instanciaDB = new \models\conexion('SBIOKAO');
+        $this->sbio_db = $this->instanciaDB->getInstanciaCNX();
+
+        $this->instanciaDB = new \models\conexion($this->defaulDataBase);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+        
     }
     
     function test() { 
@@ -18,33 +28,62 @@ class EstadoVehiculo {
 
     public function getNewCodigo($tipo='EST'){
         $query = "SELECT '$tipo'+RIGHT('000000'+ISNULL(CONVERT (Varchar , (SELECT COUNT(*)+1 FROM dbo.CAB_estado_vehiculo)),''),6) as codigo";
-        $result = odbc_exec($this->wssp_db, $query); 
-        return odbc_fetch_array($result);
+        $stmt = $this->wssp_db->prepare($query); 
+
+        try{
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 
     public function getEmpresas(){
         $query = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','006','008')";
-        $result = odbc_exec($this->sbio_db, $query); 
-        return $result;
+        $stmt = $this->sbio_db->prepare($query); 
+
+        try{
+            $stmt->execute();
+            return $stmt->fetchAll( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 
     public function getItems($tipo){
         $query = "SELECT * FROM dbo.ITEMS_estado_vehiculos WHERE activo='1' and tipo='$tipo'";
-        $result = odbc_exec($this->wssp_db, $query); 
-        return $result;
+        $stmt = $this->wssp_db->prepare($query); 
+
+        try{
+            $stmt->execute();
+            return $stmt->fetchAll( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 
     public function getEmpleadoByID($cedula){
-        $query = "SELECT Codigo, Nombre, Apellido, Empresa_WF, Cedula FROM SBIOKAO.dbo.Empleados WHERE Cedula = '$cedula'";
-        $result = odbc_exec($this->sbio_db, $query); 
-        return odbc_fetch_array($result);
+        $query = "SELECT Codigo, Nombre, Apellido, Empresa_WF, Cedula FROM dbo.Empleados WHERE Cedula = '$cedula'";
+        $stmt = $this->sbio_db->prepare($query); 
+
+        try{
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 
     public function getVehiculoByPlaca($placa, $empresa='008'){
-        $this->empresa_db = getDataBase($empresa);
+      
         $query = "SELECT * FROM dbo.ACT_ARTICULOS WHERE Codigo='$placa'";
-        $result = odbc_exec($this->empresa_db, $query); 
-        return odbc_fetch_array($result);
+        $stmt = $this->empresa_db->prepare($query); 
+        try{
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 
     public function saveSolicitud($solicitud){
@@ -54,15 +93,16 @@ class EstadoVehiculo {
                 dbo.CAB_estado_vehiculo 
             VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
         ";
-        $result = odbc_exec($this->wssp_db, $query); 
 
-        if ($result){
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
             return $this->saveSolicitudMOV($solicitud->items, $newCod);
-
-        }  else {
-            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
-           
+            
+        }catch(PDOException $exception){
+            return array('error' => TRUE, 'status' => 'error', 'mensaje' => $exception->getMessage() );
         }
+
     }
 
     public function saveOrdenPedido($solicitud){
@@ -72,15 +112,17 @@ class EstadoVehiculo {
                 dbo.CAB_estado_vehiculo 
             VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
         ";
-        $result = odbc_exec($this->wssp_db, $query); 
 
-        if ($result){
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
             return $this->saveSolicitudMOV($solicitud->items, $newCod);
-
-        }  else {
-            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
-           
+            
+        }catch(PDOException $exception){
+            return array('error' => TRUE, 'status' => 'error', 'mensaje' => $exception->getMessage() );
         }
+
+        
     }
 
     public function saveSolicitudMOV($arrayItems, $codigoCAB){
@@ -91,21 +133,19 @@ class EstadoVehiculo {
                 dbo.MOV_estado_vehiculo 
             VALUES ('$codigoCAB','$item->codigo','$item->valor')
             ";
-            $result = odbc_exec($this->wssp_db, $query); 
+           
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
             $cont++;
         }
 
-        if ($result){
-
-            return $rawdata = array('error' => FALSE, 'message' => 'Registro correcto', 'nuevoregistro' => $codigoCAB, 'itemsregistrados' => $cont );
-        }  else {
-            return $rawdata = array('error' => TRUE, 'message' => odbc_errormsg());
+        if ($cont>=1){
+            return array('error' => FALSE, 'message' => 'Registro correcto', 'nuevoregistro' => $codigoCAB, 'itemsregistrados' => $cont );
            
         }
     }
 
     public function getAllVehiculos ($busqueda='', $empresa='008'){
-        $this->empresa_db = getDataBase($empresa);
         $query = "
         SELECT TOP 100
             vehiculo.Nombre as nombreVehiculo,
@@ -121,18 +161,20 @@ class EstadoVehiculo {
         ORDER BY fecha DESC
         
         ";
-        $result = odbc_exec($this->empresa_db, $query); 
-        $resultArray= [];
-        while($row = odbc_fetch_array($result)) {
-            array_push($resultArray, $row);
+
+        try{
+            $stmt = $this->empresa_db->prepare($query); 
+            $stmt->execute();
+            return $stmt->fetchAll( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
         }
-        return $resultArray;
     }
 
 
     public function generaReporte($codigoPedido, $outputMode = 'S'){
 
-        $empresaData = $this->getInfoEmpresa('008');
+        $empresaData = $this->getInfoEmpresa('002');
         
          $html = '
              
@@ -230,11 +272,16 @@ class EstadoVehiculo {
     }
 
     /* Retorna la respuesta del modelo ajax*/
-    public function getInfoEmpresa($empresa='008'){
-        $this->empresa_db = getDataBase($empresa);
+    public function getInfoEmpresa(){
+    
         $query = "SELECT NomCia, Oficina, Ejercicio, DirCia, TelCia, RucCia, Ciudad  FROM dbo.DatosEmpresa";
-        $result = odbc_exec($this->empresa_db, $query); 
-        return odbc_fetch_array($result);
+        $stmt = $this->empresa_db->prepare($query); 
+        try{
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
        
     }
 } 

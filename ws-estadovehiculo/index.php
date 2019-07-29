@@ -1,8 +1,7 @@
 <?php
 session_start();
-include('../ws-admin/funciones.php'); // Acceso a funciones utiles
-include('../config/global.php');
-require('EstadoVehiculo.php');
+
+require_once  './vendor/autoload.php';
 
 $estadoVehiculo = new EstadoVehiculo();
 $arrayEmpresas = $estadoVehiculo->getEmpresas();
@@ -86,13 +85,11 @@ $arrayItems = $estadoVehiculo->getItems('EST');
                         <select class="form-control" name="select_empresa" id="select_empresa" required>
                             <option value=''>---Seleccione Empresa---</option>
                             <?php 
-                                while(odbc_fetch_row($arrayEmpresas))
-                                {
-                                $cod_emp = odbc_result($arrayEmpresas,"Codigo"); 
-                                $detalle_emp = odbc_result($arrayEmpresas,"Nombre"); 
 
-                                echo "<option value='$cod_emp'>$detalle_emp</option>";
+                                foreach ($arrayEmpresas as $opcion) {
+                                    echo' <option value="'.trim($opcion['Codigo']).'"> '.$opcion['Nombre'].' </option>';
                                 }
+                               
                             ?>
 
                         </select>
@@ -125,9 +122,9 @@ $arrayItems = $estadoVehiculo->getItems('EST');
                     <div class="row">
 
                         <?php
-                            while(odbc_fetch_row($arrayItems)) { 
-                                $codigo = odbc_result($arrayItems, 'codigo'); 
-                                $descripcion = odbc_result($arrayItems, 'descripcion'); 
+                            foreach ($arrayItems as $opcion) {
+                                $codigo = trim($opcion['codigo']); 
+                                $descripcion = trim($opcion['descripcion']); 
                                
                         ?>
                         
