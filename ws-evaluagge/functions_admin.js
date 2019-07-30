@@ -1,10 +1,20 @@
  $(document).ready(function() {
-        $('.codejiitem').click(function (event) {
+        $(".result_search_eji").on('click','.codejiitem', function(event) {
             fn_genreport(this);
         });
         
         $('#btn_busqueda_eji').click(function (event) {
             search(this);
+        });
+
+        $('#btn_export_excel').on('click', function(event) {
+         
+            let fechaINI = $('#dateini_excel').val();
+            let fechaFIN = $('#datefin_excel').val();
+            let empresa = $('#seleccion_empresa_excel').val();
+            console.log('Generando reporte', fechaINI, fechaFIN, empresa);
+
+            window.open(`reportes/reporte_Excel.php?dateini_excel=${fechaINI}&datefin_excel=${fechaFIN}&seleccion_empresa_excel=${empresa}`);
         });
         
        

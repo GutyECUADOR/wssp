@@ -3,7 +3,20 @@ require_once '../ws-admin/acceso_multi_db.php';
    
 $db_empresa = getDataBase('009'); //009 WSSP DB
 
-        $query = "SELECT TOP (100) EJI.*, (SBIO.Nombre + SBIO.Apellido) as SolicitanteN, SBIOEMPRESAS.Nombre as EmpresaN, (SBIOEMPLEADO.Nombre+SBIOEMPLEADO.Apellido) as EvaluadoN  FROM dbo.CAB_EJI as EJI INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON EJI.solicitante = SBIO.Cedula INNER JOIN SBIOKAO.dbo.Empresas_WF as SBIOEMPRESAS ON SBIOEMPRESAS.Codigo = EJI.empresa INNER JOIN SBIOKAO.DBO.Empleados as SBIOEMPLEADO ON SBIOEMPLEADO.Codigo = EJI.empleado WHERE EJI.estado = '0' ORDER BY id DESC";
+        $query = "
+        SELECT TOP 100 
+            EJI.*, 
+            SBIO.Nombre + SBIO.Apellido as SolicitanteN, 
+            SBIOEMPRESAS.Nombre as EmpresaN, 
+            SBIOEMPLEADO.Nombre+SBIOEMPLEADO.Apellido as EvaluadoN  
+            FROM dbo.CAB_EJI as EJI 
+                INNER JOIN SBIOKAO.dbo.Empleados as SBIO ON EJI.solicitante = SBIO.Cedula 
+                INNER JOIN SBIOKAO.dbo.Empresas_WF as SBIOEMPRESAS ON SBIOEMPRESAS.Codigo = EJI.empresa 
+                INNER JOIN SBIOKAO.DBO.Empleados as SBIOEMPLEADO ON SBIOEMPLEADO.Codigo = EJI.empleado 
+            WHERE EJI.estado = '0' 
+            ORDER BY id DESC
+        
+        ";
         $resultset = odbc_exec($db_empresa, $query);
         $count_result = odbc_num_rows($resultset);
         if ($count_result>=1){
@@ -55,7 +68,7 @@ $db_empresa = getDataBase('009'); //009 WSSP DB
                    
                     echo"<td class='celdagrid'><a href='#' target='_self'><span class='glyphicon glyphicon-eye-open codejiitem' id='$cod_reporte' value='$cod_reporte' title='Ver reporte'></span></a></td>";    
                     echo"</td>";
-                echo "</tr>";
+                    echo "</tr>";
                 }
        
         echo "</table>";
