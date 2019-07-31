@@ -2,7 +2,7 @@
 date_default_timezone_set('America/Lima');
 session_start();
 
-require('EstadoVehiculo.php');
+require_once  './vendor/autoload.php';
 
 class ajax{
   private $ajax;
@@ -35,6 +35,10 @@ class ajax{
 
     public function getAllVehiculos($busqueda){
       return $this->ajax->getAllVehiculos($busqueda, $this->empresaActiva);
+    }
+
+    public function aprobarOrden($codOrden){
+      return $this->ajax->aprobarOrden($codOrden);
     }
 
 }
@@ -80,6 +84,15 @@ class ajax{
             $formDataObject = json_decode($_POST['solicitud']);
             $respuesta = $ajax->saveOrdenPedido($formDataObject);
             $rawdata = $respuesta;
+            echo json_encode($rawdata);
+            }
+          break;
+
+        case 'aprobarOrden':
+          if (isset($_GET['codOrden'])) {
+            $codOrden = $_GET['codOrden'];
+            $respuesta = $ajax->aprobarOrden($codOrden);
+            $rawdata = array('error' => FALSE, 'message' => 'Aprobacion realizada', 'data' => $respuesta);
             echo json_encode($rawdata);
             }
           break;

@@ -11,21 +11,16 @@ class ajax{
       $this->ajax = new EstadoVehiculo();
     }
 
-    /*Métodos disponibles del API */
-
     public function generaReporte($IDDocument) {
       return $this->ajax->generaReporte($IDDocument, 'I');
     }
     
-   
-   
 }
 
-  /* Cuerpo del API */
 
   try{
-    $ajax = new ajax(); //Instancia que controla las acciones
-    $HTTPaction = $_GET["action"];
+    $ajax = new ajax();
+    $HTTPaction = isset($_GET["action"]) ? $_GET["action"]: '';
 
     switch ($HTTPaction) {
 
@@ -43,8 +38,6 @@ class ajax{
         
         break;
 
-      
-        /* Utiliza PHPMailer para el envio de correo, utiliza los correos del cliente indicados en la tabla*/ 
         case 'sendEmail':
 
           if (isset($_GET['IDDocument']) ) {

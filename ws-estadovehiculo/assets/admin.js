@@ -24,6 +24,29 @@ $(document).ready(function() {
         
             });
         },
+        aprobarOrden: function (codOrden) { 
+            console.log(codOrden);
+            $.ajax({
+                url: 'API_ajax.php?action=aprobarOrden',
+                method: 'GET',
+                data: { codOrden, codOrden },
+        
+                success: function (response) {
+                    console.log(response);
+                    let JSONresponse = JSON.parse(response);
+                    alert(JSONresponse.message + ' se aprobaron ' + JSONresponse.data + ' ordene(s)');
+                    app.getAllVehiculos('');
+                   
+                }, error: function (error) {
+                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                },complete: function() {
+                }
+        
+            });
+        },
+        enviarorden: function (IDDocument) { 
+            console.log(IDDocument);
+        },
         showResults: function (arrayData) {
         
             $('#tbodyresults').html('');
@@ -53,6 +76,10 @@ $(document).ready(function() {
                         <td>
                             ${ row.kilometraje + 'km' }
                         </td>
+                        <td>
+                            ${ row.estado == 1 ? 'Aprobado' : 'Sin revision' }
+                        </td>
+
                        
                         <td class="text-right">
                             ${ app.showMenus(row.codigo.substr(0, 3), row.codigo) }
@@ -107,7 +134,7 @@ $(document).ready(function() {
                             <ul class="dropdown-menu pull-right">
                                 <li><a class="btn-xs btn_showinforme" data-codigo="${ ID }"><i class="fa fa-check"></i> Ver detalle</a></li>
                                 <li><a class="btn-xs btn_aprobarOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Aprobar Orden</a></li>
-                                <li><a class="btn-xs btn_aprobarOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Enviar Orden</a></li>
+                                <li><a class="btn-xs btn_sendOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Enviar Orden</a></li>
                             </ul>
                         </div>
                         `;
@@ -140,6 +167,18 @@ $(document).ready(function() {
 
         window.open('./API_documentos.php?action=generaReporte&IDDocument='+IDDocument);
        
+    });
+
+    // Boton de de aprobacion de orden
+    $("#tbodyresults").on("click", '.btn_aprobarOrden', function(event) {
+        let IDDocument = $(this).data("codigo");
+        app.aprobarOrden(IDDocument);
+    });
+
+    // Boton de de envio de orden PDF
+    $("#tbodyresults").on("click", '.btn_sendOrden', function(event) {
+        let IDDocument = $(this).data("codigo");
+        app.enviarorden(IDDocument);
     });
 
 

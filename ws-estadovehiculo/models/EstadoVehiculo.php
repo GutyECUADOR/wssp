@@ -26,6 +26,19 @@ class EstadoVehiculo {
         echo 'test';
     }
 
+    public function getDBNameByCodigo($codigoDB){
+        $query = "SELECT TOP 1 NameDatabase, Codigo FROM SBIOKAO.dbo.Empresas_WF WHERE Codigo = :codigo"; 
+        $stmt = $this->sbio_db->prepare($query); 
+        $stmt->bindParam(':codigo', $codigoDB); 
+       
+            if($stmt->execute()){
+                $resulset = $stmt->fetch( \PDO::FETCH_ASSOC );
+            }else{
+                $resulset = false;
+            }
+        return $resulset;  
+    }
+
     public function getNewCodigo($tipo='EST'){
         $query = "SELECT '$tipo'+RIGHT('000000'+ISNULL(CONVERT (Varchar , (SELECT COUNT(*)+1 FROM dbo.CAB_estado_vehiculo)),''),6) as codigo";
         $stmt = $this->wssp_db->prepare($query); 
@@ -75,6 +88,9 @@ class EstadoVehiculo {
     }
 
     public function getVehiculoByPlaca($placa, $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
       
         $query = "SELECT * FROM dbo.ACT_ARTICULOS WHERE Codigo='$placa'";
         $stmt = $this->empresa_db->prepare($query); 
@@ -171,42 +187,168 @@ class EstadoVehiculo {
         }
     }
 
+    public function get_CAB_estado_vehiculo ($codigo, $empresa='008'){
 
-    public function generaReporte($codigoPedido, $outputMode = 'S'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
 
-        $empresaData = $this->getInfoEmpresa('002');
+        $query = "
+            
+            SELECT 
+                CAB.id,
+                CAB.codigo,
+                Activos.Codigo as placa,
+                Activos.Nombre as detalleVehiculo,
+                CAB.empresa as empresaCod,
+                EMPRESA.Nombre as empresaName,
+                CAB.kilometraje,
+                CAB.aprobadoPor,
+                CAB.asignadoA,
+                SBIO.Nombre + SBIO.Apellido as nombreAsignado,
+                CAB.fecha,
+                CAB.observacion,
+                CAB.estado
+            FROM 
+                dbo.ACT_ARTICULOS as Activos
+                INNER JOIN KAO_wssp.dbo.CAB_estado_vehiculo as CAB on CAB.placa = Activos.Codigo COLLATE Modern_Spanish_CI_AS
+                INNER JOIN SBIOKAO.dbo.Empleados as SBIO on SBIO.Cedula = CAB.asignadoA
+                INNER JOIN SBIOKAO.dbo.Empresas_WF as EMPRESA on EMPRESA.Codigo = CAB.empresa
+            WHERE 
+                CAB.codigo ='$codigo'
+        
+        ";
+
+        try{
+            $stmt = $this->empresa_db->prepare($query); 
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+    }
+
+    public function get_MOV_estado_vehiculo ($codigo){
+
+        $query = "
+        SELECT
+            MOV.id,
+            MOV.codigo as codOrden,
+            MOV.item as codItem,
+            ITEMS.descripcion as descripcionItem,
+            MOV.valor
+        FROM 
+            dbo.MOV_estado_vehiculo as MOV
+            INNER JOIN dbo.ITEMS_estado_vehiculos AS ITEMS ON ITEMS.codigo = MOV.item
+        WHERE MOV.codigo = '$codigo'
+        
+        ";
+
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
+            return $stmt->fetchAll( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+    }
+
+    public function generaReporte($codigo, $outputMode = 'S', $empresa='008'){
+
+        $empresaData = $this->getInfoEmpresa($empresa);
+        $CAB_estado_vehiculo = $this->get_CAB_estado_vehiculo($codigo);
+        $MOV_estado_vehiculo = $this->get_MOV_estado_vehiculo($codigo);
+        $tipoDOC = substr($codigo, 0,3);
+        $codEstado = $CAB_estado_vehiculo['estado'];
+
+        function titulo ($tipoDOC){
+            if ($tipoDOC == 'ODP') {
+                return 'ORDEN DE PEDIDO';
+            }else{
+                return 'INFORME DE ESTADO DEL VEHICULO';
+            }
+        }
+
+        function valoracion($tipoDOC, $valor){
+            switch ($tipoDOC) {
+                case 'ODP':
+                    if ($valor == 1) {
+                       return 'Realizar';
+                    }else{
+                        return 'Pendiente';
+                    }
+                    break;
+                
+                case 'EST':
+                    if ($valor == 5) {
+                       return 'Excelente';
+                    }elseif ($valor == 4){
+                        return 'Muy Bueno';
+                    }elseif ($valor == 3){
+                        return 'Bueno';
+                    }elseif ($valor == 2){
+                        return 'Regular';
+                    }else{
+                        return 'No dispone';
+                    }
+                    
+                    break;
+                
+
+                default:
+                    return 'Sin definir';
+                    
+                   
+                    break;
+            }
+        }
+
+        function estadoDocument($codEstado){
+            if ($codEstado == 0) {
+                return 'Pendiente aprobacion';
+            }elseif ($codEstado == 1) {
+                return 'Aprobado';
+            }else{
+                return 'Por definir';
+            }
+        }
         
          $html = '
              
-             <div style="width: 100%;">
+            <div style="width: 100%;">
          
-                 <div style="float: right; width: 75%;">
-                     <div id="informacion">
+                <div id="logosection">
+                    <img id="logo" src="./assets/logo_dark.png" alt="Logo">
+                </div>
+
+                 
+                <div id="informacion">
+                         <h3>'. titulo($tipoDOC) .'</h3>
                          <h4>'.$empresaData["NomCia"].'</h4>
                          <h4>Direccion: '.$empresaData["DirCia"].'</h4>
                          <h4>Telefono: '.$empresaData["TelCia"].'</h4>
                          <h4>RUC: '.$empresaData["RucCia"].'</h4>
                         
-                     </div>
-                 </div>
+                </div>
+               
          
-                 <div id="logo" style="float: left; width: 20%;">
-                     <img src="./assets/logo_dark.png" alt="Logo">
-                 </div>
-         
-             </div>
+            </div>
          
              <div id="infoCliente" class="rounded">
-                 <div class="cabecera"><b>Fecha:</b> '. date('Y-m-d').'</div>
-               
+                 <div class="cabecera"><b>Fecha:</b> '. $CAB_estado_vehiculo["fecha"].'</div>
+                 <div class="cabecera"><b>Vehiculo:</b> '. $CAB_estado_vehiculo["detalleVehiculo"] .'( '. $CAB_estado_vehiculo["placa"].')</div>
+                 <div class="cabecera"><b>Encargado:</b> '. $CAB_estado_vehiculo["nombreAsignado"] .'( '. $CAB_estado_vehiculo["asignadoA"].')</div>
+                 <div class="cabecera"><b>Empresa:</b> '. $CAB_estado_vehiculo["empresaName"] .'( '. $CAB_estado_vehiculo["empresaCod"].')</div>
+                 
              </div>
          
              <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
                  <thead>
                      <tr>
-                         <td width="20%">Item</td>
-                         <td width="30%">Codigo</td>
-                         <td width="50%">Descripcion</td>
+                        <td width="5%">#</td>
+                        <td width="15%">Item</td>
+                        <td width="50%">Descripcion</td>
+                        <td width="20%">Valoracion</td>
                          
                      </tr>
                  </thead>
@@ -215,21 +357,17 @@ class EstadoVehiculo {
              <!-- ITEMS HERE -->
              ';
                  $cont = 1;
-                 $VEN_MOV = array();
-                 foreach($VEN_MOV as $row){
+                 foreach($MOV_estado_vehiculo as $row){
                     
                      $html .= '
          
                      <tr>
                          <td align="center">'.$cont.'</td>
-                         <td align="center">'.$row["CODIGO"].'</td>
-                         <td align="center">'.$row["CANTIDAD"].'</td>
-                         <td>'.$row["Nombre"].'</td>
-                         <td>'.$row["tipoiva"].'</td>
-                         <td>'.$row["PRECIO"].'</td>
-                         <td>'.$row["DESCU"].'</td>
-                         <td class="cost"> '.$row["DESCU"].' </td>
-                         <td class="cost"> '.$row["PRECIOTOT"].'</td>
+                         <td>'.$row["codOrden"].'-'.$row["codItem"].'</td>
+                         <td>'.$row["descripcionItem"].'</td>
+                         <td>'.valoracion($tipoDOC, $row["valor"]).'</td>
+                        
+                         
                      </tr>';
                      $cont++;
                      }
@@ -243,7 +381,8 @@ class EstadoVehiculo {
              </table>
  
              <div style="width: 100%;">
-                 <p id="observacion">Observacion: </p> 
+                 <p id="observacion">Observacion:'. $CAB_estado_vehiculo["observacion"] .'</p> 
+            
              </div>
          
              
@@ -253,7 +392,6 @@ class EstadoVehiculo {
          //==============================================================
          //==============================================================
  
-         /* require_once '../../../vendor/autoload.php'; */
          $mpdf = new \Mpdf\Mpdf();
  
          // LOAD a stylesheet
@@ -261,6 +399,14 @@ class EstadoVehiculo {
          
          $mpdf->WriteHTML($stylesheet,1);	// The parameter 1 tells that this is css/style only and no body/html/text
  
+         $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
+         $mpdf->SetTitle("Reporte Generado");
+         $mpdf->SetHTMLHeader('
+           <div id="cod">
+                <h5 class="myheader">'.$CAB_estado_vehiculo["codigo"].'</h5>  
+                <h5 class="myheader">Página: {PAGENO} de {nbpg}</h5>  
+                <h5 class="myheader">'. estadoDocument($codEstado) .'</h5>  
+           </div> ');
          $mpdf->WriteHTML($html);
          
          return $mpdf->Output('doc.pdf', $outputMode);
@@ -271,8 +417,7 @@ class EstadoVehiculo {
  
     }
 
-    /* Retorna la respuesta del modelo ajax*/
-    public function getInfoEmpresa(){
+    public function getInfoEmpresa($empresa='008'){
     
         $query = "SELECT NomCia, Oficina, Ejercicio, DirCia, TelCia, RucCia, Ciudad  FROM dbo.DatosEmpresa";
         $stmt = $this->empresa_db->prepare($query); 
@@ -282,6 +427,16 @@ class EstadoVehiculo {
         }catch(PDOException $exception){
             return array('status' => 'error', 'mensaje' => $exception->getMessage() );
         }
-       
+    }
+
+    public function aprobarOrden($codOrden) {
+        $query = "UPDATE dbo.CAB_estado_vehiculo SET estado = '1' WHERE codigo='$codOrden'";
+        $stmt = $this->wssp_db->prepare($query); 
+        try{
+            $stmt->execute();
+            return $stmt->rowCount();
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
     }
 } 
