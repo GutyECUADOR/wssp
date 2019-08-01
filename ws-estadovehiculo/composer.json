@@ -15,7 +15,7 @@
           "./models/"
         ],
         "files": [
-            "../config/global.php"
+            "./config/global.php"
         ]
     },
     "require": {

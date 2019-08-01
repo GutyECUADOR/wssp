@@ -41,6 +41,10 @@ class ajax{
       return $this->ajax->aprobarOrden($codOrden);
     }
 
+    public function sendEmailWithOrden($mail, $IDDocument){
+      return $this->ajax->sendEmail($mail, $IDDocument, true);
+  }
+
 }
 
   try{
@@ -96,6 +100,21 @@ class ajax{
             echo json_encode($rawdata);
             }
           break;
+        
+        case 'sendOrden':
+
+          if (isset($_GET['IDDocument']) && isset($_GET['email']) ) {
+            $IDDocument = $_GET['IDDocument'];
+            $email = $_GET['email'];
+            $respuesta = $ajax->sendEmailWithOrden($email, $IDDocument);
+            $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
+          }else{
+            $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.' );
+          }
+
+          echo json_encode($rawdata);
+
+        break; 
           
         default:
             $rawdata = array('error' => TRUE, 'message' =>'el API no ha podido responder la solicitud, revise el tipo de action');

@@ -46,6 +46,27 @@ $(document).ready(function() {
         },
         enviarorden: function (IDDocument) { 
             console.log(IDDocument);
+            let email = prompt("Ingrese email del proveedor");
+
+            if (email != null) {
+                $.ajax({
+                    url: 'API_ajax.php?action=sendOrden',
+                    method: 'GET',
+                    data: { email: email, IDDocument: IDDocument },
+            
+                    success: function (response) {
+                        console.log(response);
+                        let JSONresponse = JSON.parse(response);
+                        alert(JSONresponse.data.mensaje);
+                        
+                    }, error: function (error) {
+                        alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                    },complete: function() {
+                    }
+            
+                });
+                
+            }
         },
         showResults: function (arrayData) {
         
