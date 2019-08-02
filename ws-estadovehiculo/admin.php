@@ -134,8 +134,9 @@ include_once ('../ws-admin/seguridad.php');
                 
 	    </div>
         
-        <?php require_once 'modalExcel.php';?>
-       
+        <?php require_once 'modalAgregaItems.php';?>
+        <?php require_once 'modalBuscarCliente.php';?>
+
         <!-- USO JQUERY, animacion de menu para responsive-->
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="../ws-admin/js/bootstrap.js"></script>

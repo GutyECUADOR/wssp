@@ -44,6 +44,30 @@ $(document).ready(function() {
         
             });
         },
+        canDoPago: function (codOrden) { 
+            console.log(codOrden);
+            $.ajax({
+                url: 'API_ajax.php?action=canDoPago',
+                method: 'GET',
+                data: { codOrden, codOrden },
+        
+                success: function (response) {
+                    console.log(response);
+                    let JSONresponse = JSON.parse(response);
+                    if (JSONresponse.isAvailable) {
+                        window.location.replace('../ws-estadovehiculo/crearpago.php?codOrden='+codOrden);
+                    }else{
+                        alert('Negado, la orden ya posee movimientos');
+                    }
+                   
+                   
+                }, error: function (error) {
+                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                },complete: function() {
+                }
+        
+            });
+        },
         enviarorden: function (IDDocument) { 
             console.log(IDDocument);
             let email = prompt("Ingrese email del proveedor");
@@ -156,6 +180,7 @@ $(document).ready(function() {
                                 <li><a class="btn-xs btn_showinforme" data-codigo="${ ID }"><i class="fa fa-check"></i> Ver detalle</a></li>
                                 <li><a class="btn-xs btn_aprobarOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Aprobar Orden</a></li>
                                 <li><a class="btn-xs btn_sendOrden" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Enviar Orden</a></li>
+                                <li><a class="btn-xs btn_crearPagoWinFenix" data-codigo="${ ID }"><i class="fa fa-thumbs-up"></i> Crear Pago</a></li>
                             </ul>
                         </div>
                         `;
@@ -196,10 +221,16 @@ $(document).ready(function() {
         app.aprobarOrden(IDDocument);
     });
 
-    // Boton de de envio de orden PDF
+    // Boton de de envio de orden PDF por email
     $("#tbodyresults").on("click", '.btn_sendOrden', function(event) {
         let IDDocument = $(this).data("codigo");
         app.enviarorden(IDDocument);
+    });
+
+    // Boton de de envio de orden PDF por email
+    $("#tbodyresults").on("click", '.btn_crearPagoWinFenix', function(event) {
+        let IDDocument = $(this).data("codigo");
+        app.canDoPago(IDDocument);
     });
 
 

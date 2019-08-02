@@ -43,6 +43,18 @@ class ajax{
 
     public function sendEmailWithOrden($mail, $IDDocument){
       return $this->ajax->sendEmail($mail, $IDDocument, true);
+    }
+
+    public function canDoPago($codOrden){
+      return $this->ajax->canDoPago($codOrden);
+    }
+
+    public function getInfoCliente($RUC){
+      return $this->ajax->getInfoCliente($RUC);
+    }
+
+    public function getInfoProducto($codigoProducto) {
+      return $this->ajax->getInfoProducto($codigoProducto);
   }
 
 }
@@ -114,7 +126,51 @@ class ajax{
 
           echo json_encode($rawdata);
 
-        break; 
+          break; 
+        
+        case 'canDoPago':
+          if (isset($_GET['codOrden'])) {
+            $codOrden = $_GET['codOrden'];
+            if ($ajax->canDoPago($codOrden)) {
+              $rawdata = array('error' => FALSE, 'isAvailable' => TRUE, 'message' => 'Validacion correcta.');
+            }else{
+              $rawdata = array('error' => FALSE, 'isAvailable' => FALSE, 'message' => 'Validacion incorrecta.');
+            }
+            
+            echo json_encode($rawdata);
+            }
+          break;
+
+          /* Obtiene array de informacion del cliente*/ 
+        case 'getInfoProveedor':
+          if (isset($_GET['RUC'])) {
+            $RUC = $_GET['RUC'];
+            $respuesta = $ajax->getInfoCliente($RUC);
+            $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
+          }else{
+            $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');
+          }
+          
+          echo json_encode($rawdata);
+
+        break;
+
+        /* Obtiene array de informacion del producto*/ 
+        case 'getInfoProducto':
+
+          if (isset($_GET['codigo'])) {
+            $codigoProducto = $_GET['codigo'];
+            $respuesta = $ajax->getInfoProducto($codigoProducto);
+            $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
+          }else{
+            $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');
+          }
+          
+        
+          echo json_encode($rawdata);
+
+        break;
+
           
         default:
             $rawdata = array('error' => TRUE, 'message' =>'el API no ha podido responder la solicitud, revise el tipo de action');
