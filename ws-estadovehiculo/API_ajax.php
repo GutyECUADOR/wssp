@@ -49,13 +49,23 @@ class ajax{
       return $this->ajax->canDoPago($codOrden);
     }
 
-    public function getInfoCliente($RUC){
-      return $this->ajax->getInfoCliente($RUC);
+    public function getInfoProveedor($RUC){
+      return $this->ajax->getInfoProveedor($RUC);
     }
 
     public function getInfoProducto($codigoProducto) {
       return $this->ajax->getInfoProducto($codigoProducto);
-  }
+    }
+
+    public function searchProducto($termino) {
+      return $this->ajax->searchProducto($termino);
+    }
+
+    
+
+    public function getProveedoresWinfenix($busqueda, $tipo){
+      return $this->ajax->getProveedoresWinfenix($busqueda, $tipo);
+    }
 
 }
 
@@ -145,7 +155,7 @@ class ajax{
         case 'getInfoProveedor':
           if (isset($_GET['RUC'])) {
             $RUC = $_GET['RUC'];
-            $respuesta = $ajax->getInfoCliente($RUC);
+            $respuesta = $ajax->getInfoProveedor($RUC);
             $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
           }else{
             $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');
@@ -161,6 +171,39 @@ class ajax{
           if (isset($_GET['codigo'])) {
             $codigoProducto = $_GET['codigo'];
             $respuesta = $ajax->getInfoProducto($codigoProducto);
+            $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
+          }else{
+            $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');
+          }
+          
+        
+          echo json_encode($rawdata);
+
+        break;
+
+        /* Obtiene array de informacion del producto*/ 
+        case 'searchProducto':
+
+          if (isset($_GET['termino'])) {
+            $termino = $_GET['termino'];
+            $respuesta = $ajax->searchProducto($termino);
+            $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
+          }else{
+            $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');
+          }
+          
+        
+          echo json_encode($rawdata);
+
+        break;
+
+        /* Obtiene array de proveedores segun SP de winfenix*/ 
+        case 'getProveedoresWinfenix':
+
+          if (isset($_GET['busqueda']) && isset($_GET['busqueda'])) {
+            $busqueda = $_GET['busqueda'];
+            $tipo = $_GET['tipo'];
+            $respuesta = $ajax->getProveedoresWinfenix($busqueda, $tipo);
             $rawdata = array('status' => 'OK', 'mensaje' => 'respuesta correcta', 'data' => $respuesta);
           }else{
             $rawdata = array('status' => 'ERROR', 'mensaje' => 'No se ha indicado parámetros.');

@@ -275,6 +275,8 @@ if (!isset($_GET['codOrden'])) {
                 
 	    </div>
         
+        <?php require_once 'modalBuscarCliente.php';?>
+        <?php require_once 'modalBuscarProducto.php';?>
       
         <!-- USO JQUERY, animacion de menu para responsive-->
         <script src="http://code.jquery.com/jquery-latest.js"></script>

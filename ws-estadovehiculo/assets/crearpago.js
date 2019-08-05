@@ -7,8 +7,8 @@ $(document).ready(function() {
     app = {
         OnInit: function () {
         },
-        validaCliente: function (RUC) {
-            console.log(RUC);
+        validaProveedor: function () {
+            let RUC = document.getElementById("inputRUC").value;
             $.ajax({
                 type: 'get',
                 url: './API_ajax.php?action=getInfoProveedor',
@@ -20,19 +20,13 @@ $(document).ready(function() {
                     let cliente = response.data;
                     
                     if (response.data) {
-                        const myCliente = new Cliente(cliente.RUC, cliente.NOMBRE, cliente.EMAIL, cliente.TELEFONO, cliente.VENDEDOR, cliente.TIPOPRECIO, cliente.DIASPAGO, cliente.FPAGO);
+                        const myCliente = new Cliente(cliente.CODIGO, cliente.RUC, cliente.NOMBRE, cliente.EMAIL, cliente.TELEFONO, cliente.DIASPAGO, cliente.FPAGO);
                         cotizacion.proveedor = myCliente;
                         console.log(cotizacion);
         
                         $('#inputCodigo').val(cliente.CODIGO.trim());
                         $('#inputNombre').val(cliente.NOMBRE.trim());
-                        $('#inputRSocial').val(cliente.EMPRESA.trim());
-                        $('#inputCorreo').val(cliente.EMAIL.trim());
-                        $('#inputTelefono').val(cliente.TELEFONO.trim());
-                        $('#inputDiasPago').val(cliente.DIASPAGO.trim() + ' ('+cliente.FPAGO.trim() + ')');
-                        $('#inputVendedor').val(cliente.VENDEDOR.trim() + ' ('+cliente.VENDEDORNAME.trim() + ')');
-                        $('#inputTipoPrecioCli').val(cliente.TIPOPRECIO.trim());
-        
+                      
                     } else {
                         myCliente = null;
                         cotizacion.proveedor = null;
@@ -48,6 +42,83 @@ $(document).ready(function() {
                     }
         
                 }
+            });
+        },
+        getAllProveedores: function (busqueda, tipo) { 
+            $.ajax({
+                url: 'API_ajax.php?action=getProveedoresWinfenix',
+                method: 'GET',
+                data: { busqueda, tipo },
+        
+                success: function (response) {
+                    console.log(response);
+                    let JSONresponse = JSON.parse(response);
+                    console.log(JSONresponse.data);
+                    app.printProveedores(JSONresponse.data);
+                   
+                }, error: function (error) {
+                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                },complete: function() {
+                }
+        
+            });
+        },
+        searchProducto: function (termino) { 
+            $.ajax({
+                url: 'API_ajax.php?action=searchProducto',
+                method: 'GET',
+                data: { termino },
+        
+                success: function (response) {
+                    console.log(response);
+                    let JSONresponse = JSON.parse(response);
+                    console.log(JSONresponse.data);
+                    app.showProductosBuscados(JSONresponse.data);
+                   
+                }, error: function (error) {
+                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                },complete: function() {
+                }
+        
+            });
+        },
+        printProveedores: function (arrayProveedores){
+        
+            $('#tblResultadosBusquedaClientes').find("tr:gt(0)").remove();
+            
+            arrayProveedores.forEach(item => {
+                let row = `
+                    <tr>
+                        <td><span class="text-center"> ${item.Codigo} </span></td>
+                        <td><span class="text-center"> ${item.Ruc} </span></td>
+                        <td><span class="text-center"> ${item.Nombre} </span></td>
+                        <td><button type="button" class="btn btn-primary btn-sm btn-block btnSeleccionarProveedor" data-codigo="${item.Ruc}"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Seleccionar</button>
+                        </td>
+                    </tr>
+                    `;
+    
+                    $('#tblResultadosBusquedaClientes > tbody:last-child').append(row);
+            
+            });
+        },
+        showProductosBuscados: function (arrayProductos){
+        
+            $('#tblResultadosBusquedaProductos').find("tr:gt(0)").remove();
+            
+            arrayProductos.forEach(item => {
+             
+                let row = `
+                    <tr>
+                        <td><span class="text-center"> ${item.codigoItem} </span></td>
+                        <td><span class="text-center"> ${item.codigoMaster} </span></td>
+                        <td><span class="text-center"> ${item.descripcion} </span></td>
+                        <td><button type="button" class="btn btn-primary btn-sm btn-block btnSeleccionarProductos" data-codigo="${item.codigoItem}"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Seleccionar</button>
+                        </td>
+                    </tr>
+                    `;
+    
+                    $('#tblResultadosBusquedaProductos > tbody:last-child').append(row);
+            
             });
         },
         validaProducto: function (codigo){
@@ -183,9 +254,8 @@ $(document).ready(function() {
         }
     });
 
-    $("#inputRUC").on("keyup", function() {
-        let RUC = $('#inputRUC').val();
-        app.validaCliente(RUC);
+    $("#inputRUC").on('keyup change', function() {
+        app.validaProveedor();
     });
 
     // Caja de texto de producto nuevo
@@ -197,7 +267,7 @@ $(document).ready(function() {
    
      // Caja de texto de producto nuevo
      $("#btnAgregarProdToList").on('click', function(event) {
-        if (newProducto != null) {
+        if (newProducto != null && newProducto.precio > 0) {
             
              //Get content of tinimce and reset
           
@@ -244,6 +314,37 @@ $(document).ready(function() {
         }
  
      });
+
+     // Boton de de envio de orden PDF por email
+    $("#searchClienteModal").on("click", function(event) {
+        let termino = $('#terminoBusquedaModalCliente').val();
+        let tipo = $('#tipoBusquedaModalCliente').val();
+        app.getAllProveedores(termino,tipo);
+    });
+
+    // Boton de de envio de orden PDF por email
+    $("#searchProductoModal").on("click", function(event) {
+        let termino = $('#terminoBusquedaModalProducto').val();
+        app.searchProducto(termino);
+    });
+
+    $("#tblResultadosBusquedaClientes").on('click', '.btnSeleccionarProveedor', function(event) {
+        let codigo = $(this).data('codigo');
+        console.log(codigo);
+        $('#inputRUC').val(codigo);
+        app.validaProveedor();
+        $('#modalBuscarCliente').modal('toggle');
+    });
+
+
+    $("#tblResultadosBusquedaProductos").on('click', '.btnSeleccionarProductos', function(event) {
+        let codigo = $(this).data('codigo');
+        console.log(codigo);
+        $('#inputNuevoCodProducto').val(codigo);
+        app.validaProducto(codigo);
+        $('#modalBuscarProducto').modal('toggle');
+     });
+
 
      // Boton de envio de datos
     $("#btnGuardar").on('click', function(event) {
@@ -335,13 +436,12 @@ class Cotizacion {
 }
 
 class Cliente {
-    constructor(RUC, nombre, email, telefono, vendedor, tipoPrecio, diasPago, formaPago) {
+    constructor(codigo, RUC, nombre, email, telefono, diasPago, formaPago) {
+      this.codigo = codigo;
       this.RUC = RUC;
       this.nombre = nombre;
       this.email = email;
       this.telefono = telefono;
-      this.vendedor = vendedor;
-      this.tipoPrecio = tipoPrecio;
       this.diasPago = diasPago;
       this.formaPago = formaPago;
       

@@ -24,6 +24,25 @@ $(document).ready(function() {
         
             });
         },
+        getAllProveedores: function (busqueda, tipo) { 
+            $.ajax({
+                url: 'API_ajax.php?action=getProveedoresWinfenix',
+                method: 'GET',
+                data: { busqueda, tipo },
+        
+                success: function (response) {
+                    console.log(response);
+                    let JSONresponse = JSON.parse(response);
+                    console.log(JSONresponse.data);
+                    //app.showResults(JSONresponse.data);
+                   
+                }, error: function (error) {
+                    alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
+                },complete: function() {
+                }
+        
+            });
+        },
         aprobarOrden: function (codOrden) { 
             console.log(codOrden);
             $.ajax({
@@ -233,6 +252,14 @@ $(document).ready(function() {
         app.canDoPago(IDDocument);
     });
 
+    // Boton de de envio de orden PDF por email
+    $("#searchClienteModal").on("click", function(event) {
+        let termino = $('#terminoBusquedaModalCliente').val();
+        let tipo = $('#tipoBusquedaModalCliente').val();
+        app.getAllProveedores(termino,tipo);
+    });
+
+    
 
    
 });

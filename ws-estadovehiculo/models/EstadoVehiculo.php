@@ -526,31 +526,28 @@ class EstadoVehiculo {
 
     }
 
-    public function getInfoCliente($RUC) {
+    public function getInfoProveedor($RUC) {
 
         //Query de consulta con parametros para bindear si es necesario.
         $query = " 
-            
+        
         SELECT 
-            CLIENTE.CODIGO, 
-            RTRIM(CLIENTE.NOMBRE) as NOMBRE, 
-            RTRIM(CLIENTE.EMPRESA) as EMPRESA, 
-            RTRIM(CLIENTE.RUC) as RUC, 
-            RTRIM(CLIENTE.EMAIL) as EMAIL, 
-            RTRIM(CLIENTE.FECHAALTA) as FECHAALTA, 
-            RTRIM(CLIENTE.DIRECCION1) as DIRECCION, 
-            RTRIM(CLIENTE.TELEFONO1) as TELEFONO, 
-            RTRIM(VENDEDOR.CODIGO) as VENDEDOR,
-            RTRIM(VENDEDOR.NOMBRE) as VENDEDORNAME,
-            RTRIM(CLIENTE.LIMITECRED) as LIMITECRED, 
-            RTRIM(CLIENTE.FPAGO) as FPAGO, 
-            RTRIM(CLIENTE.DIASPAGO) as DIASPAGO, 
-            RTRIM(CLIENTE.TIPOPRECIO) as TIPOPRECIO 
-        FROM 
-            dbo.COB_CLIENTES as CLIENTE INNER JOIN
-            dbo.COB_VENDEDORES as VENDEDOR ON VENDEDOR.CODIGO = CLIENTE.VENDEDOR
+            RTRIM(Proveedor.CODIGO) as CODIGO,
+            RTRIM(Proveedor.RUC) as RUC,
+            RTRIM(Proveedor.NOMBRE) as NOMBRE,
+            RTRIM(Proveedor.EMAIL) as EMAIL,
+            RTRIM(Proveedor.DIRECCION1) as DIRECCION,
+            RTRIM(Proveedor.TELEFONO1) as TELEFONO,
+            RTRIM(Proveedor.TIPOIVA) AS TIPOIVA,
+            RTRIM(Proveedor.DIVISA) as DIVISA,
+            RTRIM(Proveedor.Fpago) as FPAGO,
+            RTRIM(Proveedor.diaspago) as DIASPAGO
+        FROM dbo.PAG_PROVEEDORES as Proveedor
         WHERE 
-            RUC='$RUC'";  // Final del Query SQL 
+            RUC='$RUC'
+
+        
+        ";  // Final del Query SQL 
 
        
 
@@ -584,6 +581,52 @@ class EstadoVehiculo {
                     
                 }else{
                     return $resulset = false;
+                }
+
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+   
+    }
+
+    public function searchProducto($termino) {
+
+        //Query de consulta con parametros para bindear si es necesario.
+        $query = " 
+            SELECT * FROM dbo.ITEMS_pagos_vehiculo WHERE codigoItem LIKE '$termino%' OR descripcion LIKE '$termino%'
+        ";  // Final del Query SQL 
+
+        
+        $stmt = $this->wssp_db->prepare($query); 
+        try{
+                if($stmt->execute()){
+                    return $resulset = $stmt->fetchAll( \PDO::FETCH_ASSOC );
+                    
+                }else{
+                    return $resulset = false;
+                }
+
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+   
+    }
+
+    public function getProveedoresWinfenix($busqueda='%', $tipo='NOMBRE') {
+
+        //Query de consulta con parametros para bindear si es necesario.
+        $query = " 
+            exec Sp_PAGCONPRO '$busqueda','','$tipo'
+        ";  // Final del Query SQL 
+
+        
+        $stmt = $this->empresa_db->prepare($query); 
+        try{
+                if($stmt->execute()){
+                    return $resulset = $stmt->fetchAll( \PDO::FETCH_ASSOC );
+                    
+                }else{
+                    return $resulset = array();
                 }
 
         }catch(PDOException $exception){
