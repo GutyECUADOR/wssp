@@ -382,8 +382,9 @@ class Cotizacion {
                         .reduce(function(previo, actual) {
                             return previo + actual.getIVA();
                         }, 0);
-
-          return (total+IVA);
+        this.totalServicios = total ;
+        this.IVAServicios = IVA;
+        return (total+IVA);
     }
 
     getTotalRepuestos(){
@@ -399,7 +400,9 @@ class Cotizacion {
                             return previo + actual.getIVA();
                         }, 0);
 
-          return (total+IVA);
+        this.totalBienes = total;
+        this.IVABienes = IVA;
+        return (total+IVA);
     }
 
     sumarFromProductos(propiedad) {
@@ -466,14 +469,18 @@ class Producto {
     }
 
     getIVA(){
+        this.valIVA =  (this.getSubtotal() * this.valorIVA) / 100;
         return (this.getSubtotal() * this.valorIVA) / 100;
+        
     }
 
     getDescuento(){
+        this.valdescuento = ((this.cantidad * this.precio)* this.descuento)/100;
         return ((this.cantidad * this.precio)* this.descuento)/100;
     }
 
     getSubtotal(){
+        this.valsubtotal = (this.cantidad * this.precio) - this.getDescuento();
         return (this.cantidad * this.precio) - this.getDescuento();
     }
 

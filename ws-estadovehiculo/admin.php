@@ -90,7 +90,6 @@ include_once ('../ws-admin/seguridad.php');
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="../ws-estadovehiculo/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Est. Vehiculo</a></li>
                                 <li><a href="./ordenPedido.php" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Orden Pedido</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#Modal_Excel_EJI"><span class="glyphicon glyphicon-file"></span> Exportar Excel (xls)</a></li>
                             </ul>
                       </span>
                     </div><!-- /input-group -->

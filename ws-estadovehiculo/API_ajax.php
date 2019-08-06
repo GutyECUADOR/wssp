@@ -25,6 +25,10 @@ class ajax{
       return $this->ajax->getVehiculoByPlaca($placa, $empresa);
     }
 
+    public function saveWinfenixCOM($solicitud){
+      return $this->ajax->saveWinfenixCOM($solicitud, $this->empresaActiva);
+    }
+
     public function saveSolicitud($solicitud){
       return $this->ajax->saveSolicitud($solicitud);
     }
@@ -95,6 +99,15 @@ class ajax{
           $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
           echo json_encode($rawdata);
         break;
+
+        case 'saveWinfenixCOM':
+          if (isset($_POST['solicitud'])) {
+            $formDataObject = json_decode($_POST['solicitud']);
+            $respuesta = $ajax->saveWinfenixCOM($formDataObject);
+            $rawdata = $respuesta;
+            echo json_encode($rawdata);
+            }
+          break;
 
         case 'saveSolicitud':
           if (isset($_POST['solicitud'])) {

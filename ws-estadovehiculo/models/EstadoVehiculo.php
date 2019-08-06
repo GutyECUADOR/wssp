@@ -163,6 +163,115 @@ class EstadoVehiculo {
         }
     }
 
+    public function saveWinfenixCOM_CAB($solicitud, $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
+        /*Parametro de registro */
+        $tipoDOC = 'ORD';
+        $datosEmpresa = $this->getDatosEmpresaFromWINFENIX($empresa);
+        //Crea mos nuevo codigo de COB_CAB (secuencial)
+        $newCodigo = $this->getNextNumDocWINFENIX($tipoDOC, $empresa); // Recuperamos secuencial de SP de Winfenix
+        $newCodigoWith0 = $this->formatoNextNumDocWINFENIX($newCodigo, $empresa); // Asignamos formato con 0000X
+        $new_cod_VENCAB = $datosEmpresa['Oficina'].$datosEmpresa['Ejercicio'].$tipoDOC.$newCodigoWith0;
+        $oficina = $datosEmpresa['Oficina'];
+        $ejercicio = $datosEmpresa['Ejercicio'];
+        $PCID = php_uname('n');
+
+        $proveedor = $solicitud->proveedor;
+
+        $query = "
+        exec Sp_comgracab 'I','ADMINWSSP','$PCID','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$solicitud->fecha','$proveedor->codigo','BSG','DOL','1.00','$proveedor->formaPago','$proveedor->diasPago','0','0','E','0','0','0','','','$solicitud->fecha','30.00','0.00','3.60','0.00','33.60','0.00','        ','','','','','0.00','30.00','0.00','0.00','0.00','0.00','0.00','0.00','0.00','01','','','','','','01','$solicitud->fecha','0','0.00','N','0.00','3.60','0.00','','12:10:00','','','$solicitud->fecha','        ','','','','','0','0','0','','','','','0','','','','','','','','0','0','','','','','','0.00','30.00','0.00','0.00','0.00','0.00'
+        ";
+
+        try{
+            $stmt = $this->empresa_db->prepare($query); 
+    
+            return $stmt->execute();
+            
+        }catch(PDOException $exception){
+            return array('error' => TRUE, 'status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+
+        
+    }
+
+    /*Retorna array con informacion de la empresa que se indique*/
+    public function getDatosEmpresaFromWINFENIX($empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
+
+        $query = "SELECT NomCia, Oficina, Ejercicio, DirCia, TelCia, RucCia, Ciudad  FROM dbo.DatosEmpresa";
+        $stmt = $this->empresa_db->prepare($query); 
+
+        try{
+            $stmt->execute();
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+
+    }
+
+    /*Retorna array asociativo con informacion del cliente que se indique*/
+    public function getDatosDocumentsWINFENIXByTypo ($tipoDOC, $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
+        $query = "SELECT CODIGO, NOMBRE, Serie FROM dbo.VEN_TIPOS WHERE CODIGO = '$tipoDOC'";
+        $stmt = $this->empresa_db->prepare($query); 
+
+        if($stmt->execute()){
+            return $stmt->fetch( \PDO::FETCH_ASSOC );
+        }else{
+            return false;
+        }
+    }
+
+    public function getNextNumDocWINFENIX ($tipoDOC, $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
+        $query = " 
+            exec Sp_Contador 'COM','99','','$tipoDOC',''
+        ";  // Final del Query SQL 
+
+
+        $stmt = $this->empresa_db->prepare($query); 
+        try{
+                if($stmt->execute()){
+                    $resulset = $stmt->fetch( \PDO::FETCH_ASSOC );
+                    return $resulset['NExtID'];
+                    
+                }else{
+                    return $resulset = array();
+                }
+
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+
+        
+    }
+
+    /*Retorna el secuencial de WinFenix en formato 0000XXXX - Winfenix*/
+    public function formatoNextNumDocWINFENIX ($secuencialWinfenix, $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
+        $newCod = $this->empresa_db->query("select RIGHT('00000000' + Ltrim(Rtrim('$secuencialWinfenix')),8) as newcod");
+        $codigoConFormato = $newCod->fetch(\PDO::FETCH_ASSOC);
+        $codigoConFormato = $codigoConFormato['newcod'];
+        return $codigoConFormato;
+    }
+
+
     public function getAllVehiculos ($busqueda='', $empresa='008'){
         $query = "
         SELECT TOP 100
