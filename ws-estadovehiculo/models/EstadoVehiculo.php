@@ -168,27 +168,71 @@ class EstadoVehiculo {
         $this->instanciaDB->setDbname($dataBaseName);
         $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
 
+        try{
+            
         /*Parametro de registro */
         $tipoDOC = 'ORD';
         $datosEmpresa = $this->getDatosEmpresaFromWINFENIX($empresa);
         //Crea mos nuevo codigo de COB_CAB (secuencial)
-        $newCodigo = $this->getNextNumDocWINFENIX($tipoDOC, $empresa); // Recuperamos secuencial de SP de Winfenix
-        $newCodigoWith0 = $this->formatoNextNumDocWINFENIX($newCodigo, $empresa); // Asignamos formato con 0000X
+        $newCodigoWith0 = $this->getNextNumDocWINFENIX($tipoDOC, $empresa); // Recuperamos secuencial de SP de Winfenix
         $new_cod_VENCAB = $datosEmpresa['Oficina'].$datosEmpresa['Ejercicio'].$tipoDOC.$newCodigoWith0;
         $oficina = $datosEmpresa['Oficina'];
         $ejercicio = $datosEmpresa['Ejercicio'];
         $PCID = php_uname('n');
+        $fechaActual = date('Ymd');
 
         $proveedor = $solicitud->proveedor;
 
-        $query = "
-        exec Sp_comgracab 'I','ADMINWSSP','$PCID','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$solicitud->fecha','$proveedor->codigo','BSG','DOL','1.00','$proveedor->formaPago','$proveedor->diasPago','0','0','E','0','0','0','','','$solicitud->fecha','30.00','0.00','3.60','0.00','33.60','0.00','        ','','','','','0.00','30.00','0.00','0.00','0.00','0.00','0.00','0.00','0.00','01','','','','','','01','$solicitud->fecha','0','0.00','N','0.00','3.60','0.00','','12:10:00','','','$solicitud->fecha','        ','','','','','0','0','0','','','','','0','','','','','','','','0','0','','','','','','0.00','30.00','0.00','0.00','0.00','0.00'
-        ";
+       
+            $query = "
+                exec Sp_comgracab 'I','ADMINWSSP','$PCID','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$fechaActual','$proveedor->codigo','BSG','DOL','1.00','$proveedor->formaPago','$proveedor->diasPago','0','0','E','0','0','0','$solicitud->comentario','','$fechaActual','$solicitud->subtotal','0.00','$solicitud->iva','0.00','$solicitud->total','0.00','','','','','','$solicitud->totalBienes','$solicitud->totalServicios','0.00','0.00','0.00','0.00','0.00','0.00','0.00','01','','','','','','01','$fechaActual','0','0.00','N','0.00','$solicitud->iva','0.00','','12:00:00','','','$fechaActual','','','','','','0','0','0','','','','','0','','','','','','','','0','0','','','','','','0.00','$solicitud->subtotal','0.00','0.00','0.00','0.00'
+            ";
 
-        try{
             $stmt = $this->empresa_db->prepare($query); 
-    
-            return $stmt->execute();
+            $status = $stmt->execute();
+
+            if ($status) {
+
+                if ($solicitud->totalServicios != 0) {
+                    /*Servicios */
+                        $query = "
+                        exec Sp_comgramov 'I','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$fechaActual','$proveedor->codigo','BSG','E','0','SERC-027','UND','1.0000','0.00','$solicitud->totalServicios','0.0000000','$solicitud->totalServicios','12.0000','','$fechaActual','0','5','$solicitud->IVAServicios','0.0000','0.0000','0','0','0','','0','0','0','0','0','0.00','0.00','0.00','0.00','0.00','0.00','0.00','','','','0.00','0','0','','0','','0','0','0','0','','0','0','0','0','','','','0.000000','1','0','','','','T1S'
+                    ";
+                    $stmt = $this->empresa_db->prepare($query); 
+                    $stmt->execute();
+                }
+                
+
+                if ($solicitud->totalBienes != 0) {
+                    /*Bienes o Productos */
+                    $query = "
+                        exec Sp_comgramov 'I','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$fechaActual','$proveedor->codigo','BSG','E','0','COMC-016','UND','1.0000','0.00','$solicitud->totalBienes','0.0000000','$solicitud->totalBienes','12.0000','','$fechaActual','0','5','$solicitud->IVABienes','0.0000','0.0000','0','0','0','','0','0','0','0','0','0.00','0.00','0.00','0.00','0.00','0.00','0.00','','','','0.00','0','0','','0','','0','0','0','0','','0','0','0','0','','','','0.000000','1','0','','','','T1S'
+                    ";
+
+                    $stmt = $this->empresa_db->prepare($query); 
+                    $stmt->execute();
+                
+                }
+                
+                return array(
+                    'error' => FALSE,
+                    'status' => $status, 
+                    'message'  => 'Registro realizado exitosamente.',
+                    'newdocument' => $new_cod_VENCAB
+                    ); 
+        
+
+            }else {
+                return array(
+                    'error' => TRUE,
+                    'status' => $status, 
+                    'message'  => 'Registro no se realizo de forma correcta.',
+                    'newCodigoWith0' => $new_cod_VENCAB
+                    ); 
+            }
+            
+            
+          
             
         }catch(PDOException $exception){
             return array('error' => TRUE, 'status' => 'error', 'mensaje' => $exception->getMessage() );
@@ -244,13 +288,11 @@ class EstadoVehiculo {
 
         $stmt = $this->empresa_db->prepare($query); 
         try{
-                if($stmt->execute()){
-                    $resulset = $stmt->fetch( \PDO::FETCH_ASSOC );
-                    return $resulset['NExtID'];
-                    
-                }else{
-                    return $resulset = array();
-                }
+            $stmt->execute();
+            $resulset = $stmt->fetch( \PDO::FETCH_ASSOC );
+            $input = $resulset['NExtID'];
+            return str_pad($input, 8, "0", STR_PAD_LEFT);
+             
 
         }catch(PDOException $exception){
             return array('status' => 'error', 'mensaje' => $exception->getMessage() );
@@ -267,8 +309,8 @@ class EstadoVehiculo {
 
         $newCod = $this->empresa_db->query("select RIGHT('00000000' + Ltrim(Rtrim('$secuencialWinfenix')),8) as newcod");
         $codigoConFormato = $newCod->fetch(\PDO::FETCH_ASSOC);
-        $codigoConFormato = $codigoConFormato['newcod'];
-        return $codigoConFormato;
+        $codigoConFormatoSingle = $codigoConFormato['newcod'];
+        return $codigoConFormatoSingle;
     }
 
 

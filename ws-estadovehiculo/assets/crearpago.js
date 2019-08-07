@@ -219,6 +219,9 @@ $(document).ready(function() {
             document.getElementById("inputNuevoProductoSubtotal").value = "";
         },
         resumenProdutosInList: function () {
+            cotizacion.subtotal = cotizacion.getTotalProductos();
+            cotizacion.iva = cotizacion.getIVAProductos();
+            cotizacion.total = cotizacion.getTotalProductos() + cotizacion.getIVAProductos();
         
             return {
                 sumaSubtotalproductos: cotizacion.getTotalProductos(),
@@ -242,7 +245,31 @@ $(document).ready(function() {
         },
         printSubtotalNewProd: function  (){
             $("#inputNuevoProductoSubtotal").val(newProducto.getSubtotal().toFixed(4));
+        },
+        saveData: function (solicitud){
+            console.log(JSON.parse(solicitud));
+            $.ajax({
+                type: 'POST',
+                url: './API_ajax.php?action=saveWinfenixCOM',
+                dataType: "json",
+        
+                data: { solicitud: solicitud },
+                
+                success: function(response) {
+                    console.log(response);
+                    if (response.status) {
+                        alert(response.message);
+                    }else{
+                        alert('No se pudo completar el registro, reintente');
+                    }
+                    
+                }
+            });
+    
+           
+    
         }
+    
        
     } 
     // Inicio acciones
@@ -349,9 +376,9 @@ $(document).ready(function() {
      // Boton de envio de datos
     $("#btnGuardar").on('click', function(event) {
         event.preventDefault();
-       
+        console.log('Guardando...');
         let cotizacionJSON = JSON.stringify((cotizacion));
-        if (cotizacion.cliente != null && cotizacion.productos.length > 0) {
+        if (cotizacion.proveedor != null && cotizacion.productos.length > 0) {
             $(this).prop("disabled", true);
             app.saveData(cotizacionJSON);
         }else{
@@ -372,13 +399,13 @@ class Cotizacion {
 
     getTotalServicios(){
         let total = this.productos
-                        .filter(({codigoMaster}) => codigoMaster === 'SERAUTOMOVILES')
+                        .filter(({codigoMaster}) => codigoMaster === 'SERC-027')
                         .reduce(function(previo, actual) {
                             return previo + actual.getSubtotal();
                         }, 0);
 
         let IVA = this.productos
-                        .filter(({codigoMaster}) => codigoMaster === 'SERAUTOMOVILES')
+                        .filter(({codigoMaster}) => codigoMaster === 'SERC-027')
                         .reduce(function(previo, actual) {
                             return previo + actual.getIVA();
                         }, 0);
@@ -389,13 +416,13 @@ class Cotizacion {
 
     getTotalRepuestos(){
         let total = this.productos
-                        .filter(({codigoMaster}) => codigoMaster === 'REPAUTOMOVILES')
+                        .filter(({codigoMaster}) => codigoMaster === 'COMC-016')
                         .reduce(function(previo, actual) {
                             return previo + actual.getSubtotal();
                         }, 0);
 
         let IVA = this.productos
-                        .filter(({codigoMaster}) => codigoMaster === 'REPAUTOMOVILES')
+                        .filter(({codigoMaster}) => codigoMaster === 'COMC-016')
                         .reduce(function(previo, actual) {
                             return previo + actual.getIVA();
                         }, 0);

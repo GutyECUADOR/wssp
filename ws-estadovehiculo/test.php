@@ -24,19 +24,16 @@ var_dump($result4); */
 var_dump($result);
  */
 
-$datosEmpresa = $estadoVehiculo->getDatosEmpresaFromWINFENIX('008');
+/* $datosEmpresa = $estadoVehiculo->getDatosEmpresaFromWINFENIX('008');
 var_dump($datosEmpresa);
 
 $newCodigo = $estadoVehiculo->getDatosDocumentsWINFENIXByTypo($tipoDOC,'002');
-var_dump($newCodigo);
+var_dump($newCodigo); */
 
 $newCodigo = $estadoVehiculo->getNextNumDocWINFENIX($tipoDOC,'008');
 var_dump($newCodigo);
 
-$newCodigoWith0 = $estadoVehiculo->formatoNextNumDocWINFENIX($newCodigo, '008');
-var_dump($newCodigoWith0);
-
-$new_cod_VENCAB = $datosEmpresa['Oficina'].$datosEmpresa['Ejercicio'].$tipoDOC.$newCodigoWith0;
-var_dump($new_cod_VENCAB);
+/* $new_cod_VENCAB = $datosEmpresa['Oficina'].$datosEmpresa['Ejercicio'].$tipoDOC.$newCodigoWith0;
+var_dump($new_cod_VENCAB); */
 
 ?>

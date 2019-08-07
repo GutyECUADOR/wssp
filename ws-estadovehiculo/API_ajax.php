@@ -26,7 +26,7 @@ class ajax{
     }
 
     public function saveWinfenixCOM($solicitud){
-      return $this->ajax->saveWinfenixCOM($solicitud, $this->empresaActiva);
+      return $this->ajax->saveWinfenixCOM_CAB($solicitud, $this->empresaActiva);
     }
 
     public function saveSolicitud($solicitud){
@@ -104,8 +104,7 @@ class ajax{
           if (isset($_POST['solicitud'])) {
             $formDataObject = json_decode($_POST['solicitud']);
             $respuesta = $ajax->saveWinfenixCOM($formDataObject);
-            $rawdata = $respuesta;
-            echo json_encode($rawdata);
+            echo json_encode($respuesta);
             }
           break;
 
