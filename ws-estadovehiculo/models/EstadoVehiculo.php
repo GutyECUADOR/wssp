@@ -227,7 +227,7 @@ class EstadoVehiculo {
                     'error' => TRUE,
                     'status' => $status, 
                     'message'  => 'Registro no se realizo de forma correcta.',
-                    'newCodigoWith0' => $new_cod_VENCAB
+                    'newdocument' => $new_cod_VENCAB
                     ); 
             }
             
@@ -281,7 +281,8 @@ class EstadoVehiculo {
         $this->instanciaDB->setDbname($dataBaseName);
         $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
 
-        $query = " 
+        $query = "
+            SET NOCOUNT ON  
             exec Sp_Contador 'COM','99','','$tipoDOC',''
         ";  // Final del Query SQL 
 

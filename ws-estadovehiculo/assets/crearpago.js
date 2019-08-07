@@ -257,12 +257,9 @@ $(document).ready(function() {
                 
                 success: function(response) {
                     console.log(response);
-                    if (response.status) {
-                        alert(response.message);
-                    }else{
-                        alert('No se pudo completar el registro, reintente');
-                    }
-                    
+                  
+                    alert(response.message + 'Documento Generado: ' + response.newdocument);
+                   
                 }
             });
     
