@@ -495,8 +495,9 @@ class EstadoVehiculo {
                  <div class="cabecera"><b>Empresa:</b> '. $CAB_estado_vehiculo["empresaName"] .'( '. $CAB_estado_vehiculo["empresaCod"].')</div>
                  
              </div>
+             <span>Items reportados</span>
          
-             <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+            <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
                  <thead>
                      <tr>
                         <td width="5%">#</td>
@@ -517,7 +518,7 @@ class EstadoVehiculo {
          
                      <tr>
                          <td align="center">'.$cont.'</td>
-                         <td>'.$row["codOrden"].'-'.$row["codItem"].'</td>
+                         <td>'.$row["codItem"].'</td>
                          <td>'.$row["descripcionItem"].'</td>
                          <td>'.valoracion($tipoDOC, $row["valor"]).'</td>
                         
@@ -526,13 +527,66 @@ class EstadoVehiculo {
                      $cont++;
                      }
          
+                   
+
              $html .= ' 
              
          
              <!-- END ITEMS HERE -->
                  
              </tbody>
-             </table>
+             </table>';
+
+                if ($tipoDOC == 'TEST') {
+                    $html .= '
+                    <span>Items Comprados</span>
+
+
+                    <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+                        <thead>
+                            <tr>
+                                <td width="5%">#</td>
+                                <td width="15%">Item</td>
+                                <td width="50%">Descripcion</td>
+                                <td width="20%">Costo</td>
+                                
+                            </tr>
+                        </thead>
+                    <tbody>
+                
+                    <!-- ITEMS HERE -->
+                    ';
+                        $cont = 1;
+                        foreach($MOV_estado_vehiculo as $row){
+                            
+                            $html .= '
+                
+                            <tr>
+                                <td align="center">'.$cont.'</td>
+                                <td>REP00000</td>
+                                <td>test</td>
+                                <td>$20.50</td>
+                                
+                                
+                            </tr>';
+                            $cont++;
+                            }
+                
+                        
+
+                    $html .= ' 
+                    
+                
+                    <!-- END ITEMS HERE -->
+                        
+                    </tbody>
+                    </table>';
+
+                    
+                }
+
+             $html .= ' 
+            
  
              <div style="width: 100%;">
                  <p id="observacion">Observacion:'. $CAB_estado_vehiculo["observacion"] .'</p> 

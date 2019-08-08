@@ -257,14 +257,29 @@ $(document).ready(function() {
                 
                 success: function(response) {
                     console.log(response);
-                  
                     alert(response.message + 'Documento Generado: ' + response.newdocument);
-                   
+                    app.resetForm();
                 }
             });
     
-           
-    
+        },resetForm: function () {
+            cotizacion = new Cotizacion();
+            newProducto = null;
+            app.printProductos(cotizacion.productos)
+            let objectResumen = app.resumenProdutosInList();
+            app.printResumen(objectResumen)
+            
+            
+            document.getElementById("inputRUC").value = "";
+            document.getElementById("inputNombre").value = "";
+            document.getElementById("inputNuevoCodProducto").value = "";
+            document.getElementById("inputNuevoProductoNombre").value = "";
+            document.getElementById("inputNuevoProductoCantidad").value = "";
+            document.getElementById("inputNuevoProductoPrecioUnitario").value = "";
+            document.getElementById("inputNuevoProductoSubtotal").value = "";
+        
+            $('#btnGuardar').prop("disabled", false);
+            
         }
     
        
@@ -378,6 +393,7 @@ $(document).ready(function() {
         if (cotizacion.proveedor != null && cotizacion.productos.length > 0) {
             $(this).prop("disabled", true);
             app.saveData(cotizacionJSON);
+           
         }else{
             alert('El formulario esta incompleto indique cliente y al menos un producto');
         }
