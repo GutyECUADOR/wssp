@@ -182,8 +182,17 @@ class EstadoVehiculo {
         $fechaActual = date('Ymd');
 
         $proveedor = $solicitud->proveedor;
-
+        $productos = $solicitud->productos;
        
+        foreach ($productos as $producto) {
+            $query = "
+                INSERT INTO dbo.COMMOV_estado_vehiculos VALUES ('ODP000009','$producto->codigo','$producto->cantidad','$producto->valsubtotal')
+            ";
+
+            $stmt = $this->wssp_db->prepare($query); 
+            $status = $stmt->execute();
+        }
+
             $query = "
                 exec Sp_comgracab 'I','ADMINWSSP','$PCID','$oficina','$ejercicio','$tipoDOC','$newCodigoWith0','$fechaActual','$proveedor->codigo','BSG','DOL','1.00','$proveedor->formaPago','$proveedor->diasPago','0','0','E','0','0','0','$solicitud->comentario','','$fechaActual','$solicitud->subtotal','0.00','$solicitud->iva','0.00','$solicitud->total','0.00','','','','','','$solicitud->totalBienes','$solicitud->totalServicios','0.00','0.00','0.00','0.00','0.00','0.00','0.00','01','','','','','','01','$fechaActual','0','0.00','N','0.00','$solicitud->iva','0.00','','12:00:00','','','$fechaActual','','','','','','0','0','0','','','','','0','','','','','','','','0','0','','','','','','0.00','$solicitud->subtotal','0.00','0.00','0.00','0.00'
             ";
@@ -213,6 +222,9 @@ class EstadoVehiculo {
                     $stmt->execute();
                 
                 }
+
+                
+
                 
                 return array(
                     'error' => FALSE,
@@ -407,11 +419,40 @@ class EstadoVehiculo {
         }
     }
 
+    public function get_COMMOV_estado_vehiculo ($codigo){
+
+        $query = "
+        SELECT
+            MOV.id,
+            MOV.codigoDocumento,
+            MOV.codigoProducto,
+            ITEMS.descripcion,
+            MOV.cantidad,
+            MOV.valor
+        FROM 
+            dbo.COMMOV_estado_vehiculos as MOV
+            INNER JOIN dbo.ITEMS_pagos_vehiculo AS ITEMS ON ITEMS.codigoItem = MOV.codigoProducto
+        WHERE MOV.codigoDocumento = '$codigo'
+
+        
+        ";
+
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
+            return $stmt->fetchAll( \PDO::FETCH_ASSOC );
+        }catch(PDOException $exception){
+            return array('status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+    }
+
     public function generaReporte($codigo, $outputMode = 'S', $empresa='008'){
 
         $empresaData = $this->getInfoEmpresa($empresa);
         $CAB_estado_vehiculo = $this->get_CAB_estado_vehiculo($codigo);
         $MOV_estado_vehiculo = $this->get_MOV_estado_vehiculo($codigo);
+
+        $COMMOV_estado_vehiculo = $this->get_COMMOV_estado_vehiculo($codigo);
         $tipoDOC = substr($codigo, 0,3);
         $codEstado = $CAB_estado_vehiculo['estado'];
 
@@ -537,7 +578,7 @@ class EstadoVehiculo {
              </tbody>
              </table>';
 
-                if ($tipoDOC == 'TEST') {
+                if ($tipoDOC == 'ODP') {
                     $html .= '
                     <span>Items Comprados</span>
 
@@ -548,6 +589,7 @@ class EstadoVehiculo {
                                 <td width="5%">#</td>
                                 <td width="15%">Item</td>
                                 <td width="50%">Descripcion</td>
+                                <td width="10%">Cant</td>
                                 <td width="20%">Costo</td>
                                 
                             </tr>
@@ -557,15 +599,16 @@ class EstadoVehiculo {
                     <!-- ITEMS HERE -->
                     ';
                         $cont = 1;
-                        foreach($MOV_estado_vehiculo as $row){
+                        foreach($COMMOV_estado_vehiculo as $row){
                             
                             $html .= '
                 
                             <tr>
                                 <td align="center">'.$cont.'</td>
-                                <td>REP00000</td>
-                                <td>test</td>
-                                <td>$20.50</td>
+                                <td>'.$row["codigoProducto"].'</td>
+                                <td>'.$row["descripcion"].'</td>
+                                <td>'.$row["cantidad"].'</td>
+                                <td>'.$row["valor"].'</td>
                                 
                                 
                             </tr>';
