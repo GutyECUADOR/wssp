@@ -6,7 +6,7 @@ $select_codWF = $_GET['cod_DataBase']; //Indica en que DB se realizara la busque
 
 $conexion_ok = getDataBase($select_codWF);
 //$consulta_user = "SELECT  CODIGO as CodCliente, RUC as Cedula, NOMBRE as NombreN  FROM dbo.COB_CLIENTES as A WHERE A.RUC='$cod_ingresado' AND CLASE='I' AND A.RUC  IN  (SELECT cedula  FROM dbo.ROL_EMPLEADOS WHERE Estatus = 'A')";
-$consulta_user = "SELECT  A.CODIGO as CodCliente, RUC as Cedula, A.NOMBRE as NombreN FROM dbo.COB_CLIENTES as A INNER JOIN SBIOKAO.dbo.Empleados AS SBIO ON SBIO.Cedula COLLATE Modern_Spanish_CI_AS = a.RUC COLLATE Modern_Spanish_CI_AS WHERE A.RUC='$cod_ingresado' AND CLASE='I' AND A.RUC  IN  (SELECT cedula  FROM dbo.ROL_EMPLEADOS WHERE Estatus = 'A') AND SBIO.CodDpto IN ('EVA','ASI')";
+$consulta_user = "SELECT  A.CODIGO as CodCliente, RUC as Cedula, A.NOMBRE as NombreN FROM dbo.COB_CLIENTES as A INNER JOIN SBIOKAO.dbo.Empleados AS SBIO ON SBIO.Cedula COLLATE Modern_Spanish_CI_AS = a.RUC COLLATE Modern_Spanish_CI_AS WHERE A.RUC='$cod_ingresado' AND CLASE='I' AND A.RUC  IN  (SELECT cedula  FROM dbo.ROL_EMPLEADOS WHERE Estatus = 'A') AND SBIO.CodDpto IN ('EVA','ASI','TEC')";
 
 $result_query_user = odbc_exec($conexion_ok, $consulta_user);
 
