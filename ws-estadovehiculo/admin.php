@@ -113,10 +113,11 @@ include_once ('../ws-admin/seguridad.php');
                                     <th class="text-left">Codigo</th>
                                     <th class="text-left">Placas</th>
                                     <th class="text-left">Vehiculo</th>
-                                    <th class="text-left">Asignado a</th>
+                                    <th class="text-left">Creado por</th>
                                     <th class="text-left">Tipo</th>
                                     <th class="text-left">Fecha</th>
                                     <th class="text-left">Kilometraje</th>
+                                    <th class="text-left">Estado</th>
                                     
                                     </tr>
                                 </thead>
@@ -129,13 +130,17 @@ include_once ('../ws-admin/seguridad.php');
                     </div>    
                    
                 </div>
+                
 	    </div>
-       
+        
+      
+        <?php require_once 'modalBuscarCliente.php';?>
+
         <!-- USO JQUERY, animacion de menu para responsive-->
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="../ws-admin/js/bootstrap.js"></script>
         <script src="../ws-admin/js/menuresponsive.js"></script>
-        <script src="admin.js"></script>
+        <script src="assets/admin.js"></script>
         
         
 </body>

@@ -21,8 +21,10 @@ $arrayItems = $estadoVehiculo->getItems('EST');
         <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css"  media="screen,projection"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
+        <link rel="stylesheet" href="assets/pnotify.custom.min.css">
+
         <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
-        <link rel="stylesheet" href="mystyles.css">
+        <link rel="stylesheet" href="assets/mystyles.css">
 	
         <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
         
@@ -130,7 +132,7 @@ $arrayItems = $estadoVehiculo->getItems('EST');
                         
                         <div class="form-group col-lg-4">
                             <label for="<?php echo $codigo?>"><?php echo $descripcion?></label>
-                            <select class="form-control input-sm centertext itemVehiculo" id="<?php echo $codigo?>" name="<?php echo $codigo?>">
+                            <select class="form-control input-sm centertext itemVehiculo" id="<?php echo $codigo?>" name="<?php echo $codigo?>" required>
                                     <option value=""> Seleccione por favor</option>
                                     <option value="4">Muy Bueno</option>
                                     <option value="3">Bueno</option>
@@ -172,8 +174,9 @@ $arrayItems = $estadoVehiculo->getItems('EST');
     <script src="../ws-admin/js/jquery-latest.js"></script>
     <script src="../ws-admin/js/bootstrap.js"></script>
      <!-- Toastr script -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script type="text/javascript" src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript" src="assets/pnotify.custom.min.js"></script>
+    <script type="text/javascript" src="assets/app.js"></script>
         
 </body>
 </html>

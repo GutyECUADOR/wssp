@@ -22,7 +22,7 @@ $arrayItems = $estadoVehiculo->getItems('ODP');
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
         <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
-        <link rel="stylesheet" href="mystyles.css">
+        <link rel="stylesheet" href="assets/mystyles.css">
 	
         <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
         
@@ -169,7 +169,7 @@ $arrayItems = $estadoVehiculo->getItems('ODP');
     <script src="../ws-admin/js/bootstrap.js"></script>
      <!-- Toastr script -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script type="text/javascript" src="ordenPedido.js"></script>
+    <script type="text/javascript" src="assets/ordenPedido.js"></script>
         
 </body>
 </html>
