@@ -209,6 +209,23 @@ $(document).ready(function() {
                     return 'No definido';
                     break;
             }
+        },
+        saveProductoItem: function (producto){
+           
+            $.ajax({
+                type: 'POST',
+                url: './API_ajax.php?action=saveNewProduct',
+                dataType: "json",
+        
+                data: { producto: producto },
+                
+                success: function(response) {
+                    console.log(response);
+                    alert(response.message);
+                    
+                }
+            });
+    
         }
     } 
     // Inicio acciones
@@ -260,7 +277,26 @@ $(document).ready(function() {
     });
 
     
+     // Boton para agregar prodcuto desde el modal
+     $("#btn_modalGuardarProducto").on("click", function(event) {
+        console.log('Guardando.');
+        let codigo = $('#modal_itemCodigo').val();
+        let categoria = $('#modal_itemCategoria').val();
+        let descripcion = $('#modal_itemDescripcion').val();
+        let producto = new ProductoItem(codigo,categoria,descripcion);
+        let productoJSON = JSON.stringify((producto));
+        app.saveProductoItem(productoJSON);
+    });
+    
 
    
 });
 
+class ProductoItem {
+    constructor(codigo, codigoMaster, descripcion) {
+      this.codigo = codigo;
+      this.codigoMaster = codigoMaster;
+      this.descripcion = descripcion;
+      
+    }
+}

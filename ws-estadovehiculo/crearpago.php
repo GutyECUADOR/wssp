@@ -89,6 +89,7 @@ if (!isset($_GET['codOrden'])) {
                     <div class="col-md-12">
                         <div class="input-group">
                             <input type="text" class="form-control" id="inputRUC" placeholder="RUC del proveedor" required>
+                            <input type="hidden" class="form-control" id="inputIDDocument" value="<?php echo $_GET['codOrden']?>" required>
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button" data-toggle="modal" data-target="#modalBuscarCliente"><span class="glyphicon glyphicon-search"></span> Buscar</button>
                         </span>

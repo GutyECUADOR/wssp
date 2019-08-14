@@ -143,6 +143,25 @@ class EstadoVehiculo {
         
     }
 
+
+    public function saveNewProduct($producto){
+      
+        $query = "
+            INSERT INTO dbo.ITEMS_pagos_vehiculo VALUES ('$producto->codigoMaster','$producto->codigo','$producto->descripcion');
+            ";
+
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $stmt->execute();
+            return array('error' => FALSE, 'message' => 'Registro correcto');
+           
+        }catch(PDOException $exception){
+            return array('error' => TRUE, 'status' => 'error', 'message' => $exception->getMessage() );
+        }
+
+        
+    }
+
     public function saveSolicitudMOV($arrayItems, $codigoCAB){
         $cont = 0;
         foreach ($arrayItems as $item) {
@@ -186,7 +205,7 @@ class EstadoVehiculo {
        
         foreach ($productos as $producto) {
             $query = "
-                INSERT INTO dbo.COMMOV_estado_vehiculos VALUES ('ODP000009','$producto->codigo','$producto->cantidad','$producto->valsubtotal')
+                INSERT INTO dbo.COMMOV_estado_vehiculos VALUES ('$solicitud->IDDocument','$producto->codigo','$producto->cantidad','$producto->valsubtotal')
             ";
 
             $stmt = $this->wssp_db->prepare($query); 
@@ -692,7 +711,7 @@ class EstadoVehiculo {
     }
 
     public function canDoPago($codOrden) {
-        $query = "SELECT * FROM dbo.";
+        $query = "SELECT * FROM dbo.COMMOV_estado_vehiculos WHERE codigoDocumento = '$codOrden'";
         $stmt = $this->wssp_db->prepare($query); 
         try{
             $stmt->execute();

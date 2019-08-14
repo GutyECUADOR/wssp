@@ -24,12 +24,14 @@ $(document).ready(function() {
                         cotizacion.proveedor = myCliente;
                         console.log(cotizacion);
         
+                        cotizacion.IDDocument = $('#inputIDDocument').val();
                         $('#inputCodigo').val(cliente.CODIGO.trim());
                         $('#inputNombre').val(cliente.NOMBRE.trim());
                       
                     } else {
                         myCliente = null;
                         cotizacion.proveedor = null;
+                        cotizacion.IDDocument = null;
                         $('#inputCodigo').val('');
                         $('#inputNombre').val('(Sin identificar)');
                         $('#inputRSocial').val('');
@@ -259,6 +261,10 @@ $(document).ready(function() {
                     console.log(response);
                     alert(response.message + 'Documento Generado: ' + response.newdocument);
                     app.resetForm();
+
+                    if (response.status === true) {
+                        window.location.replace('../ws-estadovehiculo/admin.php');
+                    }
                 }
             });
     

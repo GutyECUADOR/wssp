@@ -37,6 +37,11 @@ class ajax{
       return $this->ajax->saveOrdenPedido($solicitud);
     }
 
+    public function saveNewProduct($producto){
+      return $this->ajax->saveNewProduct($producto);
+    }
+
+
     public function getAllVehiculos($busqueda){
       return $this->ajax->getAllVehiculos($busqueda, $this->empresaActiva);
     }
@@ -122,6 +127,14 @@ class ajax{
             $formDataObject = json_decode($_POST['solicitud']);
             $respuesta = $ajax->saveOrdenPedido($formDataObject);
             $rawdata = $respuesta;
+            echo json_encode($rawdata);
+            }
+          break;
+
+        case 'saveNewProduct':
+          if (isset($_POST['producto'])) {
+            $formDataObject = json_decode($_POST['producto']);
+            $rawdata = $ajax->saveNewProduct($formDataObject);
             echo json_encode($rawdata);
             }
           break;

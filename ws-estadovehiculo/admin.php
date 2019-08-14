@@ -90,6 +90,8 @@ include_once ('../ws-admin/seguridad.php');
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="../ws-estadovehiculo/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Est. Vehiculo</a></li>
                                 <li><a href="./ordenPedido.php" target="_blank"><span class="glyphicon glyphicon-file"></span> Nuevo Orden Pedido</a></li>
+                                <li class="divider"></li>
+                                <li><a data-toggle="modal" data-target="#modalCrearProducto"><span class="glyphicon glyphicon-plus"></span> Agregar producto</a></li>
                             </ul>
                       </span>
                     </div><!-- /input-group -->
@@ -134,7 +136,7 @@ include_once ('../ws-admin/seguridad.php');
 	    </div>
         
       
-        <?php require_once 'modalBuscarCliente.php';?>
+        <?php require_once 'modalCrearProducto.php';?>
 
         <!-- USO JQUERY, animacion de menu para responsive-->
         <script src="http://code.jquery.com/jquery-latest.js"></script>
