@@ -49,6 +49,10 @@
                                     case 'EVA':
                                         $_SESSION['user_lv'] = 7;  
                                         break;
+
+                                    case 'SVC':
+                                        $_SESSION['user_lv'] = 7;  
+                                        break;
                                     
                                     case 'TEC':
                                         $_SESSION['user_lv'] = 2;  
