@@ -347,6 +347,10 @@ class EstadoVehiculo {
 
 
     public function getAllVehiculos ($busqueda='', $empresa='008'){
+        $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
+        $this->instanciaDB->setDbname($dataBaseName);
+        $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
+
         $query = "
         SELECT TOP 100
             vehiculo.Nombre as nombreVehiculo,
@@ -468,8 +472,8 @@ class EstadoVehiculo {
     public function generaReporte($codigo, $outputMode = 'S', $empresa='008'){
 
         $empresaData = $this->getInfoEmpresa($empresa);
-        $CAB_estado_vehiculo = $this->get_CAB_estado_vehiculo($codigo);
-        $MOV_estado_vehiculo = $this->get_MOV_estado_vehiculo($codigo);
+        $CAB_estado_vehiculo = $this->get_CAB_estado_vehiculo($codigo, $empresa);
+        $MOV_estado_vehiculo = $this->get_MOV_estado_vehiculo($codigo, $empresa);
 
         $COMMOV_estado_vehiculo = $this->get_COMMOV_estado_vehiculo($codigo);
         $tipoDOC = substr($codigo, 0,3);

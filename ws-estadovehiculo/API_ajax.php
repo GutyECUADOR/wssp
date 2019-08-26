@@ -41,7 +41,6 @@ class ajax{
       return $this->ajax->saveNewProduct($producto);
     }
 
-
     public function getAllVehiculos($busqueda){
       return $this->ajax->getAllVehiculos($busqueda, $this->empresaActiva);
     }

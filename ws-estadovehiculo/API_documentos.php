@@ -9,10 +9,15 @@ class ajax{
    
     public function __construct() {
       $this->ajax = new EstadoVehiculo();
+      if ($_SESSION) {
+        $this->empresaActiva = $_SESSION['empresa_autentificada'];
+      }else {
+        $this->empresaActiva = '008';
+      }
     }
 
     public function generaReporte($IDDocument) {
-      return $this->ajax->generaReporte($IDDocument, 'I');
+      return $this->ajax->generaReporte($IDDocument, 'I', $this->empresaActiva);
     }
     
 }
