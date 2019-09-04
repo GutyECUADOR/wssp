@@ -1,0 +1,24 @@
+{
+    "name": "vidiasoft/wssp-evanfitriones",
+    "description": "App de evaluacion de anfitriones",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "José Gutiérrez",
+            "email": "guti06@hotmail.es"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+          "./",
+          "./models/"
+        ],
+        "files": [
+            "./config/global.php"
+        ]
+    },
+    "require": {
+        "mpdf/mpdf": "^8.0"
+    }
+}

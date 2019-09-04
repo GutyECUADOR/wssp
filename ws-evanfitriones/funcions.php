@@ -60,20 +60,22 @@ require_once '../ws-admin/acceso_multi_db.php';
     }
     
     
-     function createSelectWithID($cod_itemINPUT){
+     function renderItems(){
         $db_empresa = getDataBase('009'); //009 WSSP DB
-        $consulta_detalleschecks = "SELECT codItem, detalle FROM dbo.detalle_anfitriones WHERE codItem = '$cod_itemINPUT' and estado='TRUE' ORDER BY codItem ASC";
-        $result_detalleschecks = odbc_exec($db_empresa, $consulta_detalleschecks);
-        $count_result = odbc_num_rows($result_detalleschecks);
+        $query = "SELECT codItem, detalle FROM dbo.detalle_anfitriones WHERE estado='TRUE' ORDER BY ID";
+        $resultset = odbc_exec($db_empresa, $query);
+        $count_result = odbc_num_rows($resultset);
         if ($count_result>=1){
             
-            while(odbc_fetch_row($result_detalleschecks))
+            while(odbc_fetch_row($resultset))
             {
-                
-                $detalle_item = iconv("iso-8859-1", "UTF-8", odbc_result($result_detalleschecks,"detalle"));
-                echo '<label for = "'.$cod_itemINPUT.'">'.$detalle_item.'</label>'; 
+                $cod_item = trim(iconv("iso-8859-1", "UTF-8", odbc_result($resultset,"codItem"))); 
+                $detalle_item = trim(iconv("iso-8859-1", "UTF-8", odbc_result($resultset,"detalle")));
+
+                echo '<div class="form-group col-lg-12 form-inline right-align">';
+                echo '<label for = "'.$cod_item.'">'.$detalle_item.'</label>'; 
                 echo '<div class="form-group">
-                                <select class="form-control input-sm centertext totalEV" id="'.$cod_itemINPUT.'" name="'.$cod_itemINPUT.'">
+                                <select class="form-control input-sm centertext totalEV" id="'.$cod_item.'" name="'.$cod_item.'">
                                     <option value=""> Seleccione por favor</option>
                                     <option value="4">Muy Bueno</option>
                                     <option value="3">Bueno</option>
@@ -83,7 +85,7 @@ require_once '../ws-admin/acceso_multi_db.php';
                      </div>
 
                     ';
-                
+                echo '</div>';
                 }
         }
     }
