@@ -11,11 +11,10 @@ include('funcions.php');
         
     <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css"  media="screen,projection"/>
     <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
-    <link rel="stylesheet" href="mystyles.css">
+    <link rel="stylesheet" href="assets/styles.css">
     <link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
     <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
     
-    <link rel="stylesheet" type="text/css" href="sweet/sweetalert.css">
       
         
 	<title><?php echo APP_NAME?></title>
@@ -48,7 +47,7 @@ include('funcions.php');
                         <label class="etique"> INFORMACIÓN PRINCIPAL</label>
                 </div>
                 
-                <form action="addregistro.php" method="POST">
+                <form id='registerForm' method="POST">
                     <div class="row">
                         <div class="form-group col-lg-4">
                         <label for="txt_CIRUC">Cédula/RUC</label>
@@ -79,19 +78,19 @@ include('funcions.php');
                             </select>
                          </div>
                         
-                        <div class="form-group col-lg-4">
+                        <div class="form-group col-lg-5">
                             <label for="select_Empleado">Seleccion de Empleado</label>
                             <div id="ajax_result">
-                                <select class="form-control" id="select_Empleado" onchange="valida_cargo()" required>
+                                <select class="form-control" id="select_Empleado" required>
                                     <option value="">Seleccione por favor</option>
                                 </select>
                             </div>    
                          </div>
                         
-                        <div class="form-group col-lg-5">
+                        <div class="form-group col-lg-4">
                           <label for="txt_cargo">Cargo</label>
                           <input type="text" class="form-control" id="txt_cargo" placeholder="(Cargo)" readonly>
-                          <small id="txt_cargo" class="form-text text-muted">Cargo se mostrara segun informacion de la base de datos.</small>
+                          <small id="txt_cargo" class="form-text text-muted">Cargo que ocupa el empleado.</small>
                         </div>
                         
                     </div> <!-- FIN DEL ROW -->
@@ -131,6 +130,7 @@ include('funcions.php');
                     
                     <div class="form-group center">
                         <button type="submit" class="btn btn-primary btn-md">Registrar</button>
+                        <button type="button" id='btn_test' class="btn btn-primary btn-md">Test</button>
                     </div>    
                         
                 </form>
@@ -145,9 +145,8 @@ include('funcions.php');
     </div>
     
       
-	<!-- USO JQUERY, animacion de menu para responsive-->
+	<!-- JS libraries -->
         <script src="../ws-admin/js/jquery-latest.js"></script>
-        <script src="sweet/sweetalert.min.js"></script>
         <script src="../ws-admin/js/bootstrap.js"></script>
         <script type="text/javascript" src="assets/app.js"></script>
         

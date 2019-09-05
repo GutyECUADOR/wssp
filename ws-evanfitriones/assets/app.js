@@ -76,35 +76,82 @@ $(document).ready(function() {
             }
         },
         loadmodal: function () {
-            $("#modalcodigo").modal();
+            $("#modalSeguridad").modal();
              //Obtener valor seleccionado y mostrarlo en el modal
              var val_evalua = document.getElementById("txt_empleadoIdentificado").value;
              $("#myModalLabel_usuario").text(val_evalua);
                        
         },
-        validacod_seguridad: function (cedula, codigoseguridad){
+        validacod_seguridad: function (cedula, codigo){
         
             $.ajax({
-                url: 'API_ajax.php?action=getEmpleadoByID',
+                url: 'API_ajax.php?action=validacod_seguridad',
                 method: 'GET',
-                data: {cedula, codigoseguridad},
+                data: {cedula, codigo},
 
                 success : function(response) {
-                    document.getElementById("aceptar_modal1").removeAttribute('disabled');
+                    console.log(response);
+                    const JSONresponse = JSON.parse(response);
+                   
                     $("#txt_CIRUC").attr("readonly","readonly");
-                           
+
+                    if (JSONresponse.data) {
+                        $('#modalresponse').html('El codigo de validacion es correcto');
+                        $('#modalSeguridad').modal('hide');
+                        
+
+                    }else{
+                        $('#modalresponse').html('El codigo de validacion es incorrecto, reintente.');
+                    }
+                    
+                    
                 }
             });
         
         },
-        getEmpleadosByDB: function (codeDB) {
+        valida_cargoEmpleado: function (cedula){
+        
+            $.ajax({
+                url: 'API_ajax.php?action=valida_cargoEmpleado',
+                method: 'GET',
+                data: { cedula },
+
+                success : function(response) {
+                    console.log(response);
+                    const JSONresponse = JSON.parse(response);
+                    console.log(JSONresponse);
+
+                    if (JSONresponse.data) {
+                        $('#txt_cargo').val(JSONresponse.data.descripcionCargo);
+                    }else{
+                        $('#txt_cargo').val('Sin identificar');
+                    }
+                    
+                    
+                }
+            });
+        
+        },
+        getEmpleadosByDB: function (codigoDB) {
             $.ajax({
                 url: 'API_ajax.php?action=getEmpleadosByDB',
                 method: 'GET',
-                data: { codeDB },
+                data: { codigoDB },
         
                 success: function (response) {
-                    console.log(response);
+                    const JSONresponse = JSON.parse(response);
+                    const empleados = JSONresponse.data;
+                    document.querySelector('#select_Empleado').options.length = 0;
+                    
+                    empleados.forEach(function(empleado) {
+                        let opt = document.createElement("option");
+                        opt.value= empleado.Cedula;
+                        opt.innerHTML = `${empleado.Apellido} ${empleado.Nombre} `; 
+
+                        document.querySelector('#select_Empleado').appendChild(opt);
+                      });
+                  
+                
                    
                 }, error: function (error) {
                     alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
@@ -124,10 +171,22 @@ $(document).ready(function() {
         }
     });
 
-    $("#txt_CIRUC").on("keyup", function() {
+    $("#txt_CIRUC").on("change", function() {
         let cedula = $(this).val();
         console.log(cedula);
         app.searchEmpleado(cedula);
+    });
+
+    $("#btn_validarpass").on("click", function() {
+        let cedula = $('#txt_CIRUC').val(); // revisar a objeto
+        let codigo = $('#cajacod').val(); 
+        app.validacod_seguridad(cedula,codigo);
+    });
+
+    $("#select_Empleado").on("change", function() {
+        let cedula = $(this).val();
+        console.log(cedula);
+        app.valida_cargoEmpleado(cedula);
     });
 
     $("#select_Empresa").on("change", function() {
@@ -136,23 +195,14 @@ $(document).ready(function() {
         app.getEmpleadosByDB(codeDB);
     });
 
-    $("#txt_placas").on("keyup", function() {
-        let cedula = $(this).val();
-        let empresa = $('#select_empresa').val();
-        console.log(cedula, empresa);
-        app.searchVehiculo(cedula, empresa);
-    });
-
-    $("#txt_kilometraje").on("keyup", function() {
-        let kilometraje = $(this).val();
-        solicitud.kilometraje = kilometraje;
-    });
-
     $("#txt_observacion").on("keyup", function() {
         let observacion = $(this).val();
         solicitud.observacion = observacion;
     });
 
+    $("#btn_test").on("click", function() {
+        console.log(solicitud);
+    });
 
     let registerForm = $('#registerForm');
     registerForm.on("submit", function(event) {
@@ -170,7 +220,6 @@ $(document).ready(function() {
 
             success: function(response) {
                 console.log(response);
-                toastr.success('Registro exitoso', 'Realizado', {timeOut: 5000, progressBar: true, positionClass: "toast-top-right"});
                 registerForm.trigger("reset");
                 $('html, body').animate({ scrollTop: 0 }, 'fast');
             },
@@ -186,10 +235,10 @@ $(document).ready(function() {
 class Solicitud {
     constructor() {
         this.fecha = new Date(),
+        this.supervisor = null,
         this.empleado = null,
-        this.vehiculo = null,
         this.empresa = null,
-        this.kilometraje = null,
+        this.porcentajeMeta = null,
         this.items = []
         this.observacion = null;
     }

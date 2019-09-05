@@ -2,7 +2,7 @@
 ?>
 
 <!-- Modal/Código de Seguridad-->
-            <div class="modal fade" id="modalcodigo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" >
+            <div class="modal fade" id="modalSeguridad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" >
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -14,18 +14,17 @@
                     
                     <div class="alert alert-info alert-dismissable">
                       <button type="button" class="close" data-dismiss="alert">&times;</button>
-                      <h5>¡IMPORTANTE!</h5><p> Asegúrese de ingresar su còdigo de seguridad de forma correcta o el registro no se llevarà a cabo.</p>
+                      <p id="modalresponse"> Asegúrese de ingresar su còdigo de seguridad de forma correcta o el registro no se llevarà a cabo.</p>
                     </div>
                     <div class="resultmodal" style="display:none;"></div>
 
-                        <input type="password" id="cajacod" name="txt_codseguridadchk" maxlength="45" placeholder="Código de Seguridad" requiered>
+                        <input type="password" class="form-control" id="cajacod" name="txt_codseguridadchk" maxlength="45" placeholder="Código de Seguridad" requiered>
                           
                   </div>
                   <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="aceptar_modal1" disabled="disabled">Aceptar </button>
-                            <button type="button" class="btn btn-warning btn-sm" id="btn_validarpass" onclick="window.location.reload(true);">Reingresar CI</button>
-                            <button type="button" class="btn btn-info btn-sm" id="btn_validarpass" onclick="ajaxvalidacod_seguridad()">Validar Código</button>
-                           
+                      <button type="button" class="btn btn-warning btn-sm" onclick="window.location.reload(true);">Reingresar CI</button>
+                      <button type="button" class="btn btn-info btn-sm" id="btn_validarpass">Validar Código</button>
+                      
                 </div>
               </div>
             </div>  
