@@ -4,22 +4,18 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; 
-  font-size: 12px;
 }
  
 body {
-  background: #FFFFFF;
-  font-family: "Roboto";
-  
-   }
+    font-family: "Roboto";
+    font-size: 12px;
+}
 
 .wrap {
-  margin-top: 10px;
-  padding-top: 20px;
-  max-width: 850px;
-  margin: auto;
-  background: #fff;
-  box-shadow: 0px 0px 10px grey; }
+    padding-top: 30px;
+    margin-bottom: 20px;
+    max-width: 850px;
+    box-shadow: 0px 0px 10px grey; }
 
 .centertext {
     text-align: center;
@@ -48,94 +44,29 @@ body {
   padding-bottom: 10px;
  }
 
-.contenedor-formulario {
-  width: 100%;
-  padding: 10px; }
-
-  .contenedor-formulario .formulario {
-    width: 100%;
-    margin: auto; }
-	
-	.contenedor-formulario .formulario .logo{
-          position:relative;
-          text-align: center;
-          max-width: 170px; 
-          max-height: 80px;
-	  margin: auto;
-          
-          padding-bottom: 10px;
-	 }
-        
-        .txtcentro{
-          position:relative;
-          padding-top: 5px;
-          padding-bottom: 20px;
-	  margin: auto;
-          text-align: center;
-          color: #D32F2F;
-          font-size: 12px;
-	 }
-         
-         
-         .derechasub{
-          position: relative;
-          padding-left: 76%;
-         }
-         
-         .inputnoinline{
-          display: inherit !important;
-          width: 90%;
-         }
-         
-         
-         .tablaedocs{
-    margin-top: 5px;
-    width: 100%;
-    min-width: 800px; 
-}
-
-.tablaedocs_modal{
-    margin-top: 5px;
-    width: 100%;
-}
-
-
-.textheadertable{
-    font-family: Roboto, arial, sans-serif;
+ 
+.txtcentro{
+    position:relative;
+    padding-top: 5px;
+    padding-bottom: 20px;
+    margin: auto;
+    text-align: center;
+    color: #D32F2F;
     font-size: 12px;
 }
 
-.trcabecera{
-    font-size: 12px;
+.txtseccion{
+    position:relative;
+    padding: 5px;
+    margin: auto;
     text-align: center;
-    color: #FFFFFF;
-    background: #5F637A;
+    font-weight: bold;
+    background: #303766;
+    color: #fff;
+    box-shadow: 0px 0px 1px grey;
+    margin-bottom:  18px;
 }
 
-.tdcabecera{
-    height: 25px;  
-    border: 1px solid #b2b2b2;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.tdcontenido{
-    text-align: center;
-    font-size: 12px;
-    border-bottom: 1px solid #b2b2b2;
-    height: 20px;
-}
-
-.celdagrid{
-    text-align: center;
-    font-size: 12px; 
-}
-
-.tdcontenido:hover{
-background-color:#b2b2b2;
-}
-         
-         
          
          .contenedor-formulario .formulario .txtseccion{
           position:relative;
@@ -149,41 +80,9 @@ background-color:#b2b2b2;
           margin-bottom:  18px;
 	 }
          
-         .txtseccion{
-          position:relative;
-          padding: 5px;
-	  margin: auto;
-          text-align: center;
-          font-weight: bold;
-          background: #303766;
-          color: #fff;
-          box-shadow: 0px 0px 1px grey;
-          margin-bottom:  18px;
-	 }
          
          
-        .cajaarea {
-        font-family: "Roboto";
-        font-size: 12px;
-        text-align: center;
-        color: #303766;
-        width: 100%;
-        outline: none;
-        padding: 5px;
-        background: #DDDDDD;
-        border: none;
-        margin-bottom: 10px;
-        
-        }
-        
-        
-         .contenedor-formulario .formulario .txtseccion .etique{
-          position:relative;
-          margin: auto;
-          font-size:12px;
-          
-         }
-
+      
 
 /*CALLOUTS*/
 

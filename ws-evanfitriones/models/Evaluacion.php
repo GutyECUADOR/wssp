@@ -35,7 +35,7 @@ class Evaluacion {
         return $resulset;  
     }
 
-    public function getNewCodigo($tipo='EVANFI'){
+    public function getNewCodigo($tipo='EVAN'){
         $query = "SELECT '$tipo'+RIGHT('000000'+ISNULL(CONVERT (Varchar , (SELECT COUNT(*)+1 FROM dbo.ev_anfitriones)),''),6) as codigo";
         $stmt = $this->wssp_db->prepare($query); 
 
@@ -59,8 +59,10 @@ class Evaluacion {
         }
     }
 
-    public function getItems($tipo){
-        $query = "SELECT * FROM dbo.ITEMS_estado_vehiculos WHERE activo='1' and tipo='$tipo'";
+    public function getItems(){
+        $query = "
+            SELECT codItem, detalle FROM dbo.detalle_anfitriones WHERE estado='TRUE' ORDER BY ID
+        ";
         $stmt = $this->wssp_db->prepare($query); 
 
         try{
@@ -148,6 +150,25 @@ class Evaluacion {
         }
     }
 
+    public function saveSolicitud($solicitud){
+        $newCod = $this->getNewCodigo()["codigo"];
+        $query = "
+            INSERT INTO dbo.ev_anfitriones 
+                (tipoDOC, empresa, supervisor, empleado, fecha, sumatoria, observacion, estado)
+            VALUES 
+                ('$newCod', '$solicitud->empresa', '$solicitud->supervisor', '$solicitud->empleado', '$solicitud->fecha', '$solicitud->sumatoria', '$solicitud->observacion', '0');
+        ";
+
+        try{
+            $stmt = $this->wssp_db->prepare($query); 
+            $resultado = $stmt->execute();
+            return array('error' => false , 'insertCorrect' => $resultado, 'mensaje' => 'Insert realizado');
+            
+        }catch(PDOException $exception){
+            return array('error' => TRUE, 'status' => 'error', 'mensaje' => $exception->getMessage() );
+        }
+
+    }
   
 
 

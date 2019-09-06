@@ -1,19 +1,26 @@
 <?php
-session_start();
-include('../ws-admin/funciones.php'); // Acceso a funciones utiles
+/* include('../ws-admin/funciones.php'); 
 include('../config/global.php');
-include('funcions.php');
+include('funcions.php'); */
+
+session_start();
+require_once  './vendor/autoload.php';
+$estadoVehiculo = new Evaluacion();
+$arrayEmpresas = $estadoVehiculo->getEmpresas();
+$arrayItems = $estadoVehiculo->getItems();
+
 ?>
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         
-    <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css"  media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="../libs/sweetalert2-master/dist/sweetalert2.min.css">    
     <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
     <link rel="stylesheet" href="assets/styles.css">
     <link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
     <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
+    
     
       
         
@@ -24,8 +31,7 @@ include('funcions.php');
 
     <?php include '../ws-admin/topnavBar.php'?>
 
-    <div class="contenedor-formulario">
-        <div class="container wrap">
+    <div class="container wrap">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="txtcentro">
@@ -40,15 +46,15 @@ include('funcions.php');
                     <img class="logo" src="../ws-admin/img/logo.png" alt="Logo">
                 </div>
             </div>
-            
-            <div class="row">
-                
+        
                 <div class="txtseccion">
                         <label class="etique"> INFORMACIÓN PRINCIPAL</label>
                 </div>
                 
                 <form id='registerForm' method="POST">
                     <div class="row">
+                        
+
                         <div class="form-group col-lg-4">
                         <label for="txt_CIRUC">Cédula/RUC</label>
                         <input type="text" class="form-control" id="txt_CIRUC" name="txt_CIRUC" maxlength="13" placeholder="Ingrese CI o RUC (13 caracteres)" required>
@@ -67,14 +73,19 @@ include('funcions.php');
                           <small id="txt_fechaRegistro" class="form-text text-muted">Fecha con la que se registrará el actual formulario.</small>
                         </div>
                         
-                    </div> <!-- FIN DEL ROW -->
+                    </div> 
                     
                     <div class="row">
                         <div class="form-group col-lg-3">
                             <label for="select_Empresa">Seleccion de Empresa</label>
                             <select class="form-control" id="select_Empresa" name="select_Empresa" required>
                                 <option value="">Seleccione por favor</option>
-                                <?php getSelectEmpresasWF();?>
+                                <?php 
+                                    foreach ($arrayEmpresas as $opcion) {
+                                        echo' <option value="'.trim($opcion['Codigo']).'"> '.$opcion['Nombre'].' </option>';
+                                    }
+
+                                    ?>
                             </select>
                          </div>
                         
@@ -93,30 +104,55 @@ include('funcions.php');
                           <small id="txt_cargo" class="form-text text-muted">Cargo que ocupa el empleado.</small>
                         </div>
                         
-                    </div> <!-- FIN DEL ROW -->
+                    </div> 
                     
                     <div class="txtseccion">
                         <label class="etique"> INFORMACIÓN DE REGISTRO</label>
                     </div>
-                   
+
                     <div class="row">
-                        <?php renderItems()?>
+                        <div class="text-right">
+
+                            <?php
+                                foreach ($arrayItems as $opcion) {
+                                    $codigo = trim($opcion['codItem']); 
+                                    $descripcion = trim($opcion['detalle']); 
+                               
+                            ?>
+
+                       
+                            <div class="form-group col-lg-12 form-inline right-align">
+                                <label for="<?php echo $codigo?>"><?php echo $descripcion?></label>
+                                <div class="form-group">
+                                            <select class="form-control input-sm centertext itemEV" id="<?php echo $codigo?>" name="<?php echo $codigo?>" required>
+                                                <option value=""> Seleccione por favor</option>
+                                                <option value="4">Muy Bueno</option>
+                                                <option value="3">Bueno</option>
+                                                <option value="2">Regular</option>
+                                                <option value="1">Malo</option>
+                                            </select>
+                                </div>
+
+                            </div>
+
+                            <?php } ?>
                             
-                        <div class="form-group col-lg-12 form-inline right-align">
-                            <label for = "">% de cumplimiento de la meta</label>
-                            <div class="form-group">
-                                <select class="form-control input-sm centertext totalEV" id="'.$cod_item.'" name="'.$cod_item.'">
-                                    <option value=""> Seleccione por favor</option>
-                                    <option value="90-100">90-100 %</option>
-                                    <option value="80-90">80-90 %</option>
-                                    <option value="70-80">70-80 %</option>
-                                    <option value="60-70">60-70 %</option>
-                                    <option value="0">No aplica</option>
-                                </select>
+                            <div class="form-group col-lg-12 form-inline right-align">
+                                <label for = "">% de cumplimiento de la meta</label>
+                                <div class="form-group">
+                                    <select class="form-control input-sm centertext" id="metaPorcent" name="metaPorcent" required>
+                                        <option value=""> Seleccione por favor</option>
+                                        <option value="90-100">90-100 %</option>
+                                        <option value="80-90">80-90 %</option>
+                                        <option value="70-80">70-80 %</option>
+                                        <option value="60-70">60-70 %</option>
+                                        <option value="0">No aplica</option>
+                                    </select>
+                                </div>
+
                             </div>
 
                         </div>
-
                     </div>
                     
                     <div class="txtseccion">
@@ -128,26 +164,24 @@ include('funcions.php');
                         <textarea class="form-control" rows="2" id="txt_observacion" name="txt_observacion" maxlength="150" placeholder="(200 caracteres)"></textarea>
                     </div>
                     
-                    <div class="form-group center">
+                    <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary btn-md">Registrar</button>
-                        <button type="button" id='btn_test' class="btn btn-primary btn-md">Test</button>
+                        <button type="button" id='btn_test' class="btn btn-danger btn-md">Test</button>
                     </div>    
                         
                 </form>
+
                 <div class="footer">Todos los derechos reservados © 2017 - <?php echo date('Y')?>, <?php echo 'Ver ' .APP_VERSION?></div>  
       
-            </div>
             
+    </div>       
         
             <?php require_once 'seguridadModal.php';?>
-            
-        
-    </div>
-    
-      
+           
 	<!-- JS libraries -->
         <script src="../ws-admin/js/jquery-latest.js"></script>
         <script src="../ws-admin/js/bootstrap.js"></script>
+        <script src="../libs/sweetalert2-master/dist/sweetalert2.all.min.js"></script>
         <script type="text/javascript" src="assets/app.js"></script>
         
 </body>

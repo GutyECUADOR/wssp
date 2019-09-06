@@ -19,11 +19,11 @@ $(document).ready(function() {
                     
                     if (JSONresponse.error == false && JSONresponse.data != false) {
                         $('#txt_empleadoIdentificado').val(`${JSONresponse.data.Apellido.trim()} ${JSONresponse.data.Nombre.trim()}`);
-                        solicitud.empleado = cedula.trim();
+                        solicitud.supervisor = cedula.trim();
                         app.loadmodal();
                     }else{
                         $('#txt_empleadoIdentificado').val(`Sin identificar`);
-                        solicitud.empleado = null;
+                        solicitud.supervisor = null;
                     }
                    
                 }, error: function (error) {
@@ -66,12 +66,12 @@ $(document).ready(function() {
             
             
         },
-        addItems: function (){
-            let list = document.getElementsByClassName("itemVehiculo");
+        addItemsToSolicitud: function (){
+            let list = document.getElementsByClassName("itemEV");
             for (let item of list) {
                 if (item.value) {
-                    let ItemVehiculo = new Item(item.id,item.value);
-                    solicitud.items.push(ItemVehiculo);
+                    let itemEV = new Item(item.id,item.value);
+                    solicitud.items.push(itemEV);
                 }
             }
         },
@@ -186,14 +186,25 @@ $(document).ready(function() {
     $("#select_Empleado").on("change", function() {
         let cedula = $(this).val();
         console.log(cedula);
+        solicitud.empleado = cedula.trim();
         app.valida_cargoEmpleado(cedula);
     });
 
     $("#select_Empresa").on("change", function() {
         let codeDB = $(this).val();
         console.log(codeDB);
+        solicitud.empresa = codeDB;
         app.getEmpleadosByDB(codeDB);
     });
+
+    $("#metaPorcent").on("change", function() {
+        let seleccion = $(this).val();
+        console.log(seleccion);
+        solicitud.porcentajeMeta = seleccion;
+    });
+
+
+    
 
     $("#txt_observacion").on("keyup", function() {
         let observacion = $(this).val();
@@ -202,12 +213,19 @@ $(document).ready(function() {
 
     $("#btn_test").on("click", function() {
         console.log(solicitud);
+        Swal.fire({
+            title: 'Registro correcto!',
+            text: `El codigo de su evlauacion es: `,
+            type: 'success',
+            confirmButtonText: 'Aceptar'
+        })
     });
 
     let registerForm = $('#registerForm');
     registerForm.on("submit", function(event) {
         event.preventDefault();
-        app.addItems();
+        app.addItemsToSolicitud();
+        solicitud.calculaTotal();
 
         console.log(solicitud);
        
@@ -221,6 +239,8 @@ $(document).ready(function() {
             success: function(response) {
                 console.log(response);
                 registerForm.trigger("reset");
+                $("#txt_CIRUC").attr("readonly",false);
+                solicitud = new Solicitud();
                 $('html, body').animate({ scrollTop: 0 }, 'fast');
             },
             error: function(error) {
@@ -239,8 +259,16 @@ class Solicitud {
         this.empleado = null,
         this.empresa = null,
         this.porcentajeMeta = null,
-        this.items = []
+        this.items = [],
+        this.sumatoria = null,
         this.observacion = null;
+    }
+
+    calculaTotal(){
+        let total = this.items.reduce(function (total, currentValue) {
+            return total + Number(currentValue.valor);
+        }, 0);
+        this.sumatoria = total
     }
 }
 

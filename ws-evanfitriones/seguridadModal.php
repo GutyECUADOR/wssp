@@ -22,8 +22,8 @@
                           
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-warning btn-sm" onclick="window.location.reload(true);">Reingresar CI</button>
-                      <button type="button" class="btn btn-info btn-sm" id="btn_validarpass">Validar Código</button>
+                      <button type="button" class="btn btn-danger btn-sm" onclick="window.location.reload(true);">Reingresar CI</button>
+                      <button type="button" class="btn btn-success btn-sm" id="btn_validarpass">Validar Código</button>
                       
                 </div>
               </div>

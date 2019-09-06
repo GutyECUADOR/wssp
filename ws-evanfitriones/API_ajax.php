@@ -73,10 +73,6 @@ class ajax{
           echo json_encode($rawdata);
         break;
 
-
-        
-        
-
         case 'saveSolicitud':
           if (isset($_POST['solicitud'])) {
             $formDataObject = json_decode($_POST['solicitud']);

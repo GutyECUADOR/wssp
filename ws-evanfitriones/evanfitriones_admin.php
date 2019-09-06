@@ -16,20 +16,9 @@ include_once('funcions.php');
         <link rel="stylesheet" href="../ws-admin/css/estilos_main.css">
         <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
         <link rel="stylesheet" href="../ws-admin/fonts/style.css">
-	
-       <!-- USO JQUERY, animacion de menu para responsive-->
-        <script src="../ws-admin/js/jquery-latest.js"></script>
-        <script src="../ws-admin/js/bootstrap.js"></script>
-        <script src="../ws-admin/js/menuresponsive.js"></script>
-        
-        <script src="sweet/dist/sweetalert.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="sweet/dist/sweetalert.css">
-       
-        <!-- Librerias datepicker Boostrap3-->
+        <link rel="stylesheet" type="text/css" href="../libs/sweetalert2-master/dist/sweetalert2.min.css">
         <link href="../libs/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.css" rel="stylesheet">
-        <script src="../libs/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js"></script>
-        <script src="../libs/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
-        <script type="text/javascript" src="../ws-admin/js/myJS.js"></script>
+        
        
         <title><?php echo APP_NAME. " Administración"?></title>
 </head>
@@ -103,8 +92,15 @@ include_once('funcions.php');
                 
         </div>
      
-    <!-- USO JQUERY, animacion de menu para responsive-->
-        <script type="text/javascript" src="functions.js"></script>
+    <!-- JS Libs -->
+    <script src="../ws-admin/js/jquery-latest.js"></script>
+    <script src="../ws-admin/js/bootstrap.js"></script>
+    <script src="../ws-admin/js/menuresponsive.js"></script> 
+    <script src="../libs/sweetalert2-master/dist/sweetalert2.min.js"></script>
+    <script src="../libs/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js"></script>
+    <script src="../libs/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
+    <script type="text/javascript" src="../ws-admin/js/myJS.js"></script>
+    <script type="text/javascript" src="assets/functions.js"></script>
         
 </body>
 </html>
