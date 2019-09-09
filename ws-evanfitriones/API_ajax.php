@@ -37,6 +37,10 @@ class ajax{
       return $this->ajax->saveSolicitud($solicitud);
     }
 
+    public function getAllEvaluaciones($busqueda){
+      return $this->ajax->getAllEvaluaciones($busqueda);
+    }
+
 }
 
   try{
@@ -80,6 +84,13 @@ class ajax{
             $rawdata = $respuesta;
             echo json_encode($rawdata);
             }
+        break;
+
+        case 'getAllEvaluaciones':
+          $busqueda = $_GET["busqueda"];
+          $respuesta = $ajax->getAllEvaluaciones($busqueda);
+          $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
+          echo json_encode($rawdata);
         break;
 
         default:

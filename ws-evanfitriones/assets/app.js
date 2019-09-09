@@ -143,11 +143,15 @@ $(document).ready(function() {
                     const empleados = JSONresponse.data;
                     document.querySelector('#select_Empleado').options.length = 0;
                     
+                    let opt = document.createElement("option");
+                    opt.value="";
+                    opt.innerHTML = `Seleccione por favor`; 
+                    document.querySelector('#select_Empleado').appendChild(opt);
+
                     empleados.forEach(function(empleado) {
                         let opt = document.createElement("option");
-                        opt.value= empleado.Cedula;
+                        opt.value= empleado.Codigo.trim();
                         opt.innerHTML = `${empleado.Apellido} ${empleado.Nombre} `; 
-
                         document.querySelector('#select_Empleado').appendChild(opt);
                       });
                   
@@ -214,9 +218,9 @@ $(document).ready(function() {
     $("#btn_test").on("click", function() {
         console.log(solicitud);
         Swal.fire({
-            title: 'Registro correcto!',
-            text: `El codigo de su evlauacion es: `,
-            type: 'success',
+            title: 'Ups, no se pudo registrar!',
+            text: `El registro no se realizo de forma correcta, reintente. Tiempo de espera agotado`,
+            type: 'error',
             confirmButtonText: 'Aceptar'
         })
     });
@@ -238,10 +242,29 @@ $(document).ready(function() {
 
             success: function(response) {
                 console.log(response);
+                const responseJSON = JSON.parse(response);
                 registerForm.trigger("reset");
                 $("#txt_CIRUC").attr("readonly",false);
+                document.querySelector('#select_Empleado').options.length = 0;
+                $('#cajacod').val('');
                 solicitud = new Solicitud();
                 $('html, body').animate({ scrollTop: 0 }, 'fast');
+
+                if (responseJSON.insertCorrect) {
+                    Swal.fire({
+                        title: 'Registro correcto!',
+                        text: `El codigo de su evlauacion es: ${responseJSON.newCod}`,
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    })
+                }else{
+                    Swal.fire({
+                        title: 'Ups, no se pudo registrar!',
+                        text: `El registro no se realizo de forma correcta, reintente. ${responseJSON.message}`,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    })
+                }
             },
             error: function(error) {
                 alert('No se pudo completar la operación. #' + error.status + ' ' + error.statusText, '. Intentelo mas tarde.');

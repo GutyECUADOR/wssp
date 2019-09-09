@@ -13,7 +13,6 @@
                   <div class="modal-body">
                     
                     <div class="alert alert-info alert-dismissable">
-                      <button type="button" class="close" data-dismiss="alert">&times;</button>
                       <p id="modalresponse"> Asegúrese de ingresar su còdigo de seguridad de forma correcta o el registro no se llevarà a cabo.</p>
                     </div>
                     <div class="resultmodal" style="display:none;"></div>

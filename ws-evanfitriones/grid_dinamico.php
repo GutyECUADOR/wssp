@@ -2,7 +2,26 @@
 require_once '../ws-admin/acceso_multi_db.php';
    
 $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB
-        $query = "select top 100 (B.Nombre + B.Apellido)as empleadoN, (c.Nombre + c.Apellido)as supervisorN, d.Nombre as empresaN, A.* from dbo.ev_anfitriones as A INNER JOIN SBIOKAO.DBO.Empleados AS B ON B.Codigo = A.empleado INNER JOIN SBIOKAO.dbo.Empleados as C on C.Cedula = A.supervisor INNER JOIN SBIOKAO.dbo.Empresas_WF as D ON D.Codigo = A.empresa";
+        $query = "
+        SELECT TOP 100
+            evaluacion.id,
+            evaluacion.tipoDoc as codEvaluacion,
+            evaluacion.empresa,
+            empresa.Nombre as nombreEmpresa,
+            evaluacion.supervisor,
+            supervisor.Apellido + supervisor.Nombre as nombreSupervisor,
+            evaluacion.empleado,
+            empleado.Apellido + empleado.Nombre as nombreEmpleado,
+            evaluacion.fecha,
+            evaluacion.sumatoria,
+            evaluacion.observacion,
+            evaluacion.estado
+            FROM dbo.ev_anfitriones as evaluacion
+            LEFT JOIN SBIOKAO.DBO.Empleados AS empleado ON empleado.Cedula = evaluacion.empleado 
+            LEFT JOIN SBIOKAO.dbo.Empleados AS supervisor ON supervisor.Cedula = evaluacion.supervisor
+            INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = evaluacion.empresa
+        ORDER BY id DESC
+        ";
         $result_consulta_chlocales = odbc_exec($db_empresa, $query);
         $count_result = odbc_num_rows($result_consulta_chlocales);
             if ($count_result>=1){
@@ -12,7 +31,8 @@ $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun c
             
             echo " <table class='tablaedocs'>";    
             echo " <tr class='trcabecera'>
-                    <td tdcabecera title='Código'>ID</td>
+                    <td tdcabecera title='ID'>ID</td>
+                    <td tdcabecera title='Código'>Cod Eva.</td>
                     <td tdcabecera title='Empresa'>Empresa</td>
                     <td tdcabecera title='Supervisor'>Supervisor</td>
                     <td tdcabecera title='Empleado'>Empleado</td>
@@ -22,18 +42,15 @@ $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun c
                     <td tdcabecera title='Informe'>Informe</td>
                   </tr>
                 ";  
-            //Construcción Filas
-          
+           
             $cont=0;
             while(odbc_fetch_row($result_consulta_chlocales))
             {
-                //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_consulta_chlocales,"id");
-                //$empresa = odbc_result($result_consulta_chlocales,"NombreEmpresaN");
-                $empresacodDB = odbc_result($result_consulta_chlocales,"empresaN");
-                //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorN"));
-                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"empleadoN"));
+                $cod_evaluacion = odbc_result($result_consulta_chlocales,"codEvaluacion");
+                $empresacodDB = odbc_result($result_consulta_chlocales,"nombreEmpresa");
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"nombreSupervisor"));
+                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"nombreEmpleado"));
                 $fechaPDF = odbc_result($result_consulta_chlocales,"fecha");
                 $puntaje = odbc_result($result_consulta_chlocales,"sumatoria");
                
@@ -53,6 +70,7 @@ $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun c
                 
                     echo"<tr class='celdagrid' bgcolor=${color_row[$ind_color]}>";
                     echo"<td>".$cod_reporte."</td>";
+                    echo"<td>".$cod_evaluacion."</td>";
                     echo"<td>".$empresacodDB."</td>";
                     echo"<td>".$supervisor_pdf."</td>";
                     echo"<td>".$empleado_pdf."</td>";

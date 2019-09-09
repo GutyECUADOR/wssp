@@ -32,18 +32,19 @@ $arrayItems = $estadoVehiculo->getItems();
     <?php include '../ws-admin/topnavBar.php'?>
 
     <div class="container wrap">
+            
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <img class="logo" src="../ws-admin/img/logokao_new.png" alt="Logo">
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="txtcentro">
                             <h5>FORMULARIO DE PERSONAL ANFITRIONES</h5>
                             <h6>rev04.09.2019</h6>
                     </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-sm-12 text-center">
-                    <img class="logo" src="../ws-admin/img/logo.png" alt="Logo">
                 </div>
             </div>
         
@@ -156,7 +157,7 @@ $arrayItems = $estadoVehiculo->getItems();
                     </div>
                     
                     <div class="txtseccion">
-                        <label class="etique"> ACCIONES</label>
+                        <label class="etique"> OBSERVACIONES</label>
                     </div>
                     
                     <div class="form-group">
@@ -166,7 +167,7 @@ $arrayItems = $estadoVehiculo->getItems();
                     
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary btn-md">Registrar</button>
-                        <button type="button" id='btn_test' class="btn btn-danger btn-md">Test</button>
+                        <!-- <button type="button" id='btn_test' class="btn btn-danger btn-md">Test</button> -->
                     </div>    
                         
                 </form>
