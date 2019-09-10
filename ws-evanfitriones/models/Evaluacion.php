@@ -114,7 +114,7 @@ class Evaluacion {
     }
 
     public function validacod_seguridad($cedula, $codigo){
-        $query = "SELECT Codigo,Cedula, Nombre, Apellido, Empresa_WF, CodDpto FROM dbo.Empleados with (nolock) WHERE Cedula='$cedula' AND Clave = '$codigo' AND CodDpto IN ('EVA','SUP','ASI')";
+        $query = "SELECT Codigo,Cedula, Nombre, Apellido, Empresa_WF, CodDpto FROM dbo.Empleados with (nolock) WHERE Cedula='$cedula' AND Clave = '$codigo' AND CodDpto IN ('EVA','SUP','ASI','SSP')";
         $stmt = $this->sbio_db->prepare($query); 
 
         try{
