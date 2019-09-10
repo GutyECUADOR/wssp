@@ -157,9 +157,9 @@ class Evaluacion {
         $newCod = $this->getNewCodigo()["codigo"];
         $query = "
             INSERT INTO dbo.ev_anfitriones 
-                (tipoDOC, empresa, supervisor, empleado, fecha, sumatoria, observacion, estado)
+                (tipoDOC, empresa, supervisor, empleado, fecha, sumatoria, meta, observacion, estado)
             VALUES 
-                ('$newCod', '$solicitud->empresa', '$solicitud->supervisor', '$solicitud->empleado', '$solicitud->fecha', '$solicitud->sumatoria', '$solicitud->observacion', '0');
+                ('$newCod', '$solicitud->empresa', '$solicitud->supervisor', '$solicitud->empleado', '$solicitud->fecha', '$solicitud->sumatoria', '$solicitud->porcentajeMeta', '$solicitud->observacion', '0');
         ";
 
         try{
@@ -329,6 +329,9 @@ class Evaluacion {
             </div>
          
              <div id="infoCliente" class="rounded">
+
+             
+                <div class="cabecera"><b>Codigo Evaluacion:</b> '.$evaluacion_CAB["codEvaluacion"].' </div>
                 <div class="cabecera"><b>Fecha de Evaluacion:</b> '.$evaluacion_CAB["fecha"].' </div>
                 <div class="cabecera"><b>Supervisor evaluador:</b> '.$evaluacion_CAB["nombreSupervisor"].'</div>
                 <div class="cabecera"><b>Empleado evaluado:</b> '.$evaluacion_CAB["nombreEmpleado"].'</div>
