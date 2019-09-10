@@ -3,13 +3,15 @@ $(document).ready(function() {
     // Inicio de funciones
     app = {
         OnInit: function () {
-            app.getAllEvaluaciones('');
+            const dateini = document.getElementById("fechaINI").value;
+            const datefin = document.getElementById("fechaFIN").value;
+            app.getAllEvaluaciones(dateini, datefin, '002');
         },
-        getAllEvaluaciones: function (busqueda) { 
+        getAllEvaluaciones: function (fechaINI, fechaFIN, empresa) { 
             $.ajax({
                 url: 'API_ajax.php?action=getAllEvaluaciones',
                 method: 'GET',
-                data: { busqueda },
+                data: { fechaINI, fechaFIN, empresa },
         
                 success: function (response) {
                     console.log(response);
@@ -54,7 +56,7 @@ $(document).ready(function() {
                     console.log(response);
                     let JSONresponse = JSON.parse(response);
                     alert(JSONresponse.message + ' se aprobaron ' + JSONresponse.data + ' ordene(s)');
-                    app.getAllVehiculos('');
+                    app.getAllEvaluaciones('');
                    
                 }, error: function (error) {
                     alert('No se pudo completar la operación, informe a sistemas. #' + error.status + ' ' + error.statusText);
@@ -212,9 +214,11 @@ $(document).ready(function() {
     });
 
     $("#btn_busqueda").on("click", function() {
-        let busqueda = $('#txt_busqueda').val();
-        console.log(busqueda);
-        app.getAllVehiculos(busqueda);
+        let fechaINI = $('#fechaINI').val();
+        let fechaFIN = $('#fechaFIN').val();
+        let empresa = $('#seleccion_empresa').val();
+        console.log(fechaINI, fechaFIN, empresa);
+        app.getAllEvaluaciones(fechaINI, fechaFIN, empresa);
     });
 
     // Boton de creacion de PDF en busqueda de documentos

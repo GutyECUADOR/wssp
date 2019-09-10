@@ -125,20 +125,23 @@ class Evaluacion {
         }
     }
 
-    public function valida_cargoEmpleado($cedula, $empresa='008'){
+    public function valida_cargoEmpleado($codigo, $empresa='008'){
         $dataBaseName = $this->getDBNameByCodigo($empresa)['NameDatabase'];
         $this->instanciaDB->setDbname($dataBaseName);
         $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
 
         $query = "
-            SELECT 
-                ROL.codigo as cedulaEmpleado, 
-                ROL.cargo as codigoCargo, 
-                Cargos.Nombre as descripcionCargo 
-                FROM 
-                    dbo.ROL_EMPLEADOS as ROL 
-                INNER JOIN dbo.ROL_Cargos as Cargos ON ROL.cargo = Cargos.Codigo  
-            WHERE ROL.codigo = '$cedula'
+        SELECT 
+            SBIO.Codigo as codEmpleado,
+            ROL.codigo as cedulaEmpleado, 
+            ROL.cargo as codigoCargo, 
+            Cargos.Nombre as descripcionCargo 
+            FROM 
+                dbo.ROL_EMPLEADOS as ROL 
+            INNER JOIN SBIOKAO.dbo.Empleados as SBIO on SBIO.Cedula = ROL.codigo COLLATE Modern_Spanish_CI_AS
+            INNER JOIN dbo.ROL_Cargos as Cargos ON ROL.cargo = Cargos.Codigo
+    WHERE 
+        SBIO.Codigo = '$codigo'
         ";
         $stmt = $this->empresa_db->prepare($query); 
 
@@ -194,7 +197,7 @@ class Evaluacion {
         }
     }
 
-    public function getAllEvaluaciones ($busqueda=''){
+    public function getAllEvaluaciones ($fechaINI, $fechaFIN, $empresa='008'){
        
         $query = "
         SELECT TOP 100
@@ -215,7 +218,9 @@ class Evaluacion {
             LEFT JOIN SBIOKAO.DBO.Empleados AS empleado ON empleado.Codigo = evaluacion.empleado 
             LEFT JOIN SBIOKAO.dbo.Empleados AS supervisor ON supervisor.Cedula = evaluacion.supervisor
             INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = evaluacion.empresa
-            WHERE empleado LIKE '%$busqueda%'
+            WHERE
+				evaluacion.fecha BETWEEN '$fechaINI' AND '$fechaFIN'
+				AND evaluacion.empresa = '$empresa'
         ORDER BY id DESC
 
         

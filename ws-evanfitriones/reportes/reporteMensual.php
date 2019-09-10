@@ -2,74 +2,92 @@
     require_once '../../ws-admin/acceso_multi_db.php';
     require_once '../../libs/mpdf/mpdf.php';
    
-    $empresa_search = $_GET['empresa_search'];
-    $fecha_ini = $_GET['dateini'];
-    $fecha_fin = $_GET['datefin'];
-    
-    $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
- 
-    $fecha_actual= $dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y') ;
-
-// Metadados de PDF
+    $empresa = $_GET['empresa_search'];
+    $fechaINI = $_GET['dateini'];
+    $fechaFIN = $_GET['datefin'];
     
     $name_doc = 'reporte'.$empresa_search.'.pdf';
-    $css = file_get_contents('style.css');
+    $css = file_get_contents('../assets/reportesStyles.css');
     $destino = 'I';
     
     $html = '
-      
-     <body>
-    <header class="clearfix">
-      <div id="logo">
-        <img class="logo" src="logo.png">
-        
-      </div>
-      <h1>EVALUACION DE PERSONAL ANFITRIONES</h1>
-      <div id="contenedor_info">
-            <div id="company" class="clearfix">
-              <div>KAO Sport Center</div>
-              <div>Av. de los Shyris y Naciones Unidas Edificio Nuñez Vela<br /> Quito, Ecuador</div>
-              <div>(593-2)-2550005</div>
-              <div><a href="mailto:info@kaosport.com">info@kaosport.com</a></div>
+             
+        <div style="width: 100%;">
+    
+            <div id="logosection">
+                <img id="logo" src="../assets/logo_dark.png" alt="Logo">
             </div>
-            <div id="datos1">
-              <div><span>EMPRESA: </span> '.$empresa_search.' </div>
-              <div><span>FECHA DEL REPORTE:</span> '.  $fecha_actual .'</div>
-            </div>
-      </div>    
-    </header>
-    <main>
-        <div class="grupo-2">
-        <table>
-            <thead>
-            <tr>
-                <th class="title-row" >ID</th>
-                <th class="title-row">SUPERVISOR</th>
-                <th class="title-row">EMPLEADO</th>
-                <th class="title-row">FECHA REPORTADA</th>
-                <th class="title-row">PUNTAJE</th>
-                <th class="title-row">A RECIBIR</th>
-            </tr> 
-            </thead>
-            <tbody>
-                ';
 
+            
+            <div id="informacion">
+                    <h3>Evaluacion de Anfitriones</h3>
+            </div>
+          
+    
+        </div>
+    
+        <div id="infoCliente" class="rounded">
+            <div class="cabecera"><b>Fecha de reporte:</b> '.date('Y-m-d').' </div>
+            <div class="cabecera"><b>Desde: </b> '.$fecha_ini.'</div>
+            <div class="cabecera"><b>Hasta:</b> '.$fecha_fin.'</div>
+        </div>
+        <span>Lista de Evaluaciones</span>
+    
+        <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+            <thead>
+                <tr>
+                    <td width="10%">ID</td>
+                    <td width="10%">Cod EV.</td>
+                    <td width="20%">Evaluador</td>
+                    <td width="20%">Evaluado</td>
+                    <td width="10%">Fecha</td>
+                    <td width="10%">Puntaje</td>
+                    <td width="10%">Meta</td>
+                    <td width="10%">A recibir</td>
+                    
+                </tr>
+            </thead>
+        <tbody>';
+            
             $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB
-            $query = "select top 100 (B.Nombre + B.Apellido)as empleadoN, (c.Nombre + c.Apellido)as supervisorN, d.Nombre as empresaN, A.* from dbo.ev_anfitriones as A INNER JOIN SBIOKAO.DBO.Empleados AS B ON B.Codigo = A.empleado INNER JOIN SBIOKAO.dbo.Empleados as C on C.Cedula = A.supervisor INNER JOIN SBIOKAO.dbo.Empresas_WF as D ON D.Codigo = A.empresa WHERE a.fecha BETWEEN '$fecha_ini' AND '$fecha_fin' AND empresa = '$empresa_search'  ORDER BY id ASC";
-            $result_consulta_chlocales = odbc_exec($db_empresa, $query);
+            $query = "
+              SELECT TOP 100
+                  evaluacion.id,
+                  evaluacion.tipoDoc as codEvaluacion,
+                  evaluacion.empresa,
+                  empresa.Nombre as nombreEmpresa,
+                  evaluacion.supervisor,
+                  supervisor.Apellido + supervisor.Nombre as nombreSupervisor,
+                  evaluacion.empleado,
+                  empleado.Apellido + empleado.Nombre as nombreEmpleado,
+                  evaluacion.fecha,
+                  evaluacion.sumatoria,
+                  evaluacion.observacion,
+                  evaluacion.meta,
+                  evaluacion.estado
+                  FROM dbo.ev_anfitriones as evaluacion
+                  LEFT JOIN SBIOKAO.DBO.Empleados AS empleado ON empleado.Codigo = evaluacion.empleado 
+                  LEFT JOIN SBIOKAO.dbo.Empleados AS supervisor ON supervisor.Cedula = evaluacion.supervisor
+                  INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = evaluacion.empresa
+                  WHERE
+                      evaluacion.fecha BETWEEN '$fechaINI' AND '$fechaFIN'
+                      AND evaluacion.empresa = '$empresa'
+              ORDER BY id DESC
+           ";
+            
+            $result_query = odbc_exec($db_empresa, $query);
            
-            while(odbc_fetch_row($result_consulta_chlocales))
+            while(odbc_fetch_row($result_query))
             {
-                //RECUPERAR DATOS
-                $cod_reporte = odbc_result($result_consulta_chlocales,"id");
-                //$empresa = odbc_result($result_consulta_chlocales,"NombreEmpresaN");
-                $empresacodDB = odbc_result($result_consulta_chlocales,"empresaN");
-                //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"supervisorN"));
-                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_consulta_chlocales,"empleadoN"));
-                $fechaPDF = odbc_result($result_consulta_chlocales,"fecha");
-                $puntaje = odbc_result($result_consulta_chlocales,"sumatoria");
+                $id = odbc_result($result_query,"id");
+                $cod_evaluacion = odbc_result($result_query,"codEvaluacion");
+                $empresacodDB = trim(odbc_result($result_query,"nombreEmpresa"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"nombreSupervisor"));
+                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"nombreEmpleado"));
+                $fechaPDF = odbc_result($result_query,"fecha");
+                $puntaje = odbc_result($result_query,"sumatoria");
+                $meta = odbc_result($result_query,"meta");
+                $observacion = odbc_result($result_query,"observacion");
                 
                 if($puntaje>25){
                     $extra = 30;
@@ -81,35 +99,30 @@
 
               $html .= '
               <tr>
-                <td class="service">'.$cod_reporte.'</td>
-                <td class="service">'.$supervisor_pdf.'</td>
-                <td class="service">'.$empleado_pdf.'</td>
-                <td class="service">'.$fechaPDF.'</td>
-                <td class="service">'.$puntaje.' / 28</td>
-                <td class="service">$ '.$extra.'</td>
+                <td>'.$id.'</td>
+                <td>'.$cod_evaluacion.'</td>
+                <td>'.$supervisor_pdf.'</td>
+                <td>'.$empleado_pdf.'</td>
+                <td>'.$fechaPDF.'</td>
+                <td>'.$puntaje.'</td>
+                <td>'.$meta.'</td>
+                <td> $ '.$extra.'</td>
              
               </tr>';
             }
+
+        $html .= ' 
+        
     
-            $html .= ' 
-            </tbody>
-        </table>
-        </div>
-        
-        <div id="cont_firmas">
-            <div id="firma1">Firma Autorizada</div>
-        </div>
-
-        
-        
-    </main>
-    <div class="grupo-2">
-   
-    </div>
-  </body>
-
-    ';
+        <!-- END ITEMS HERE -->
             
+        </tbody>
+        </table>';
+
+        $html .= ' 
+        
+        
+    ';  
     
     $mpdf = new mPDF('c','A4');
     $mpdf->WriteHTML($css,1);

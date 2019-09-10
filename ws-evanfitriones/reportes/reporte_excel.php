@@ -45,9 +45,9 @@ require_once '../../libs/PHPExcel-1.8/PHPExcel.php';
 
 // datos de busqueda
    
-    $fecha_ini= filter_input(INPUT_GET,'dateini');
-    $fecha_fin=  filter_input(INPUT_GET, 'datefin');
-    $empresa_search = filter_input(INPUT_GET,'empresa_search'); 
+    $fechaINI= filter_input(INPUT_GET,'dateini');
+    $fechaFIN=  filter_input(INPUT_GET, 'datefin');
+    $empresa = filter_input(INPUT_GET,'empresa_search'); 
 
 
 // Create new PHPExcel object
@@ -81,43 +81,80 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(TRUE);
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(TRUE);
 $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(TRUE);
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(TRUE);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(TRUE);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(TRUE);
 
 // Add some titles
 $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'ID.')
-            ->setCellValue('B1', 'EMPRESA')
-            ->setCellValue('C1', 'SUPERVISOR')
-            ->setCellValue('D1', 'EMPLEADO')
-            ->setCellValue('E1', 'FECHA DE EV.')
-            ->setCellValue('F1', 'PUNTAJE')
-            ->setCellValue('G1', 'A RECIBIR');
+            ->setCellValue('B1', 'COD EV.')
+            ->setCellValue('C1', 'EMPRESA')
+            ->setCellValue('D1', 'SUPERVISOR')
+            ->setCellValue('E1', 'EMPLEADO')
+            ->setCellValue('F1', 'FECHA DE EV.')
+            ->setCellValue('G1', 'PUNTAJE')
+            ->setCellValue('H1', 'META')
+            ->setCellValue('I1', 'OBSERVACION');
 
-$numero=1; // Identifica la fila que sera llenada
+        $numero=1; // Identifica la fila que sera llenada
+        
         $db_empresa = getDataBase('009'); //Obtenemos conexion con base de datos segun codigo de la DB (009 - ODBC_wssp)
-        $consulta_general = "select (B.Nombre + B.Apellido)as empleadoN, (c.Nombre + c.Apellido)as supervisorN, d.Nombre as empresaN, A.* from dbo.ev_anfitriones as A INNER JOIN SBIOKAO.DBO.Empleados AS B ON B.Codigo = A.empleado INNER JOIN SBIOKAO.dbo.Empleados as C on C.Cedula = A.supervisor INNER JOIN SBIOKAO.dbo.Empresas_WF as D ON D.Codigo = A.empresa WHERE a.fecha BETWEEN '$fecha_ini' AND '$fecha_fin' AND empresa = '$empresa_search'  ORDER BY id ASC";
+        
+        $query = "
+            SELECT TOP 100
+                evaluacion.id,
+                evaluacion.tipoDoc as codEvaluacion,
+                evaluacion.empresa,
+                empresa.Nombre as nombreEmpresa,
+                evaluacion.supervisor,
+                supervisor.Apellido + supervisor.Nombre as nombreSupervisor,
+                evaluacion.empleado,
+                empleado.Apellido + empleado.Nombre as nombreEmpleado,
+                evaluacion.fecha,
+                evaluacion.sumatoria,
+                evaluacion.observacion,
+                evaluacion.meta,
+                evaluacion.estado
+                FROM dbo.ev_anfitriones as evaluacion
+                LEFT JOIN SBIOKAO.DBO.Empleados AS empleado ON empleado.Codigo = evaluacion.empleado 
+                LEFT JOIN SBIOKAO.dbo.Empleados AS supervisor ON supervisor.Cedula = evaluacion.supervisor
+                INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = evaluacion.empresa
+                WHERE
+                    evaluacion.fecha BETWEEN '$fechaINI' AND '$fechaFIN'
+                    AND evaluacion.empresa = '$empresa'
+            ORDER BY id DESC
+        
+        ";
 
-        $result_query = odbc_exec($db_empresa, $consulta_general);
+        $result_query = odbc_exec($db_empresa, $query);
 
         while(odbc_fetch_row($result_query))
             {
             $numero++;
             //RECUPERAR DATOS
                 $cod_reporte = odbc_result($result_query,"id");
+                $cod_evaluacion = odbc_result($result_query,"codEvaluacion");
                 //$empresa = odbc_result($result_consulta_chlocales,"NombreEmpresaN");
-                $empresacodDB = trim(odbc_result($result_query,"empresaN"));
+                $empresacodDB = trim(odbc_result($result_query,"nombreEmpresa"));
                 //Recodificacion de ISO-8859 a UTF
-                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"supervisorN"));
-                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"empleadoN"));
+                $supervisor_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"nombreSupervisor"));
+                $empleado_pdf = iconv("iso-8859-1", "UTF-8", odbc_result($result_query,"nombreEmpleado"));
                 $fechaPDF = odbc_result($result_query,"fecha");
                 $puntaje = odbc_result($result_query,"sumatoria");
+                $meta = odbc_result($result_query,"meta");
+                $observacion = odbc_result($result_query,"observacion");
         
                 $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$numero, $cod_reporte)
-                ->setCellValue('B'.$numero, $empresacodDB) 
-                ->setCellValue('C'.$numero, $supervisor_pdf)        
-                ->setCellValue('D'.$numero, $empleado_pdf)
-                ->setCellValue('E'.$numero, $fechaPDF)
-                ->setCellValue('F'.$numero, $puntaje."/56");        
+                ->setCellValue('B'.$numero, $cod_evaluacion)
+                ->setCellValue('C'.$numero, $empresacodDB) 
+                ->setCellValue('D'.$numero, $supervisor_pdf)        
+                ->setCellValue('E'.$numero, $empleado_pdf)
+                ->setCellValue('F'.$numero, $fechaPDF)
+                ->setCellValue('G'.$numero, $puntaje)
+                ->setCellValue('H'.$numero, $meta)
+                ->setCellValue('I'.$numero, $observacion); 
+                       
 
                 
                         

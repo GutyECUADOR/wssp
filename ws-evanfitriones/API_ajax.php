@@ -29,16 +29,16 @@ class ajax{
       return $this->ajax->validacod_seguridad($cedula, $codigo);
     }
 
-    public function valida_cargoEmpleado($cedula){
-      return $this->ajax->valida_cargoEmpleado($cedula);
+    public function valida_cargoEmpleado($codigo, $empresa){
+      return $this->ajax->valida_cargoEmpleado($codigo, $empresa);
     }
 
     public function saveSolicitud($solicitud){
       return $this->ajax->saveSolicitud($solicitud);
     }
 
-    public function getAllEvaluaciones($busqueda){
-      return $this->ajax->getAllEvaluaciones($busqueda);
+    public function getAllEvaluaciones($fechaINI, $fechaFIN, $empresa){
+      return $this->ajax->getAllEvaluaciones($fechaINI, $fechaFIN, $empresa);
     }
 
 }
@@ -71,8 +71,9 @@ class ajax{
         break;
 
         case 'valida_cargoEmpleado':
-          $cedula = $_GET["cedula"];
-          $respuesta = $ajax->valida_cargoEmpleado($cedula);
+          $codigo = $_GET["codigo"];
+          $empresa = $_GET["empresa"];
+          $respuesta = $ajax->valida_cargoEmpleado($codigo, $empresa);
           $rawdata = array('error' => FALSE, 'message' => 'Consulta realizada correctamente', 'data' => $respuesta);
           echo json_encode($rawdata);
         break;
@@ -87,8 +88,10 @@ class ajax{
         break;
 
         case 'getAllEvaluaciones':
-          $busqueda = $_GET["busqueda"];
-          $respuesta = $ajax->getAllEvaluaciones($busqueda);
+          $fechaINI = $_GET["fechaINI"];
+          $fechaFIN = $_GET["fechaFIN"];
+          $empresa = $_GET["empresa"];
+          $respuesta = $ajax->getAllEvaluaciones($fechaINI, $fechaFIN, $empresa);
           $rawdata = array('error' => FALSE, 'message' => 'respuesta correcta', 'data' => $respuesta);
           echo json_encode($rawdata);
         break;

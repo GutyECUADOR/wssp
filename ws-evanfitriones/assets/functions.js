@@ -308,8 +308,8 @@ $(document).ready(function() {
         //Generacion de reportes segun row clickeado
        function fn_genreport(){
             var empresa_search = document.getElementById("seleccion_empresa").value;
-            var dateini = document.getElementById("dateini_modal").value;
-            var datefin = document.getElementById("datefin_modal").value;
+            var dateini = document.getElementById("fechaINI").value;
+            var datefin = document.getElementById("fechaFIN").value;
             if (empresa_search!="" && dateini!="" & datefin!="" ){
                 alert("Generando reporte.");
                 window.open('reportes/reporteMensual.php?empresa_search='+empresa_search+'&dateini='+dateini+'&datefin='+datefin);
@@ -321,8 +321,8 @@ $(document).ready(function() {
         
         function fn_genreport_Excel(){
             var empresa_search = document.getElementById("seleccion_empresa").value;
-            var dateini = document.getElementById("dateini_modal").value;
-            var datefin = document.getElementById("datefin_modal").value;
+            var dateini = document.getElementById("fechaINI").value;
+            var datefin = document.getElementById("fechaFIN").value;
             if (empresa_search!="" && dateini!="" & datefin!="" ){
                 alert("Generando reporte Excel.");
                 window.open('reportes/reporte_excel.php?empresa_search='+empresa_search+'&dateini='+dateini+'&datefin='+datefin);

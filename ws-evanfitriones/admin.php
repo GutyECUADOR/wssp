@@ -51,11 +51,11 @@ $arrayEmpresas = $estadoVehiculo->getEmpresas();
                         <div class="col-md-12">
                             <div class="input-group">
                                 <div class="col-md-4" style="padding-right: 0px; padding-left: 0px;">
-                                    <input type="text" id="dateini_modal" name="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial">
+                                    <input type="text" id="fechaINI" name="fechaINI" class="form-control centertext pickyDate"  placeholder="Fecha Inicial" value='<?php echo date('Y-m-01')?>'>
                 
                                 </div>
                                 <div class="col-md-4" style="padding-right: 0px; padding-left: 0px;">
-                                    <input type="text" id="datefin_modal" name="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final">
+                                    <input type="text" id="fechaFIN" name="fechaFIN" class="form-control centertext pickyDate" placeholder="Fecha Final" value='<?php echo date('Y-m-d')?>'>
                 
                                 </div>
 
@@ -79,8 +79,9 @@ $arrayEmpresas = $estadoVehiculo->getEmpresas();
                                 <button class="btn btn-default" type="button" id="btn_busqueda"><span class="glyphicon glyphicon-search"></span> Buscar</button>
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opciones <span class="caret"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#" onclick="fn_genreport()"><span class="glyphicon glyphicon-file"></span> Informe Excel</a></li>
-                                        <li><a href="#" onclick="fn_genreport_Excel()"><span class="glyphicon glyphicon-file"></span> Informe PDF</a></li>
+                                        <li><a href="#" onclick="fn_genreport()"><span class="glyphicon glyphicon-file"></span> Informe PDF</a></li>
+                                        <li><a href="#" onclick="fn_genreport_Excel()"><span class="glyphicon glyphicon-file"></span> Informe Excel</a></li>
+                                        <li><a href="../ws-evanfitriones/" target="_blank"><span class="glyphicon glyphicon-file"></span> Nueva Evaluacion</a></li>
                                         
                                     </ul>
                             </span>

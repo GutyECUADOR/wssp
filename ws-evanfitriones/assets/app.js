@@ -109,12 +109,12 @@ $(document).ready(function() {
             });
         
         },
-        valida_cargoEmpleado: function (cedula){
+        valida_cargoEmpleado: function (codigo, empresa){
         
             $.ajax({
                 url: 'API_ajax.php?action=valida_cargoEmpleado',
                 method: 'GET',
-                data: { cedula },
+                data: { codigo, empresa },
 
                 success : function(response) {
                     console.log(response);
@@ -189,9 +189,10 @@ $(document).ready(function() {
 
     $("#select_Empleado").on("change", function() {
         let cedula = $(this).val();
+        let empresa = $('#select_Empresa').val();
         console.log(cedula);
         solicitud.empleado = cedula.trim();
-        app.valida_cargoEmpleado(cedula);
+        app.valida_cargoEmpleado(cedula, empresa);
     });
 
     $("#select_Empresa").on("change", function() {
