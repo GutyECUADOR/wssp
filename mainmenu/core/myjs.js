@@ -32,11 +32,11 @@ setTimeout(function() { toggleOptions('.selector'); }, 100);
 
 var clock_tick = function clock_tick() {
         setInterval('update_clock();', 1000);
-    }
+}
 
-    // start the clock immediatly
-    clock_tick();
+var update_clock = function update_clock() {
+    document.getElementById('liveclock').innerHTML = moment().format("DD/MM/YYYY HH:mm:ss");
+}
 
-    var update_clock = function update_clock() {
-        document.getElementById('liveclock').innerHTML = moment().format("DD/MM/YYYY HH:mm:ss");
-    }
+// start the clock immediatly
+clock_tick();
