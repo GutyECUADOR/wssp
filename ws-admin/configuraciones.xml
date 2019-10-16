@@ -2,7 +2,7 @@
 <xmlConfig>
       <enMantenimiento>false</enMantenimiento>
       <finMantenimiento>02h30 PM</finMantenimiento>
-      <ultimoDiaActivoVales>12</ultimoDiaActivoVales>
+      <ultimoDiaActivoVales>14</ultimoDiaActivoVales>
       <ultimoDiaEvaluaEGG>10</ultimoDiaEvaluaEGG>
       <permisosUsuarios>
             <ADM>
@@ -42,7 +42,7 @@
                   <modulo1 isActivo="true" idDB="1" name="modulo1">Evaluaciones</modulo1>
                   <modulo2 isActivo="" idDB="2" name="modulo2">Vales por p&#xE9;rdida</modulo2>
                   <modulo3 isActivo="" idDB="3" name="modulo3">Check List Locales</modulo3>
-                  <modulo4 isActivo="" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
+                  <modulo4 isActivo="true" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
                   <modulo5 isActivo="true" idDB="5" name="modulo5">Revisar e Imprimir vales por perdida </modulo5>
                   <modulo6 isActivo="" idDB="6" name="modulo6">Evaluacion Jefe Inmediato</modulo6>
                   <modulo7 isActivo="" idDB="9" name="modulo7">Configuraciones</modulo7>
@@ -64,11 +64,11 @@
                   <modulo1 isActivo="true" idDB="1" name="modulo1">Evaluaciones</modulo1>
                   <modulo2 isActivo="" idDB="2" name="modulo2">Vales por p&#xE9;rdida</modulo2>
                   <modulo3 isActivo="" idDB="3" name="modulo3">Check List Locales</modulo3>
-                  <modulo4 isActivo="" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
+                  <modulo4 isActivo="true" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
                   <modulo5 isActivo="true" idDB="5" name="modulo5">Revisar e Imprimir vales por perdida </modulo5>
                   <modulo6 isActivo="" idDB="6" name="modulo6">Evaluacion Jefe Inmediato</modulo6>
                   <modulo7 isActivo="" idDB="9" name="modulo7">Configuraciones</modulo7>
-                  <modulo8 isActivo="true" idDB="10" name="modulo8">Listar e imprimir reporte de Vehiculos</modulo8>
+                  <modulo8 isActivo="" idDB="10" name="modulo8">Listar e imprimir reporte de Vehiculos</modulo8>
             </EVA>
 
             <SVC>
