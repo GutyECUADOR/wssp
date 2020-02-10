@@ -252,6 +252,7 @@ $(document).ready(function() {
         },
         saveData: function (solicitud, empresa){
             console.log(JSON.parse(solicitud));
+            console.log(empresa);
             $.ajax({
                 type: 'POST',
                 url: './API_ajax.php?action=saveWinfenixCOM',
@@ -400,6 +401,7 @@ $(document).ready(function() {
         let empresa = $('#select_empresa').val();
         if (empresa) {
             console.log('Guardando...');
+            console.log(empresa);
             let cotizacionJSON = JSON.stringify((cotizacion));
             if (cotizacion.proveedor != null && cotizacion.productos.length > 0) {
                 $(this).prop("disabled", true);

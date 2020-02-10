@@ -107,7 +107,7 @@ class ajax{
         case 'saveWinfenixCOM':
           if (isset($_POST['solicitud']) && isset($_POST['empresa'])) {
             $formDataObject = json_decode($_POST['solicitud']);
-            $empresa = json_decode($_POST['empresa']);
+            $empresa = $_POST['empresa'];
             $respuesta = $ajax->saveWinfenixCOM($formDataObject, $empresa);
             echo json_encode($respuesta);
             }
