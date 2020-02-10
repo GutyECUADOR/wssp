@@ -3,6 +3,8 @@ $(document).ready(function() {
     var cotizacion = new Cotizacion();
     var newProducto = null;
 
+    $('[data-toggle="tooltip"]').tooltip()
+
     // Inicio de funciones
     app = {
         OnInit: function () {
@@ -248,14 +250,14 @@ $(document).ready(function() {
         printSubtotalNewProd: function  (){
             $("#inputNuevoProductoSubtotal").val(newProducto.getSubtotal().toFixed(4));
         },
-        saveData: function (solicitud){
+        saveData: function (solicitud, empresa){
             console.log(JSON.parse(solicitud));
             $.ajax({
                 type: 'POST',
                 url: './API_ajax.php?action=saveWinfenixCOM',
                 dataType: "json",
         
-                data: { solicitud: solicitud },
+                data: { solicitud: solicitud, empresa: empresa },
                 
                 success: function(response) {
                     console.log(response);
@@ -394,15 +396,23 @@ $(document).ready(function() {
      // Boton de envio de datos
     $("#btnGuardar").on('click', function(event) {
         event.preventDefault();
-        console.log('Guardando...');
-        let cotizacionJSON = JSON.stringify((cotizacion));
-        if (cotizacion.proveedor != null && cotizacion.productos.length > 0) {
-            $(this).prop("disabled", true);
-            app.saveData(cotizacionJSON);
-           
+
+        let empresa = $('#select_empresa').val();
+        if (empresa) {
+            console.log('Guardando...');
+            let cotizacionJSON = JSON.stringify((cotizacion));
+            if (cotizacion.proveedor != null && cotizacion.productos.length > 0) {
+                $(this).prop("disabled", true);
+                app.saveData(cotizacionJSON, empresa);
+            }else{
+                alert('El formulario esta incompleto indique cliente y al menos un producto');
+            }
         }else{
-            alert('El formulario esta incompleto indique cliente y al menos un producto');
+            alert('No se ha indicado una empresa');
         }
+        
+        
+       
         
         
     });

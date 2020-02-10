@@ -1,6 +1,11 @@
 <?php
-include_once ('../ws-admin/acceso_db.php');
+
 include_once ('../ws-admin/seguridad.php');
+require_once  './vendor/autoload.php';
+
+$estadoVehiculo = new EstadoVehiculo();
+$arrayEmpresas = $estadoVehiculo->getEmpresas();
+
 
 if (!isset($_GET['codOrden'])) {
     header("Location:" . "../ws-estadovehiculo/admin.php");
@@ -8,7 +13,7 @@ if (!isset($_GET['codOrden'])) {
 
 ?>
 
-<html lang="en">
+<html lang="es">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -17,6 +22,7 @@ if (!isset($_GET['codOrden'])) {
     <link rel="stylesheet" href="../ws-admin/fonts/style.css">
 	<link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
 	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="./assets/pagestyles.css">
     
     <link rel="stylesheet" href="assets/pnotify.custom.min.css">
 	
@@ -87,6 +93,20 @@ if (!isset($_GET['codOrden'])) {
                 
                 <div class="row">
                     <div class="col-md-12">
+                    <div class="input-group">
+                        <span style="color: red;" class="input-group-addon">Empresa a la que pertenece el vehiculo: </span>
+                            <select class="form-control" name="select_empresa" id="select_empresa" data-toggle="tooltip" data-placement="bottom" title="Indica la empresa en la que se registrara el pago." required>
+                                <option value=''>---Seleccione Empresa---</option>
+                                <?php 
+
+                                    foreach ($arrayEmpresas as $opcion) {
+                                        echo' <option value="'.trim($opcion['Codigo']).'"> '.$opcion['Nombre'].' </option>';
+                                    }
+                                
+                                ?>
+
+                            </select>
+                        </div>
                         <div class="input-group">
                             <input type="text" class="form-control" id="inputRUC" placeholder="RUC del proveedor" required>
                             <input type="hidden" class="form-control" id="inputIDDocument" value="<?php echo $_GET['codOrden']?>" required>
@@ -96,7 +116,7 @@ if (!isset($_GET['codOrden'])) {
                         </div>
                         <div class="input-group">
                         <span class="input-group-addon">Proveedor: </span>
-                        <input id="inputNombre" type="text" class="form-control" readonly>
+                            <input id="inputNombre" type="text" class="form-control" readonly>
                         </div>
                     </div>
                 </div>

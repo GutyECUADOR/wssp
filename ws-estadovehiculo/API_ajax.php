@@ -25,8 +25,8 @@ class ajax{
       return $this->ajax->getVehiculoByPlaca($placa, $empresa);
     }
 
-    public function saveWinfenixCOM($solicitud){
-      return $this->ajax->saveWinfenixCOM_CAB($solicitud, $this->empresaActiva);
+    public function saveWinfenixCOM($solicitud, $codEmpresa = '008'){
+      return $this->ajax->saveWinfenixCOM_CAB($solicitud, $codEmpresa);
     }
 
     public function saveSolicitud($solicitud){
