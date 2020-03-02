@@ -10,15 +10,15 @@ include_once ('./acceso_db_sbio.php');
 ?>
 
 <html lang="es">
-<head><meta http-equiv="Content-Type" content="text/html; charset=euc-jp">
-	
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=euc-jp">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <link rel="stylesheet" href="css/estilos_login.css">
         <link rel="stylesheet" href="fonts/style.css">
         <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
         <link rel="shortcut icon" href="img/favicon.ico">
         <script src="../ws-admin/js/jquery-latest.js"></script>
-        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
 	<title>Ingreso a Sistema</title>
 	
 </head>
