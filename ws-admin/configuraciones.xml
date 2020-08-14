@@ -2,7 +2,7 @@
 <xmlConfig>
       <enMantenimiento>false</enMantenimiento>
       <finMantenimiento>02h30 PM</finMantenimiento>
-      <ultimoDiaActivoVales>11</ultimoDiaActivoVales>
+      <ultimoDiaActivoVales>13</ultimoDiaActivoVales>
       <ultimoDiaEvaluaEGG>10</ultimoDiaEvaluaEGG>
       <permisosUsuarios>
             <ADM>
@@ -28,7 +28,7 @@
 
             <SUP>
                   <modulo1 isActivo="true" idDB="1" name="modulo1">Evaluaciones</modulo1>
-                  <modulo2 isActivo="" idDB="2" name="modulo2">Vales por p&#xE9;rdida</modulo2>
+                  <modulo2 isActivo="true" idDB="2" name="modulo2">Vales por p&#xE9;rdida</modulo2>
                   <modulo3 isActivo="true" idDB="3" name="modulo3">Check List Locales</modulo3>
                   <modulo4 isActivo="true" idDB="4" name="modulo4">Registros Anfitriones</modulo4>
                   <modulo5 isActivo="true" idDB="5" name="modulo5">Revisar e Imprimir vales por perdida </modulo5>

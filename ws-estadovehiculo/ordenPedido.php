@@ -149,7 +149,7 @@ $arrayItems = $estadoVehiculo->getItems('ODP');
                     
                     <div class="form-group">
                         <label for="txt_observacion">Observacion:</label>
-                        <textarea class="form-control" rows="2" id="txt_observacion" name="txt_observacion" maxlength="150" placeholder="(200 caracteres)"></textarea>
+                        <textarea class="form-control" rows="2" id="txt_observacion" name="txt_observacion" maxlength="300" placeholder="(300 caracteres)"></textarea>
                     </div>
                     
                     <div class="form-group center">

@@ -125,7 +125,8 @@ $(document).ready(function() {
 
             success: function(response) {
                 console.log(response);
-                toastr.success('Registro exitoso', 'Realizado', {timeOut: 5000, progressBar: true, positionClass: "toast-top-right"});
+                let respuesta = JSON.parse(response);
+                toastr.success(`Registro exitoso, ID de orden generado: ${respuesta.nuevoregistro}`, 'Realizado', {timeOut: 5000, progressBar: true, positionClass: "toast-top-right"});
                 registerForm.trigger("reset");
                 $('html, body').animate({ scrollTop: 0 }, 'fast');
             },
