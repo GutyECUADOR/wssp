@@ -1,21 +1,19 @@
 <?php
 include_once ('../ws-admin/acceso_multi_db.php');
-$conexion_vales = getDataBase(008); //Cod 008 Empresa MODELO
 
 $cod_ingresado = $_GET['cod_usu_ing'];
+$empresa = $_GET['empresa'];
+$conexion = getDataBase($empresa);
 
-$consulta_IVA = "SELECT * FROM dbo.COB_CLIENTES WHERE RUC = '$cod_ingresado'";
+$sql = "SELECT * FROM dbo.COB_CLIENTES WHERE RUC = '$cod_ingresado'";
 
-$result_query = odbc_exec($conexion_vales, $consulta_IVA);
+$result_query = odbc_exec($conexion, $sql);
 
-if (odbc_num_rows($result_query)>=1)
-    {
+if (odbc_num_rows($result_query)>=1){
     $descuento_val= odbc_result($result_query,"PORTARJETAEFE");
     echo $descuento_val;
-
-    }  else
-    {    
+} else {    
     echo 0;  
-    }
+}
     
     

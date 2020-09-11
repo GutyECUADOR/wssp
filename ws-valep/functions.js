@@ -291,7 +291,7 @@ $(function ajaxbusqueda_valepANT(){
                                                 document.getElementsByName("txt_descuento[]")[position].value=0;
                                             }else{
                                                 document.getElementsByName("txt_precio_product[]")[position].readOnly=true;
-                                                document.getElementsByName("txt_descuento[]")[position].value = 10; 
+                                                document.getElementsByName("txt_descuento[]")[position].value = porcent_descuento; 
                                             }
                                             
                                             
@@ -389,47 +389,46 @@ $(function ajaxbusqueda_valepANT(){
         var iva=getiva();
         var isANT=false;
         function getiva(){
-              var iva_activo = 'T12';
-              $.ajax({
-                           type : 'get',
-                            url : 'valida_iva.php', 
-                            dataType: "json",
-
-                            data: {activo: iva_activo},
-                       
-                        success : function(response)
-                            {
-                              iva = response;
-                            }
-                        });
+            let empresa = document.getElementById("select_empresaa").value
+            var iva_activo = 'T12';
+            $.ajax({
+                    type : 'get',
+                    url : 'valida_iva.php', 
+                    dataType: "json",
+                    data: {activo: iva_activo, empresa:empresa},
+                    success : function(response)
+                        {
+                            iva = response;
+                        }
+                    });
                         
-                        if(isANT===true){
-                            return 0;
-                        }else{
-                            return 0;
-                        } 
+                    if(isANT===true){
+                        return 0;
+                    }else{
+                        return 0;
+                    } 
         }
         
         
         //Obtenemos descuento por AJAX
         var descuento = getDescuento();
         function getDescuento(){
-              var cod_usu_ing = document.getElementById("txt_cisolicitante").value;
-                 
-              $.ajax({
+                let cod_usu_ing = document.getElementById("txt_cisolicitante").value;
+                let empresa = document.getElementById("select_empresaa").value
+                    $.ajax({
                            type : 'get',
                             url : 'valida_descuento.php', 
                             dataType: "json",
-
-                            data: {cod_usu_ing: cod_usu_ing},
+                            data: {cod_usu_ing: cod_usu_ing, empresa: empresa},
                        
                         success : function(response)
                             {
-                              descuento = 10;
+                                console.log(response);
+                                descuento = response;
                             }
                         });
                         
-                       return descuento;
+                    return descuento;
         }
         
         

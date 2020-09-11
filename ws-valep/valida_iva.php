@@ -1,17 +1,16 @@
 <?php
 include_once ('../ws-admin/acceso_multi_db.php');
-$conexion_vales = getDataBase(008); //Cod 008 Empresa MODELO
 
 $cod_ingresado = $_GET['activo'];
+$empresa = $_GET['empresa'];
+$conexion = getDataBase($empresa);
 
-$consulta_IVA = "SELECT * FROM dbo.INV_IVA WHERE CODIGO = '$cod_ingresado'";
-$result_query = odbc_exec($conexion_vales, $consulta_IVA);
+$sql = "SELECT * FROM dbo.INV_IVA WHERE CODIGO = '$cod_ingresado'";
+$result_query = odbc_exec($conexion, $sql);
 
-if (odbc_num_rows($result_query)>=1)
-    {
-    $iva_val= odbc_result($result_query,"VALOR");
+if (odbc_num_rows($result_query)>=1){
+    $iva_val = odbc_result($result_query,"VALOR");
     echo $iva_val;
-    }  else
-    {    
+} else{    
     echo 12;  
-    }
+}

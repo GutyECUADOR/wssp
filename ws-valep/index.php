@@ -4,7 +4,7 @@ include('../ws-admin/acceso_db.php');
 include('../ws-admin/acceso_db_sbio.php');
 include('../ws-admin/acceso_multi_db.php');
 include('../ws-admin/funciones.php');
-$conexionEmpresa = getDataBase(008); // Empresa modelo es 008
+
 
 if(file_exists('../ws-admin/configuraciones.xml') && $configXML = simplexml_load_file('../ws-admin/configuraciones.xml')){
     $ultimoDiaValep = (string) $configXML->ultimoDiaActivoVales;
@@ -12,9 +12,6 @@ if(file_exists('../ws-admin/configuraciones.xml') && $configXML = simplexml_load
 }else{
     die ('Error no se pudo cargar el archivo de configuraciones XML, informe a sistemas.');
 } 
-
-
-
 
 $fechaActual = getDateNow();
 $fechainicio = first_month_day();
@@ -52,7 +49,7 @@ $fechafinal = ultimo_dia_vales($ultimoDiaValep);
 	<title>Solicitud de vales por perdida</title>
 	
 </head>
-<body oncontextmenu="return false">
+<body oncontextmenu="return true">
 	<?php 
                 if( check_in_range($fechainicio, $fechafinal, $fechaActual) && in_array($nombreDia, $diasHabiles)){
                 
