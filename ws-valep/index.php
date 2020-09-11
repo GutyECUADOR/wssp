@@ -51,14 +51,14 @@ $fechafinal = ultimo_dia_vales($ultimoDiaValep);
 </head>
 <body oncontextmenu="return true">
 	<?php 
-                if( check_in_range($fechainicio, $fechafinal, $fechaActual) && in_array($nombreDia, $diasHabiles)){
-                
-                    include_once './contentvale.php';
-                }else{
-                    include_once './contentValeError.php';
-                }
-
-        ?>
+        if( check_in_range($fechainicio, $fechafinal, $fechaActual) && in_array($nombreDia, $diasHabiles)){
         
+            include_once './contentvale.php';
+        }else{
+            include_once './contentValeError.php';
+        }
+
+    ?>
+    
 </body>
 </html>

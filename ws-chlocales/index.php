@@ -5,7 +5,7 @@ include('../config/global.php');
 include('../ws-admin/acceso_multi_db.php');
 include('../ws-admin/funciones.php'); // Acceso a funciones utiles
 include('funcions.php');
-$conexionEmpresa = getDataBase(008); // Empresa modelo es 008
+
 ?>
 <html lang="es">
     <!--La alteración total o parcial de los datos provistos en el sistema son considerados como
@@ -48,7 +48,7 @@ $conexionEmpresa = getDataBase(008); // Empresa modelo es 008
                      
                             <div class="txtcentro">
                                     <h5>CHECKLIST DE ACTIVIDADES DIARIAS EN LOCALES</h5>
-                                    <h6>rev05.06.17</h6>
+                                    <h6>rev11.09.20</h6>
                             </div>
                     
                             <div class="centrado">

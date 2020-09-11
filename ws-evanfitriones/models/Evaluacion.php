@@ -7,7 +7,7 @@ class Evaluacion {
     public $wssp_db;
     public $sbio_db;
     public $empresa_db;
-    public $defaulDataBase = "MODELOKIND_V7";
+    public $defaulDataBase = "";
     
     function __construct() {
         
