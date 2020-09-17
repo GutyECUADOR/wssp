@@ -2,8 +2,8 @@
 <xmlConfig>
       <enMantenimiento>false</enMantenimiento>
       <finMantenimiento>02h30 PM</finMantenimiento>
-      <ultimoDiaActivoVales>13</ultimoDiaActivoVales>
-      <ultimoDiaEvaluaEGG>10</ultimoDiaEvaluaEGG>
+      <ultimoDiaActivoVales>14</ultimoDiaActivoVales>
+      <ultimoDiaEvaluaEGG>16</ultimoDiaEvaluaEGG>
       <permisosUsuarios>
             <ADM>
                   <modulo1 isActivo="true" idDB="1" name="modulo1">Evaluaciones</modulo1>

@@ -11,9 +11,6 @@
 
 include_once ('../ws-admin/acceso_db.php');
 include_once ('../ws-admin/acceso_multi_db.php');
-
-
-$conexion_vales = getDataBase(009);
         
 if (!empty($_POST['txt_cisolicitante']) && !empty($_POST['txt_total']) ) {
                    
