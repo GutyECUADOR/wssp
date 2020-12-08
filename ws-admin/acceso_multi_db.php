@@ -81,6 +81,14 @@
             case '010':
                 $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=SBIOKAO;', 'sfb', 'sfb123') or die ("Error en conexion ODBC");  // Base de datos SBIO
                 break;	
+
+            case 011:
+                $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=DBASPORT_V7;', 'sfb', 'sfb123') or die ("Error en conexion ODBC");  // Base de datos SBIO
+                break;
+            
+            case '011':
+                $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=DBASPORT_V7;', 'sfb', 'sfb123') or die ("Error en conexion ODBC");  // Base de datos SBIO
+                break;	
             
             default:
                 $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=MODELOKIND_V7;', 'sfb', 'sfb123' ) or die ("Error en conexion ODBC"); // Base de datos modelo, autenticacion de SQL requiere user y pass
