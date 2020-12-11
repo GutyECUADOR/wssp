@@ -48,7 +48,7 @@ class Evaluacion {
     }
 
     public function getEmpresas(){
-        $query = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','006','008')";
+        $query = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','006','008','011')";
         $stmt = $this->sbio_db->prepare($query); 
 
         try{
