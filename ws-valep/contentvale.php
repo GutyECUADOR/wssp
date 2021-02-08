@@ -30,7 +30,7 @@
                                      <option value=''>---SELECCIONE POR FAVOR---</option>
                                         <?PHP
                                         
-                                        $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','004','006') ORDER BY Codigo";
+                                        $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','004','006','011') ORDER BY Codigo";
 
                                         $result_query_empresa = odbc_exec($conexion_sbio, $consulta_empresa);
 
