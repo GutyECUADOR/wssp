@@ -2,7 +2,6 @@ var nbOptions = 8;
 var angleStart = -360;
 
 
-
 // jquery rotate animation
 function rotate(li,d) {
     $({d:angleStart}).animate({d:d}, {
@@ -26,17 +25,21 @@ function toggleOptions(s) {
     }
 }
 
+$( document ).ready(function() {
+    toggleOptions('.selector');
+    console.log( "ready!" );
 
-setTimeout(function() { toggleOptions('.selector'); }, 100);
-
-
-var clock_tick = function clock_tick() {
+    var clock_tick = function clock_tick() {
         setInterval('update_clock();', 1000);
-}
+    }
 
-var update_clock = function update_clock() {
-    document.getElementById('liveclock').innerHTML = moment().format("DD/MM/YYYY HH:mm:ss");
-}
+    var update_clock = function update_clock() {
+        document.getElementById('liveclock').innerHTML = moment().format("DD/MM/YYYY HH:mm:ss");
+    }
 
-// start the clock immediatly
-clock_tick();
+    // start the clock immediatly
+    clock_tick();
+});
+
+
+

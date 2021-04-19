@@ -12,6 +12,12 @@ class EstadoVehiculo {
     public $defaulDataBase = "";
 
     function __construct() {
+
+        if ($_SESSION) {
+            $this->defaulDataBase = $_SESSION['empresa_autentificada'];
+          }else {
+            $this->defaulDataBase = '008';
+          }
         
         $this->instanciaDB = new \models\conexion('KAO_wssp');
         $this->wssp_db = $this->instanciaDB->getInstanciaCNX();
@@ -19,7 +25,8 @@ class EstadoVehiculo {
         $this->instanciaDB = new \models\conexion('SBIOKAO');
         $this->sbio_db = $this->instanciaDB->getInstanciaCNX();
 
-        $this->instanciaDB = new \models\conexion($this->defaulDataBase);
+        $dbName = $this->getDBNameByCodigo($this->defaulDataBase)['NameDatabase'];
+        $this->instanciaDB = new \models\conexion($dbName);
         $this->empresa_db = $this->instanciaDB->getInstanciaCNX();
         
     }
@@ -888,7 +895,7 @@ class EstadoVehiculo {
 
         //Query de consulta con parametros para bindear si es necesario.
         $query = " 
-            exec Sp_PAGCONPRO '$busqueda','','$tipo'
+            exec SP_PAGCONPRO '$busqueda','','$tipo'
         ";  // Final del Query SQL 
 
         
