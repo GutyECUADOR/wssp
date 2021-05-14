@@ -115,8 +115,8 @@ class EstadoVehiculo {
         $newCod = $this->getNewCodigo('EST')["codigo"];
         $query = "
             INSERT INTO 
-                dbo.CAB_estado_vehiculo 
-            VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
+                dbo.CAB_estado_vehiculo (codigo, documento, empresa, placa, kilometraje, aprobadoPor, asignadoA, fecha, observacion, estado)
+            VALUES ('$newCod', '', '$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
         ";
 
         try{
@@ -134,8 +134,8 @@ class EstadoVehiculo {
         $newCod = $this->getNewCodigo('ODP')["codigo"];
         $query = "
             INSERT INTO 
-                dbo.CAB_estado_vehiculo 
-            VALUES ('$newCod','$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
+                dbo.CAB_estado_vehiculo (codigo, documento, empresa, placa, kilometraje, aprobadoPor, asignadoA, fecha, observacion, estado)
+            VALUES ('$newCod', '', '$solicitud->empresa','$solicitud->vehiculo','$solicitud->kilometraje','','$solicitud->empleado','$solicitud->fecha','$solicitud->observacion',0)
         ";
 
         try{
@@ -249,8 +249,16 @@ class EstadoVehiculo {
                 
                 }
 
-                
+                $query = "
+                    UPDATE dbo.CAB_estado_vehiculo
+                    SET documento = '$new_cod_VENCAB'
+                    WHERE codigo = '$solicitud->IDDocument'
+                ";
 
+                    $stmt = $this->wssp_db->prepare($query); 
+                    $stmt->execute();
+                
+                    
                 
                 return array(
                     'error' => FALSE,
@@ -369,7 +377,7 @@ class EstadoVehiculo {
             ACT_ARTICULOS as vehiculo
         INNER JOIN KAO_wssp.dbo.CAB_estado_vehiculo as wssp on vehiculo.Codigo = wssp.placa COLLATE Modern_Spanish_CI_AS
         INNER JOIN SBIOKAO.dbo.Empleados as SBIO on SBIO.Cedula = wssp.asignadoA
-        WHERE wssp.placa LIKE '".$busqueda."%' and wssp.empresa='$empresa'
+        WHERE wssp.placa LIKE '".$busqueda."%' and wssp.empresa='$empresa' and wssp.estado != 2
         ORDER BY fecha DESC
         
         ";
