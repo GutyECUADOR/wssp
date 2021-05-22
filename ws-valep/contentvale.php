@@ -1,6 +1,6 @@
     <?php include '../ws-admin/topnavBar.php'?>
 
-        <div class="contenedor-formulario">
+        <div class="container-fluid">
 		<div class="wrap">
                             <div class="text-center">
                                     <h5>SOLICITUD DE VALES POR PÉRDIDA</h5>
@@ -92,7 +92,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="responsibetable">        
+                                        <div class="table-responsive">        
                                             <table class="table table-bordered table-condensed">
                                                 <thead>
                                                     <tr>
@@ -173,45 +173,62 @@
             
                                 <div class="col">
                                     <div class="form-group">
-                                        <label for="nombre">Indique numero de cuotas: <em class="em">*</em></label>
-                                        <input type="number" name="select_numcuotas" class="form-control input-sm" id="select_numcuotas" min="1" value="3" readonly required>
+                                        <label>Indique numero de cuotas: <em class="em">*</em></label>
+                                        <input type="number" name="select_numcuotas" class="form-control input-sm text-center" id="select_numcuotas" min="1" value="3" readonly required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="nombre">Indique Fecha de Inicio de Pagos: <em class="em">*</em></label>
-                                        <input type="text" id="date_pagosini" name="date_pagosini" class="form-control input-sm" placeholder="Fecha Inicio Pagos" value="<?php echo date('Y-m-10')?>" readonly required>
+                                        <label>Indique Fecha de Inicio de Pagos: <em class="em">*</em></label>
+                                        <input type="text" id="date_pagosini" name="date_pagosini" class="form-control input-sm text-center" placeholder="Fecha Inicio Pagos" value="<?php echo date('Y-m-10')?>" readonly required>
                                     </div>
                                 </div>
-            
-            
-                                <div class="col" name="row_empleados[]">
-                                    <div class="form-group recargo_ci">
-                                        <label>Cédula: <em class="em">*</em></label>
-                                        <input type="text" class="form-control input-sm text-center rowempleado" onkeyup="ajaxvalidaemp(this);valor_porcentaje();empleadoRepetido(this)" name="txt_ci_empleado[]" id="txt_ci_empleado[]" required>
-                                    </div>
-                                     <div class="form-group recargo_empleado">
-                                        <label>Empleado:</label>
-                                        <input type="text" class="form-control input-sm text-center row_deusuario" name="txt_nombre_emp[]" readonly>
-                                        <input type="hidden" name="txt_hiddenwinf_emp[]">
-                                     </div>
 
-                                     <div class="form-group recargo_porcent">
-                                        <label>%: <em class="em">*</em></label>
-                                        <input type="text" class="form-control input-sm text-center valporcent" name="txt_porcent_emp[]" onkeyup="valor_porcentaje_manual()" onchange="valida_porcentaje_manual();" value="0" required>
-                                     </div>
-                                     <div class="form-group recargo_valor">
-                                        <label>Valor:</label>
-                                        <input type="text" class="form-control input-sm text-center importe_linea_emp" name="txt_valor_emp[]" value="0" readonly>
-                                        <input type="hidden" name="hidden_valor_emp[]">
-                                     </div>
-                                     <div class="form-group icon_remove">
-                                        <a id="removeprod_ico_emp" class="pointerico_ico"><span class="glyphicon glyphicon-remove removeprod_ico_emp" title="Eliminar Item" onclick="remove_emp(this)"></span></a>
+
+                                <!-- Tabla de Empleados -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">        
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width: 10%;" >Cédula</th>
+                                                        <th class="text-center" style="width: 20%; min-width: 200px;">Nombre del Empleado</th>
+                                                        <th class="text-center" style="width: 3%">%</th>
+                                                        <th class="text-center" style="width: 5%; min-width: 100px;">Valor</th>
+                                                        <th class="text-center" style="width: 5%">Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr name="row_empleados[]">
+                                                        <td>
+                                                        <input type="text" class="form-control input-sm text-center rowempleado" onkeyup="ajaxvalidaemp(this);valor_porcentaje();empleadoRepetido(this)" name="txt_ci_empleado[]" id="txt_ci_empleado[]" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center row_deusuario" name="txt_nombre_emp[]" readonly>
+                                                            <input type="hidden" name="txt_hiddenwinf_emp[]">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center valporcent" name="txt_porcent_emp[]" onkeyup="valor_porcentaje_manual()" onchange="valida_porcentaje_manual();" value="0" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center importe_linea_emp" name="txt_valor_emp[]" value="0" readonly>
+                                                            <input type="hidden" name="hidden_valor_emp[]">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" onclick="remove_emp(this)" class="btn btn-danger btn-sm btn-block"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                        <!-- Contenedor de Controles ajax-->
+                                                    <div class="result_emp_add"> 
+                                                    </div>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
             
-                                <!-- Contenedor de Controles ajax-->
-                                <div class="result_emp_add"></div>
-                               
-                              
+            
                                  <!--SECCION DETALLE-->                     
                                 <div class="txtseccion">
                                     <label class="etique"> COMENTARIO / OBSERVACION</label>
@@ -233,77 +250,6 @@
             
             
 	</div>
-    
-    
-        <!-- Modal Informe Antiguo-->
-            <div class="modal fade" id="modal_buscar_informe_ant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Recuperación de datos</h5>
-                  </div>
-                  <div class="modal-body">
-                    
-                    <div class="alert alert-info alert-dismissable">
-                      <button type="button" class="close" data-dismiss="alert">&times;</button>
-                      <p><strong> ATENCIÓN </strong></p>
-                      <p><h5> Recupere la información de un vale a la vez</h5></p>
-                    </div>
-                    <div class="resultmodal" style="display:none;"></div>
-
-                     <form method="GET" target="_blank" class="form-inline">
-                            <div class="row">
-                              <select class="form-control text-center" name="seleccion_empresa_valep" id="seleccion_empresa_valep" required>
-                                   <option value=''>---SELECCIONE EMPRESA---</option>
-                                    <?PHP 
-                                    $consulta_emp = "SELECT * FROM dbo.Empresas_WF with (nolock) ORDER BY Codigo";
-                                   
-                                    $result_query_emp = odbc_exec($conexion_sbio, $consulta_emp);
-
-                                    while(odbc_fetch_row($result_query_emp))
-                                    {
-                                    $cod_emp = odbc_result($result_query_emp,"Codigo"); 
-                                    $detalle_emp = odbc_result($result_query_emp,"Nombre"); 
-                                  
-                                    echo "<option value='$cod_emp'>$detalle_emp</option>";
-                                    }
-                                    ?>
-                                   
-                                   <option value='008'> EMPRESA MODELO </option>
-                                   
-                               </select>
-                            </div>
-                            <div class="rowspace form-group">
-                                <input type="date" id="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial" required><span class="form-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                            </div>
-                         
-                            <div class="rowspace form-group">
-                                <input type="date" id="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final" required><span class="form-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                            </div>
-                            
-                            <div class="row">
-                                
-                            </div>
-                        <!-- Resultados AJAX-->
-                        <div class="resultmodal_valep" style="display:none;">
-                            <p>Resultados</p>
-                        </div>
-                  
-                         <div class="row rowspace">
-                            <button type="button" class="btn btn-primary" id="btn_search_valep" onclick="ajaxbusqueda_valepANT()"> <span class="glyphicon glyphicon-search"></span> Buscar</button>
-                           
-                        </div>
-                        </form> 
-                    
-                         
-                  </div>
-                  <div class="modal-footer">
-                  <button type="submit" class="btn btn-default btn-sm" data-dismiss="modal"><span class="glyphicon"></span> Aceptar </button>
-                   
-                </div>
-              </div>
-            </div>  
-            </div>
     
     
         <!-- Floating Button Google-->
