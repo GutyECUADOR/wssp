@@ -2,195 +2,208 @@
 
         <div class="contenedor-formulario">
 		<div class="wrap">
-                            <div class="txtcentro">
+                            <div class="text-center">
                                     <h5>SOLICITUD DE VALES POR PÉRDIDA</h5>
                                     <h6>rev13.09.17</h6>
                             </div>
-                    
-                    <form action="addvalep.php" autocomplete="off"  class="formulario" name="formulario_registro" method="POST" onsubmit= "return validar_formulario()">
-               			<div class="centrado">
-	           		   	<img class="logo" src="../ws-admin/img/logo.png" alt="Logo">
+
+                            <div class="text-center">
+	           		        	<img class="logo" src="../ws-admin/img/logo.png" alt="Logo" style="width:200px">
                     		</div>
                     
-                                <div class="txtcentro">
+                    <form action="addvalep.php" autocomplete="off" name="formulario_registro" method="POST" onsubmit= "return validar_formulario()">
+               			
+                    
+                                <div class="text-center">
                                     <label> Los campos con (*) son obligatorios y deben contener información verídica. Recuerde al finalizar validar campos de seguridad.</label>
                                 </div>
                             
-                                
-            <!--SECCION INFO PERSONAL-->                
+                           
                                 <div class="txtseccion">
                                     <label class="etique"> INFORMACIÓN DEL SOLICITANTE</label>
                                 </div>
                                 
-                                <div id="bloque">
-                                <div class="anchototal">
-                                 <label class="label" for="nombre">Indique empresa: <em class="em">*</em></label>
-                                 
-                                <select name="select_empresaa" id="select_empresaa" onchange="showselectBodegas(this.value);showselectSupervisores(this.value)" required>
-                                     <option value=''>---SELECCIONE POR FAVOR---</option>
-                                        <?PHP
-                                        
-                                        $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','004','006','011') ORDER BY Codigo";
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Indique empresa: <em class="em">*</em></label>
+                                        <select class="form-control input-sm" name="select_empresaa" id="select_empresaa" onchange="showselectBodegas(this.value);showselectSupervisores(this.value)" required>
+                                            <option value=''>---SELECCIONE POR FAVOR---</option>
+                                            <?PHP
+                                            
+                                            $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','004','006','011','008') ORDER BY Codigo";
 
-                                        $result_query_empresa = odbc_exec($conexion_sbio, $consulta_empresa);
+                                            $result_query_empresa = odbc_exec($conexion_sbio, $consulta_empresa);
 
-                                        while(odbc_fetch_row($result_query_empresa))
-                                        {
-                                        $cod_emp = odbc_result($result_query_empresa,"Codigo"); 
-                                        $detalle_emp = odbc_result($result_query_empresa,"Nombre"); 
+                                            while(odbc_fetch_row($result_query_empresa))
+                                            {
+                                                $cod_emp = odbc_result($result_query_empresa,"Codigo"); 
+                                                $detalle_emp = odbc_result($result_query_empresa,"Nombre"); 
 
-                                        echo "<option value='$cod_emp'>$detalle_emp</option>";
-                                        }
-                                       
-                                        ?>
-                                       
-                                 </select>
-                                </div>
+                                                echo "<option value='$cod_emp'>$detalle_emp</option>";
+                                            }
+                                            
+                                            ?>
+                                            
+                                        </select>
+                                    </div>
                                     
-                                    
-                                <div class="anchototal">
-                                 <label class="label" for="nombre">Indique el tipo de documento: <em class="em">*</em></label>
-                                 
-                                 <select name="select_dirigidoa" id="select_dirigidoa" required>
-                                     <option value=''>---SELECCIONE POR FAVOR---</option>
-                                 </select>
-                                     
-                                
-                                </div>
-            
-                                
+                                    <div class="form-group">
+                                        <label>Indique el tipo de documento: <em class="em">*</em></label>
+                                        <select class="form-control input-sm" name="select_dirigidoa" id="select_dirigidoa" required>
+                                            <option value=''>---SELECCIONE POR FAVOR---</option>
+                                        </select>
+                                    </div>
                                 </div>        
                                         
-                                <div  id="bloque">   
-                                <div class="input-group bloquede3-1">
-                                    <label class="label">CI del Solicitante: <em class="em">*</em></label>
-                                    <input type="text" id="txt_cisolicitante" name="txt_cisolicitante" onkeyup="ajaxvalidacod();getDescuento()" maxlength="13" required>
-                                </div> 
-                                
-                                <div class="input-group bloquede3-2">
-                                    <label class="label">Solicitante:</label>
-                                    <input type="text" id="txt_solicitante_name" name="txt_solicitante_name" readonly>
-                                </div>
-                                
+                                <div class="row">  
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>CI del Solicitante: <em class="em">*</em></label>
+                                            <input type="text" class="form-control input-sm"  id="txt_cisolicitante" name="txt_cisolicitante" onkeyup="ajaxvalidacod();getDescuento()" maxlength="13" required>
+                                        </div> 
+                                    </div>
                                     
-                                <div class="input-group bloquede3-3">
-                                    <label class="label">Empresa/Bodega:</label>
-                                    <select type="text" id="cod_txt_empresa" name="cod_txt_empresa" required>
-                                         <option value=''>---SELECCIONE POR FAVOR---</option>
-                                    </select>    
-                                    <input type="hidden"  id="cod_txt_cliente" name="cod_txt_cliente">
-                                </div>  
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Solicitante:</label>
+                                            <input type="text" class="form-control input-sm"  id="txt_solicitante_name" name="txt_solicitante_name" readonly>
+                                        </div>
+                                    </div>
+                                        
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Empresa/Bodega:</label>
+                                            <select class="form-control input-sm" id="cod_txt_empresa" name="cod_txt_empresa" required>
+                                                <option value=''>---SELECCIONE POR FAVOR---</option>
+                                            </select>    
+                                            <input type="hidden"  id="cod_txt_cliente" name="cod_txt_cliente">
+                                        </div>
+                                    </div>
                                     
                                 </div>    
             
-            <!--SECCION DETALLE-->                     
-                                <div class="txtseccion">
-                                    <label class="etique"> DETALLE</label>
-                                </div>
-            
-                                <div id="bloque">
-                                    <div class="alert alert-info alert-dismissable centrado">
+                          
+                                <div class="col">
+                                    <div class="alert alert-info alert-dismissable text-center">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <h5>Agrege Productos (25 máximo)</h5><p class="centrado"> Haga clic sobre el botón agregar productos de la parte derecha, para ingresar uno nuevo.</p>
+                                        <h5>Agrege Productos</h5><p class="text-center"> Haga clic sobre el botón agregar productos de la parte derecha, para ingresar uno nuevo.</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="responsibetable">        
+                                            <table class="table table-bordered table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width: 10%;" >Codigo</th>
+                                                        <th class="text-center" style="width: 20%; min-width: 200px;">Nombre del Articulo</th>
+                                                        <th class="text-center" style="width: 3%">Cantidad</th>
+                                                        <th class="text-center" style="width: 5%; min-width: 100px;">Costo</th>
+                                                        <th class="text-center" style="width: 5%; min-width: 80px;">Descuento</th>
+                                                        <th class="text-center" style="width: 5%">Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tablaProductosEgreso">
+                                                    <tr name="row_productos[]">
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center rowproducto" onkeyup="ajaxvalidacod_producto(this);productoRepetido(this)" onblur="calcular_total();valor_porcentaje()" name="txt_cod_product[]" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center row_deproducto" name="txt_detalle_product[]" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" class="form-control input-sm text-center rowcantidad" name="txt_cant_product[]" onclick="extra_prod(this);calcular_total();valor_porcentaje()" onkeyup="extra_prod(this);calcular_total();valor_porcentaje()" min="0" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center importe_linea" name="txt_precio_product[]" value="0" onkeyup="calcular_total();valor_porcentaje()" onkeypress="return valida_numeros(event)" readonly>
+                                                            <input type="hidden" name="hidden_precio_product[]">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control input-sm text-center" name="txt_descuento[]" value="0" min="0" max="100"  readonly>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" onclick="remove_extra_prod(this);valor_porcentaje()" class="btn btn-danger btn-sm btn-block"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                                        </td>
+                                                    </tr>
+                                                        <!-- Contenedor de Controles ajax-->
+                                                    <div class="result_add"> 
+                                                    </div>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center" style="vertical-align: middle;"><b>Subtotal</b>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <input type="text" class="form-control input-sm text-center subtotales" id="txt_subtotal" name="txt_subtotal" readonly required="true">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center" style="vertical-align: middle;"><b>IVA</b>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <input type="text" class="form-control input-sm text-center subtotales" id="txt_iva" name="txt_iva" readonly required="true">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center" style="vertical-align: middle;"><b>Total</b>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <input type="text" class="form-control input-sm text-center subtotales" id="txt_total"  name="txt_total" readonly required="true">
+                                                        </td>
+                                                    </tr>
+
+                                                </tfoot>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
             
-                                <div id="bloque" name="row_productos[]">
-                                    <div class="input-group cod_p">
-                                        <label class="label">Código: <em class="em">*</em></label>
-                                        <input type="text" class="centrado rowproducto" onkeyup="ajaxvalidacod_producto(this);productoRepetido(this)" onblur="calcular_total();valor_porcentaje()" name="txt_cod_product[]" required>
-                                    </div>
-                                     <div class="input-group cod_detalle">
-                                        <label class="label">Producto:</label>
-                                        <input type="text" class="centrado row_deproducto" name="txt_detalle_product[]" readonly>
-                                     </div>
-
-                                    <div class="input-group cod_cantidad">
-                                        <label class="label">Cantidad: <em class="em">*</em></label>
-                                        <input type="number" class="centrado rowcantidad" name="txt_cant_product[]" onclick="extra_prod(this);calcular_total();valor_porcentaje()" onkeyup="extra_prod(this);calcular_total();valor_porcentaje()" min="0" required>
-                                    </div>
-                                    
-                                    <div class="input-group cod_descuento">
-                                        <label class="label">% Descuento:</label>
-                                        <input type="text" class="centrado" name="txt_descuento[]" value="0" min="0" max="100"  readonly>
-                                    </div>
-                                    
-                                    <div class="input-group cod_precio">
-                                        <label class="label">Precio:</label>
-                                        <input type="text" class="centrado importe_linea" name="txt_precio_product[]" value="0" onkeyup="calcular_total();valor_porcentaje()" onkeypress="return valida_numeros(event)" readonly>
-                                        <input type="hidden" name="hidden_precio_product[]">
-                                     </div>
-                                     <div class="input-group icon_remove">
-                                        <a id="removeprod_ico" class="pointerico_ico"><span class="glyphicon glyphicon-remove removeprod_ico" title="Eliminar Item" onclick="remove_extra_prod(this);valor_porcentaje()"></span></a>
-                                    </div>
-
-                                </div>
-            
-                                <!-- Contenedor de Controles ajax-->
-                                
-                                    <div class="result_add"> 
-                                    </div>
-                               
-                                <div id="bloque" class="derechasub">
-                                <div class="input-group inputnoinline">
-                                    <label class="label">Subtotal:</label>
-                                    <input type="text" class="centrado subtotales" id="txt_subtotal" name="txt_subtotal" readonly required="true">
-                                </div>
-                                <div class="input-group inputnoinline">   
-                                    <label class="label">IVA:</label>
-                                    <input type="text" class="centrado subtotales" id="txt_iva" name="txt_iva" readonly required="true">
-                                </div>
-                                <div class="input-group inputnoinline">     
-                                    <label class="label">Total:</label>
-                                    <input type="text" class="centrado subtotales" id="txt_total"  name="txt_total" readonly required="true">
-                                </div> 
-                                </div>
-                                
                                 <!--SECCION RECARGO-->                       
                                 <div class="txtseccion">
                                     <label class="etique">RECARGO</label>
                                 </div>
                                 
-                                <div id="bloque">
-                                    <div class="alert alert-info alert-dismissable centrado">
+                                <div class="col">
+                                    <div class="alert alert-info alert-dismissable text-center">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <h5>Agrege empleados a recargar monto (15 máximo)</h5><p class="centrado"> Haga clic sobre el botón agregar empleado de la parte derecha, para ingresar uno nuevo.</p>
+                                        <h5>Agrege empleados a recargar monto</h5><p class="text-center"> Haga clic sobre el botón agregar empleado de la parte derecha, para ingresar uno nuevo.</p>
                                     </div>
                                 </div>
             
-                                <div id="bloque">
-                                    <div class="input-group bloquede2-1">
-                                        <label class="label" for="nombre">Indique numero de cuotas: <em class="em">*</em></label>
-                                        <input type="number" name="select_numcuotas" class="centertext" id="select_numcuotas" min="1" value="3" readonly required>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="nombre">Indique numero de cuotas: <em class="em">*</em></label>
+                                        <input type="number" name="select_numcuotas" class="form-control input-sm" id="select_numcuotas" min="1" value="3" readonly required>
                                     </div>
-                                    <div class="input-group bloquede2-2">
-                                        <label class="label" for="nombre">Indique Fecha de Inicio de Pagos: <em class="em">*</em></label>
-                                        <input type="text" id="date_pagosini" name="date_pagosini" class="centertext" placeholder="Fecha Inicio Pagos" value="<?php echo date('Y-m-10')?>" readonly required>
+                                    <div class="form-group">
+                                        <label for="nombre">Indique Fecha de Inicio de Pagos: <em class="em">*</em></label>
+                                        <input type="text" id="date_pagosini" name="date_pagosini" class="form-control input-sm" placeholder="Fecha Inicio Pagos" value="<?php echo date('Y-m-10')?>" readonly required>
                                     </div>
                                 </div>
             
             
-                                <div id="bloque" name="row_empleados[]">
-                                    <div class="input-group recargo_ci">
-                                        <label class="label">Cédula: <em class="em">*</em></label>
-                                        <input type="text" class="centrado rowempleado" onkeyup="ajaxvalidaemp(this);valor_porcentaje();empleadoRepetido(this)" name="txt_ci_empleado[]" id="txt_ci_empleado[]" required>
+                                <div class="col" name="row_empleados[]">
+                                    <div class="form-group recargo_ci">
+                                        <label>Cédula: <em class="em">*</em></label>
+                                        <input type="text" class="form-control input-sm text-center rowempleado" onkeyup="ajaxvalidaemp(this);valor_porcentaje();empleadoRepetido(this)" name="txt_ci_empleado[]" id="txt_ci_empleado[]" required>
                                     </div>
-                                     <div class="input-group recargo_empleado">
-                                        <label class="label">Empleado:</label>
-                                        <input type="text" class="centrado row_deusuario" name="txt_nombre_emp[]" readonly>
+                                     <div class="form-group recargo_empleado">
+                                        <label>Empleado:</label>
+                                        <input type="text" class="form-control input-sm text-center row_deusuario" name="txt_nombre_emp[]" readonly>
                                         <input type="hidden" name="txt_hiddenwinf_emp[]">
                                      </div>
 
-                                     <div class="input-group recargo_porcent">
-                                        <label class="label">%: <em class="em">*</em></label>
-                                        <input type="text" class="centrado valporcent" name="txt_porcent_emp[]" onkeyup="valor_porcentaje_manual()" onchange="valida_porcentaje_manual();" value="0" required>
+                                     <div class="form-group recargo_porcent">
+                                        <label>%: <em class="em">*</em></label>
+                                        <input type="text" class="form-control input-sm text-center valporcent" name="txt_porcent_emp[]" onkeyup="valor_porcentaje_manual()" onchange="valida_porcentaje_manual();" value="0" required>
                                      </div>
-                                     <div class="input-group recargo_valor">
-                                        <label class="label">Valor:</label>
-                                        <input type="text" class="centrado importe_linea_emp" name="txt_valor_emp[]" value="0" readonly>
+                                     <div class="form-group recargo_valor">
+                                        <label>Valor:</label>
+                                        <input type="text" class="form-control input-sm text-center importe_linea_emp" name="txt_valor_emp[]" value="0" readonly>
                                         <input type="hidden" name="hidden_valor_emp[]">
                                      </div>
-                                     <div class="input-group icon_remove">
+                                     <div class="form-group icon_remove">
                                         <a id="removeprod_ico_emp" class="pointerico_ico"><span class="glyphicon glyphicon-remove removeprod_ico_emp" title="Eliminar Item" onclick="remove_emp(this)"></span></a>
                                     </div>
                                 </div>
@@ -204,14 +217,14 @@
                                     <label class="etique"> COMENTARIO / OBSERVACION</label>
                                 </div>
                                  
-                                 <div id="bloque" class="input-group">
-                                     <textarea class="cajaarea" name="txt_comentario" rows="3" cols="100%" maxlength="180"></textarea>
+                                 <div class="col">
+                                     <textarea class="form-control cajaarea" name="txt_comentario" rows="3" cols="100%" maxlength="180"></textarea>
                                      
                                  </div> 
                                  
                                  
 		                <div>
-                                    <input name="guardar" type="submit" id="btn-submit" value="Solicitar">
+                        <input class="btn btn-primary btn-block"name="guardar" type="submit" id="btn-submit" value="Solicitar">
 				</div>
 				
 			<div class="footer">Todos los derechos reservados © 2017, Ver 2.0.0</div>
@@ -260,12 +273,12 @@
                                    
                                </select>
                             </div>
-                            <div class="rowspace input-group">
-                                <input type="date" id="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial" required><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <div class="rowspace form-group">
+                                <input type="date" id="dateini_modal" class="form-control centertext pickyDate"  placeholder="Fecha Inicial" required><span class="form-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
                          
-                            <div class="rowspace input-group">
-                                <input type="date" id="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final" required><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <div class="rowspace form-group">
+                                <input type="date" id="datefin_modal" class="form-control centertext pickyDate" placeholder="Fecha Final" required><span class="form-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
                             
                             <div class="row">
