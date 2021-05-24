@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('../ws-admin/acceso_db.php');
 include('../ws-admin/acceso_db_sbio.php');
 include('../ws-admin/acceso_multi_db.php');
@@ -25,27 +25,16 @@ $fechafinal = ultimo_dia_vales($ultimoDiaValep);
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <link rel="stylesheet" href="../ws-admin/css/estilos_solicitud.css">
-        <link href="../ws-admin/icons/iconfont/material-icons.css" rel="stylesheet">
-        <!--Import Google Icon Font-->
-        <!--<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-        <!--Import materialize.css-->
-        <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css"  media="screen,projection"/>
-        <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
-	<link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
-        <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
-        <script src="sweetalert-master/dist/sweetalert.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
-        <script src="../ws-admin/js/jquery-latest.js"></script>
-        
-        <!-- Librerias datepicker Boostrap3-->
-        <link href="../libs/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.css" rel="stylesheet">
-        <script src="../libs/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js"></script>
-        <script src="../libs/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
-        <script type="text/javascript" src="../ws-admin/js/myJS.js"></script>  <!-- JS datepicker Boostrap3-->
-        
+    <link rel="stylesheet" href="../ws-admin/css/estilos_solicitud.css">
+    <link href="../ws-admin/icons/iconfont/material-icons.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css" />
+    <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
+    <link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
+    <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
+    <link href="../libs/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.css" rel="stylesheet">
        
-        
+    
 	<title>Solicitud de vales por perdida</title>
 	
 </head>

@@ -33,7 +33,7 @@
         </li>
         
         <?php
-          if ($_SESSION) {
+          if (isset($_SESSION['user_autentificado'])) {
             echo '<li><a href="../ws-admin/">Administracion <span class="sr-only"></span></a></li>';
           }else {
             echo '<li><a href="../ws-admin/">Iniciar Sesión <span class="sr-only"></span></a></li>';

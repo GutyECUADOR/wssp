@@ -1,24 +1,24 @@
     <?php include '../ws-admin/topnavBar.php'?>
 
-        <div class="container-fluid">
-		<div class="wrap">
-                            <div class="text-center">
-                                    <h5>SOLICITUD DE VALES POR PÉRDIDA</h5>
-                                    <h6>rev13.09.17</h6>
-                            </div>
+        <div id="app" class="container-fluid">
+		    <div class="wrap">
+                    <div class="text-center">
+                            <h5>{{ title }}</h5>
+                            <h6>rev13.09.17</h6>
+                    </div>
 
-                            <div class="text-center">
-	           		        	<img class="logo" src="../ws-admin/img/logo.png" alt="Logo" style="width:200px">
-                    		</div>
-                    
-                    <form action="addvalep.php" autocomplete="off" name="formulario_registro" method="POST" onsubmit= "return validar_formulario()">
-               			
+                    <div class="text-center">
+                        <img class="logo" src="../ws-admin/img/logo.png" alt="Logo" style="width:200px">
+                    </div>
+            
+                    <form v-on:submit.prevent="saveDocumento" autocomplete="off">
+                        
                     
                                 <div class="text-center">
                                     <label> Los campos con (*) son obligatorios y deben contener información verídica. Recuerde al finalizar validar campos de seguridad.</label>
                                 </div>
                             
-                           
+                            
                                 <div class="txtseccion">
                                     <label class="etique"> INFORMACIÓN DEL SOLICITANTE</label>
                                 </div>
@@ -26,24 +26,11 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label>Indique empresa: <em class="em">*</em></label>
-                                        <select class="form-control input-sm" name="select_empresaa" id="select_empresaa" onchange="showselectBodegas(this.value);showselectSupervisores(this.value)" required>
-                                            <option value=''>---SELECCIONE POR FAVOR---</option>
-                                            <?PHP
-                                            
-                                            $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001','002','004','006','011','008') ORDER BY Codigo";
-
-                                            $result_query_empresa = odbc_exec($conexion_sbio, $consulta_empresa);
-
-                                            while(odbc_fetch_row($result_query_empresa))
-                                            {
-                                                $cod_emp = odbc_result($result_query_empresa,"Codigo"); 
-                                                $detalle_emp = odbc_result($result_query_empresa,"Nombre"); 
-
-                                                echo "<option value='$cod_emp'>$detalle_emp</option>";
-                                            }
-                                            
-                                            ?>
-                                            
+                                        <select v-model="documento.empresa" class="form-control">
+                                            <option value="">Seleccione por favor</option>
+                                            <option v-for="item in empresas" :value="item.NameDatabase">
+                                            {{item.Nombre}}
+                                            </option>
                                         </select>
                                     </div>
                                     
@@ -82,7 +69,7 @@
                                     
                                 </div>    
             
-                          
+                            
                                 <div class="col">
                                     <div class="alert alert-info alert-dismissable text-center">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -229,43 +216,47 @@
                                 </div>
             
             
-                                 <!--SECCION DETALLE-->                     
+                                    <!--SECCION DETALLE-->                     
                                 <div class="txtseccion">
                                     <label class="etique"> COMENTARIO / OBSERVACION</label>
                                 </div>
-                                 
-                                 <div class="col">
-                                     <textarea class="form-control cajaarea" name="txt_comentario" rows="3" cols="100%" maxlength="180"></textarea>
-                                     
-                                 </div> 
-                                 
-                                 
-		                <div>
-                        <input class="btn btn-primary btn-block"name="guardar" type="submit" id="btn-submit" value="Solicitar">
-				</div>
-				
-			<div class="footer">Todos los derechos reservados © 2017, Ver 2.0.0</div>
+                                    
+                                    <div class="col">
+                                        <textarea class="form-control cajaarea" name="txt_comentario" rows="3" cols="100%" maxlength="180"></textarea>
+                                        
+                                    </div> 
+                                
+                                <button type="submit" class="btn btn-primary btn-block" name="guardar"  id="btn-submit">Solicitar</button>
+                
                     </form>
-                </div>
+             
+                    <div class="footer">Todos los derechos reservados © 2017, Ver 2.0.0</div>
+            </div>
             
+            <!-- Floating Button-->
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large red">
+                <i class="large material-icons">mode_edit</i>
+                </a>
+                <ul>
+                <li><a class="btn-floating green" id="btn_add_producto" onclick="add_row()" title="Agregar Producto"><i class="material-icons">playlist_add</i></a></li>
+                <li><a class="btn-floating blue" onclick="add_row_emp()" title="Agregar Empleado"><i class="material-icons">perm_identity</i></a></li>
+                
+                </ul>
+            </div>
             
-	</div>
+	    </div>
     
-    
-        <!-- Floating Button Google-->
-        <div class="fixed-action-btn">
-            <a class="btn-floating btn-large red">
-              <i class="large material-icons">mode_edit</i>
-            </a>
-            <ul>
-              <li><a class="btn-floating green" id="btn_add_producto" onclick="add_row()" title="Agregar Producto"><i class="material-icons">playlist_add</i></a></li>
-              <li><a class="btn-floating blue" onclick="add_row_emp()" title="Agregar Empleado"><i class="material-icons">perm_identity</i></a></li>
-              
-            </ul>
-          </div>
-          
+
 	<!-- USO JQUERY, animacion de menu para responsive-->
         
-        <script type="text/javascript" src="../ws-admin/js/materialize.js"></script>
-        <script src="../ws-admin/js/bootstrap.js"></script>
-        <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript" src="sweetalert-master/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../ws-admin/js/jquery-latest.js"></script>
+    <script type="text/javascript" src="../ws-admin/js/materialize.js"></script>
+    <script type="text/javascript" src="../libs/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../libs/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.es.min.js"></script>
+    <script type="text/javascript" src="../libs/vue.js"></script>
+    <script type="text/javascript" src="../ws-admin/js/myJS.js"></script>  <!-- JS datepicker Boostrap3-->
+    <script type="text/javascript" src="../ws-admin/js/bootstrap.js"></script>
+    <script type="text/javascript" src="valesPerdida.js?<?php echo date('Ymdhiiss')?>"></script>
+   
