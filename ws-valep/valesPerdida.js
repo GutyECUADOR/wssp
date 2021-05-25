@@ -92,6 +92,7 @@ const app = new Vue({
     data: {
         title: 'Formulario de Vales por Pérdida',
         documento : new Documento(),
+        busqueda_solicitante: '',
         empresas: [],
         tiposDoc: [],
         bodegas: []
@@ -127,6 +128,19 @@ const app = new Vue({
             });
             console.log(response);
             this.bodegas = response.data;
+        },
+        async getEmpleado(){
+            let empresa = this.documento.empresa;
+            let cedula = this.documento.busqueda_solicitante;
+            let busqueda = JSON.stringify({cedula, empresa});
+            const response = await fetch(`./api/index.php?action=getEmpleado&busqueda=${busqueda}`)
+            .then(response => {
+                return response.json();
+            }).catch(error => {
+                console.error(error);
+            });
+            console.log(response);
+            this.documento.solicitante = response.data;
         },
         addNewProducto(){
                 this.documento.productos.items.push(new Producto({}));

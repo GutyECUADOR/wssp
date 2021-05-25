@@ -15,7 +15,6 @@ require_once "../controllers/AjaxController.php";
       $HTTPaction = $_GET["action"];
     }else{
       throw new Exception("Solicitud sin action");
-      
     }
     
     switch ($HTTPaction) {
@@ -47,6 +46,19 @@ require_once "../controllers/AjaxController.php";
         }else{
           throw new Exception("Sin datos de empresa.");
         }
+      break; 
+
+        case 'getEmpleado':
+          if (isset($_GET["busqueda"])) {
+            $busqueda = json_decode($_GET['busqueda']);
+            $response = $ajaxController->getEmpleado($busqueda);
+            $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
+            echo json_encode($rawdata);
+          }else{
+            throw new Exception("Sin datos de busqueda.");
+          }
+
+
         
       break;
 

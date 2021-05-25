@@ -4,7 +4,7 @@
 		    <div class="wrap">
                     <div class="text-center">
                             <h5>{{ title }}</h5>
-                            <h6>rev13.09.17</h6>
+                            <h6>rev25.05.2021</h6>
                     </div>
 
                     <div class="text-center">
@@ -28,7 +28,7 @@
                                         <label>Indique empresa:</label>
                                         <select class="form-control input-sm" v-model="documento.empresa" @change="getTiposDoc(); getBodegas()" required>
                                             <option value="">Seleccione por favor</option>
-                                            <option v-for="item in empresas" :value="item.NameDatabase">
+                                            <option v-for="item in empresas" :value="item.NameDatabase.trim()">
                                             {{item.Nombre}}
                                             </option>
                                         </select>
@@ -38,7 +38,7 @@
                                         <label>Indique el tipo de documento:</label>
                                         <select class="form-control input-sm"   required>
                                             <option value=''>Seleccione por favor</option>
-                                            <option v-for="item in tiposDoc" :value="item.CODIGO">
+                                            <option v-for="item in tiposDoc" :value="item.CODIGO.trim()">
                                                 {{item.NOMBRE}}
                                             </option>
                                         </select>
@@ -48,15 +48,15 @@
                                 <div class="row">  
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>CI del Solicitante:</label>
-                                            <input type="text" class="form-control input-sm"  id="txt_cisolicitante" name="txt_cisolicitante" onkeyup="ajaxvalidacod();getDescuento()" maxlength="13" required>
+                                            <label>Cédula del Solicitante:</label>
+                                            <input type="text" class="form-control input-sm" v-model="documento.busqueda_solicitante" @keyup="getEmpleado()" required>
                                         </div> 
                                     </div>
                                     
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Solicitante:</label>
-                                            <input type="text" class="form-control input-sm"  id="txt_solicitante_name" name="txt_solicitante_name" readonly>
+                                            <input type="text" class="form-control input-sm" :value="documento.solicitante.NOMBRE" readonly>
                                         </div>
                                     </div>
                                         
@@ -65,7 +65,7 @@
                                             <label>Bodega (Local):</label>
                                             <select class="form-control input-sm"  required>
                                                 <option value=''>Seleccione por favor</option>
-                                                <option v-for="item in bodegas" :value="item.CODIGO">
+                                                <option v-for="item in bodegas" :value="item.CODIGO.trim()">
                                                     {{item.NOMBRE}}
                                                 </option>
                                             </select>    
