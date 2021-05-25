@@ -26,6 +26,30 @@ require_once "../controllers/AjaxController.php";
         echo json_encode($rawdata);
       break;
 
+      case 'getTiposDoc':
+        if (isset($_GET["empresa"])) {
+          $empresa = $_GET["empresa"];
+          $response = $ajaxController->getTiposDoc($empresa);
+          $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
+          echo json_encode($rawdata);
+        }else{
+          throw new Exception("Sin datos de empresa.");
+        }
+       
+      break;
+
+      case 'getBodegas':
+        if (isset($_GET["empresa"])) {
+          $empresa = $_GET["empresa"];
+          $response = $ajaxController->getBodegas($empresa);
+          $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
+          echo json_encode($rawdata);
+        }else{
+          throw new Exception("Sin datos de empresa.");
+        }
+        
+      break;
+
 
       default:
           $rawdata = array('status' => 'error', 'message' =>'El API no ha podido responder la solicitud, revise el tipo de action');
@@ -34,7 +58,7 @@ require_once "../controllers/AjaxController.php";
     }
     
   } catch (Exception $ex) {
-    //Return error message
+    http_response_code(400);
     $rawdata = array();
     $rawdata['status'] = "error";
     $rawdata['message'] = $ex->getMessage();

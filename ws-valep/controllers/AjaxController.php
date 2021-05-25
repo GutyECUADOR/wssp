@@ -10,12 +10,23 @@ class AjaxController  {
     }
   
     /* Retorna la respuesta del modelo ajax*/
-    public function initForm($database='MODELOKIND_V7'){
+    public function initForm(){
+        $empresas = $this->ajaxModel->getEmpresas();
+        return array('empresas' => $empresas);
+    }
+
+    public function getTiposDoc($database){
         $this->ajaxModel->setDbname($database);
         $this->ajaxModel->conectarDB();
 
-        $empresas = $this->ajaxModel->getEmpresas();
-        return array('empresas' => $empresas);
+        return $this->ajaxModel->getTiposDoc();
+    }
+
+    public function getBodegas($database){
+        $this->ajaxModel->setDbname($database);
+        $this->ajaxModel->conectarDB();
+
+        return $this->ajaxModel->getBodegas();
     }
 
     

@@ -25,8 +25,8 @@
                                 
                                 <div class="col">
                                     <div class="form-group">
-                                        <label>Indique empresa: <em class="em">*</em></label>
-                                        <select v-model="documento.empresa" class="form-control">
+                                        <label>Indique empresa:</label>
+                                        <select class="form-control input-sm" v-model="documento.empresa" @change="getTiposDoc(); getBodegas()" required>
                                             <option value="">Seleccione por favor</option>
                                             <option v-for="item in empresas" :value="item.NameDatabase">
                                             {{item.Nombre}}
@@ -35,9 +35,12 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label>Indique el tipo de documento: <em class="em">*</em></label>
-                                        <select class="form-control input-sm" name="select_dirigidoa" id="select_dirigidoa" required>
-                                            <option value=''>---SELECCIONE POR FAVOR---</option>
+                                        <label>Indique el tipo de documento:</label>
+                                        <select class="form-control input-sm"   required>
+                                            <option value=''>Seleccione por favor</option>
+                                            <option v-for="item in tiposDoc" :value="item.CODIGO">
+                                                {{item.NOMBRE}}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>        
@@ -45,7 +48,7 @@
                                 <div class="row">  
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>CI del Solicitante: <em class="em">*</em></label>
+                                            <label>CI del Solicitante:</label>
                                             <input type="text" class="form-control input-sm"  id="txt_cisolicitante" name="txt_cisolicitante" onkeyup="ajaxvalidacod();getDescuento()" maxlength="13" required>
                                         </div> 
                                     </div>
@@ -59,11 +62,14 @@
                                         
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Empresa/Bodega:</label>
-                                            <select class="form-control input-sm" id="cod_txt_empresa" name="cod_txt_empresa" required>
-                                                <option value=''>---SELECCIONE POR FAVOR---</option>
+                                            <label>Bodega (Local):</label>
+                                            <select class="form-control input-sm"  required>
+                                                <option value=''>Seleccione por favor</option>
+                                                <option v-for="item in bodegas" :value="item.CODIGO">
+                                                    {{item.NOMBRE}}
+                                                </option>
                                             </select>    
-                                            <input type="hidden"  id="cod_txt_cliente" name="cod_txt_cliente">
+                                            
                                         </div>
                                     </div>
                                     

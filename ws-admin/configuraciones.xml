@@ -2,7 +2,7 @@
 <xmlConfig>
       <enMantenimiento>false</enMantenimiento>
       <finMantenimiento>02h30 PM</finMantenimiento>
-      <ultimoDiaActivoVales>23</ultimoDiaActivoVales>
+      <ultimoDiaActivoVales>25</ultimoDiaActivoVales>
       <ultimoDiaEvaluaEGG>16</ultimoDiaEvaluaEGG>
       <permisosUsuarios>
             <ADM>

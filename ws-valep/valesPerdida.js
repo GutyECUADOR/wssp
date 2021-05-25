@@ -92,19 +92,41 @@ const app = new Vue({
     data: {
         title: 'Formulario de Vales por Pérdida',
         documento : new Documento(),
-        empresas: []
+        empresas: [],
+        tiposDoc: [],
+        bodegas: []
     },
     methods:{
         async init() {
             const response = await fetch(`./api/index.php?action=initform`)
                 .then(response => {
-                return response.json();
+                    return response.json();
                 }).catch(error => {
-                console.error(error);
+                    console.error(error);
                 });
             console.log(response);
             this.empresas = response.data.empresas;
             
+        },
+        async getTiposDoc(){
+            const response = await fetch(`./api/index.php?action=getTiposDoc&empresa=${this.documento.empresa}`)
+            .then(response => {
+                return response.json();
+            }).catch(error => {
+                console.error(error);
+            });
+            console.log(response);
+            this.tiposDoc = response.data;
+        },
+        async getBodegas(){
+            const response = await fetch(`./api/index.php?action=getBodegas&empresa=${this.documento.empresa}`)
+            .then(response => {
+                return response.json();
+            }).catch(error => {
+                console.error(error);
+            });
+            console.log(response);
+            this.bodegas = response.data;
         },
         addNewProducto(){
                 this.documento.productos.items.push(new Producto({}));
