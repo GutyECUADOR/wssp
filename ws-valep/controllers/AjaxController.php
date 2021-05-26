@@ -36,6 +36,13 @@ class AjaxController  {
         return $this->ajaxModel->getEmpleado_ValesPerdida($busqueda);
     }
 
+    public function getProducto($busqueda){
+        $this->ajaxModel->setDbname($busqueda->empresa);
+        $this->ajaxModel->conectarDB();
+
+        return $this->ajaxModel->getProducto_ValesPerdida($busqueda);
+    }
+
     
 
 

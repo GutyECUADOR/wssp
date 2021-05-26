@@ -47,7 +47,7 @@ class Documento {
             IVA: 0,
             total: 0
         },
-        this.solicitante = '',
+        this.solicitante = null,
         this.tipoDoc = '',
         this.empresa = '',
         this.bodega
@@ -130,6 +130,10 @@ const app = new Vue({
             this.bodegas = response.data;
         },
         async getEmpleado(){
+            if (!this.documento.empresa) {
+                alert(`Seleccione una empresa antes de buscar el solicitante.`);
+                return;
+            }
             let empresa = this.documento.empresa;
             let cedula = this.documento.busqueda_solicitante;
             let busqueda = JSON.stringify({cedula, empresa});
@@ -140,7 +144,10 @@ const app = new Vue({
                 console.error(error);
             });
             console.log(response);
-            this.documento.solicitante = response.data;
+            if (response.data) {
+                this.documento.solicitante = response.data;
+            }
+           
         },
         addNewProducto(){
                 this.documento.productos.items.push(new Producto({}));
@@ -154,7 +161,7 @@ const app = new Vue({
         async getProductos() {
             this.search_producto.isloading = true;
             let busqueda = JSON.stringify(this.search_producto.busqueda);
-            const productos = fetch(`./api/inventario/index.php?action=searchProductos&busqueda=${busqueda}`)
+            const productos = await fetch(`./api/index.php?action=searchProductos&busqueda=${busqueda}`)
                 .then(response => {
                     this.search_producto.isloading = false;
                     return response.json();
@@ -164,6 +171,21 @@ const app = new Vue({
 
             console.log(productos);
             this.search_producto.results = productos.data;
+            
+        },
+        async getProduco(producto) {
+            let empresa = this.documento.empresa;
+            let codigo = producto.codigo;
+            let busqueda = JSON.stringify({codigo, empresa});
+            const productoDB = await fetch(`./api/index.php?action=getProducto&busqueda=${busqueda}`)
+                .then(response => {
+                    return response.json();
+                }).catch( error => {
+                    console.error(error);
+                }); 
+
+            console.log(productoDB);
+            
             
         },
         async saveDocumento(){

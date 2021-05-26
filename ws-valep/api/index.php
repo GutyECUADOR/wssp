@@ -48,18 +48,26 @@ require_once "../controllers/AjaxController.php";
         }
       break; 
 
-        case 'getEmpleado':
-          if (isset($_GET["busqueda"])) {
-            $busqueda = json_decode($_GET['busqueda']);
-            $response = $ajaxController->getEmpleado($busqueda);
-            $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
-            echo json_encode($rawdata);
-          }else{
-            throw new Exception("Sin datos de busqueda.");
-          }
+      case 'getEmpleado':
+        if (isset($_GET["busqueda"])) {
+          $busqueda = json_decode($_GET['busqueda']);
+          $response = $ajaxController->getEmpleado($busqueda);
+          $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
+          echo json_encode($rawdata);
+        }else{
+          throw new Exception("Sin datos de busqueda.");
+        }
+      break;
 
-
-        
+      case 'getProducto':
+        if (isset($_GET["busqueda"])) {
+          $busqueda = json_decode($_GET['busqueda']);
+          $response = $ajaxController->getProducto($busqueda);
+          $rawdata = array('status' => 'success', 'message' => 'Peticion Realizada', 'data' => $response);
+          echo json_encode($rawdata);
+        }else{
+          throw new Exception("Sin datos de busqueda.");
+        }
       break;
 
 

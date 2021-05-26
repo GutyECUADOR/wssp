@@ -27,8 +27,8 @@ $fechafinal = ultimo_dia_vales($ultimoDiaValep);
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="../ws-admin/css/estilos_solicitud.css">
     <link href="../ws-admin/icons/iconfont/material-icons.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="../ws-admin/css/materialize.css" />
-    <link rel="stylesheet" href="../ws-admin/css/bootstrap.css">
+    <link rel="stylesheet" href="../ws-admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../ws-admin/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../ws-admin/img/favicon.ico">
     <link href='../ws-admin/css/roboto.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
