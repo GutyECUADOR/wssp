@@ -32,6 +32,17 @@ if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqu
                 LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
                 INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa
             WHERE revisadopor='$empresa_search' AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' 
+            GROUP BY checklist.id,
+            checklist.empresa,
+            empresa.Nombre,
+            checklist.local,
+            bodega.NOMBRE,
+            checklist.supervisor,
+            (SBIO.Nombre + SBIO.Apellido),
+            checklist.fecha,
+            checklist.revisadopor,
+            (SBIO2.Nombre + SBIO2.Apellido),
+            checklist.estado
             ORDER BY id desc
         ";
         $result_consulta_chlocales = odbc_exec($db_empresa, $consulta_chlocales);
@@ -142,6 +153,17 @@ if($empresa_search == '0400882940' || $empresa_search == '1711743227'){ // Busqu
                 LEFT JOIN SBIOKAO.dbo.Empleados as SBIO2 ON SBIO2.Cedula = checklist.revisadopor
                 INNER JOIN SBIOKAO.dbo.Empresas_WF as empresa ON empresa.Codigo = checklist.empresa
             WHERE checklist.empresa = '$dbcode' AND checklist.local='$local_search' AND fecha BETWEEN '$fecha_iniCHK' AND '$fecha_finCHK' 
+            GROUP BY checklist.id,
+            checklist.empresa,
+            empresa.Nombre,
+            checklist.local,
+            bodega.NOMBRE,
+            checklist.supervisor,
+            (SBIO.Nombre + SBIO.Apellido),
+            checklist.fecha,
+            checklist.revisadopor,
+            (SBIO2.Nombre + SBIO2.Apellido),
+            checklist.estado
             ORDER BY id desc
 
             
