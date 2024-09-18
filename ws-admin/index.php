@@ -3,10 +3,10 @@ session_start();
 include_once ('acceso_db.php');
 include_once ('./acceso_db_sbio.php');
 
-      if ($_SESSION) {
-       echo 'Session activa';
-       header('Location: frm_main.php');
-      }
+        if (isset($_SESSION['autentificacion'])) {
+                echo 'Session activa';
+                header('Location: frm_main.php');
+        }
 ?>
 
 <html lang="es">
@@ -39,7 +39,7 @@ include_once ('./acceso_db_sbio.php');
                                             <select name="select_empresa_login" id="select_empresa_login" required="true">
                                                 <option value=''>---Seleccione Empresa---</option>
                                                     <?PHP 
-                                                    $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) ORDER BY Codigo";
+                                                    $consulta_empresa = "SELECT * FROM dbo.Empresas_WF with (nolock) WHERE Codigo IN ('001', '002', '011') ORDER BY Codigo ";
 
                                                     $result_query_empresa = odbc_exec($conexion_sbio, $consulta_empresa);
 
@@ -47,8 +47,9 @@ include_once ('./acceso_db_sbio.php');
                                                     {
                                                     $cod_emp = odbc_result($result_query_empresa,"Codigo"); 
                                                     $detalle_emp = odbc_result($result_query_empresa,"Nombre"); 
+                                                    $dbname = odbc_result($result_query_empresa,"NameDatabase"); 
 
-                                                    echo "<option value='$cod_emp'>$detalle_emp</option>";
+                                                    echo "<option value='$cod_emp'>$detalle_emp ($dbname)</option>";
                                                     }
                                                     ?>
                                              </select>

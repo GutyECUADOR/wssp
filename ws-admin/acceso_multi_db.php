@@ -58,18 +58,10 @@
                 $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=VJCB_V7;', 'sfb', 'sfb123' )  or die ("Error en conexion ODBC");//or die ("Error en conexion ODBC de VERONICA CARRASCO");
                 break;
             
-            case 008:
-                $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=;', 'sfb', 'sfb123' )  or die ("Error en conexion ODBC");// Base de datos modelo, autenticacion de SQL requiere user y pass
-                break;
-            
             case '008':
                 $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=;', 'sfb', 'sfb123' ) or die ("Error en conexion ODBC"); // Base de datos modelo, autenticacion de SQL requiere user y pass
                 break;
-
-            case 009:
-                $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=KAO_wssp;', 'sfb', 'sfb123') or die ("Error en conexion ODBC");  // Base de datos WSSP
-                break;
-            
+  
             case '009':
                 $conexion_ok = odbc_connect('Driver={SQL Server};Server=196.168.1.201;Database=KAO_wssp;', 'sfb', 'sfb123') or die ("Error en conexion ODBC");  // Base de datos WSSP
                 break;

@@ -189,7 +189,7 @@ li a:hover {
 }
 /*Cambios de menu activo*/
 
-nav#evaluaciones ul.menu li:nth-child(1) a,
+/* nav#evaluaciones ul.menu li:nth-child(1) a,
 nav#valesperdida ul.menu li:nth-child(2) a,
 nav#chlocales ul.menu li:nth-child(3) a,
 nav#info ul.menu li:nth-child(4) a,
@@ -205,7 +205,7 @@ li a.active{
 li a:active{
     background-color: #303766;
     color: white;
-}
+}  */
 
 .tituloh5 {
     font-size: 11px;

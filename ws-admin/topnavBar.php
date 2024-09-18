@@ -14,32 +14,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-          <li><a href="../">Inicio<span class="sr-only"></span></a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Formularios <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-              <li><a href="../ws-evalua/">Evaluación (Locales)</a></li>
-              <li><a href="../ws-evanfitriones/">Evaluación (Anfitriones)</a></li>
-              <li><a href="../ws-evaluagge/">Evaluación (Jefe Inmediato)</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="../ws-chlocales/">CheckList (Locales)</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="../ws-valep/">Vales por pérdida</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="../ws-estadovehiculo/">Estado del Vehiculo</a></li>
-            <li><a href="../ws-estadovehiculo/ordenPedido.php">Orden de Pedido Vehiculo</a></li>
-           
-          </ul>
-        </li>
-        
-        <?php
-          if ($_SESSION) {
-            echo '<li><a href="../ws-admin/">Administracion <span class="sr-only"></span></a></li>';
-          }else {
-            echo '<li><a href="../ws-admin/">Iniciar Sesión <span class="sr-only"></span></a></li>';
-          }
-        ?>
-        
+          <li><a href="http://196.168.1.243:8050/wssp/?action=inicio">Regresar<span class="sr-only"></span></a></li>
+      
         
       </ul>
       
